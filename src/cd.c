@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
-void cd(){
+void minish_cd(){
+	printf("call cd\n");
 	return ;
 }

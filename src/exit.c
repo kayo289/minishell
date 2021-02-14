@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
-void exit(){
-	return ;
+void minish_exit(){
+	printf("call exit\n");
+	return;
 }

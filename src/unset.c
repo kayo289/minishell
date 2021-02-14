@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
-void unset(){
+void minish_unset(){
+	printf("call unset\n");
 	return ;
 }

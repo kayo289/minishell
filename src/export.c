@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
-void export(){
+void minish_export(){
+	printf("call export\n");
 	return ;
 }

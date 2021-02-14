@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
-void env(){
+void minish_env(){
+	printf("call env\n");
 	return ;
 }

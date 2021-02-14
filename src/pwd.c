@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
-void pwd(){
+void minish_pwd(){
+	printf("call pwd\n");
 	return ;
 }
