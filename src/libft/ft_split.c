@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 13:02:08 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/02/13 21:29:55 by kkikuchi         ###   ########.fr       */
+/*   Updated: 2021/02/16 18:42:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ static char			**ft_clear(char ***ans)
 	unsigned int	i;
 
 	i = 0;
-	while ((*ans)[i])
-	{
+	while ((*ans)[i]) {
 		free((*ans)[i]);
 		(*ans)[i++] = NULL;
 	}
@@ -53,10 +52,8 @@ static void			ft_scpy(char *str1, char *str2, char *until)
 {
 	while (str2 < until)
 		*(str1++) = *(str2++);
-	*str1 = 0;
+	*str1 = '\0';
 }
-
-#include<stdio.h>
 
 char				**ft_split(const char *s, char c)
 {
