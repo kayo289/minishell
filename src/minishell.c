@@ -67,7 +67,7 @@ int execute(char *cmd)
 	//	return (0);
 }
 
-int lsh_loop()
+int minish_loop(void)
 {
 	int p_status;
 	int run;
@@ -99,6 +99,6 @@ int lsh_loop()
 
 int main()
 {
-	lsh_loop();
+	minish_loop();
 	return (0);
 }
