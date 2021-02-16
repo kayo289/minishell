@@ -1,5 +1,5 @@
 #include "../includes/minishell.h"
 
-void echo(){
+void minish_echo(){
 	printf("call echo\n");
 }

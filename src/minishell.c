@@ -1,25 +1,29 @@
 #include "../includes/minishell.h"
 
 const char *cmds[] = {
-	"cd",
-	"env", 
-	"exit", 
-	"export",
-	"pwd",
-	"unset",
+	"./cd",
+	"./echo",
+	"./env", 
+	"./exit", 
+	"./export",
+	"./pwd",
+	"./unset",
 	NULL
 };
 
+/*
 void (*builtin_func[]) () = {
   	minish_cd,
+	minish_echo,
   	minish_env,
   	minish_exit,
 	minish_export,
 	minish_pwd,
 	minish_unset
 };
+*/
 
-int parse_cmd(char *cmd)
+int parse_command(char *cmd)
 {
 	int n;
 
@@ -36,29 +40,61 @@ int parse_cmd(char *cmd)
 int execute(char *cmd)
 {
 	int cmd_no;
-	int pid;
+	int status;
+	pid_t pid;
+	//char *arg[];
 
-	cmd_no = parse_cmd(cmd);
-	if (cmds[cmd_no] == NULL)
-		return 0;
-	(*builtin_func[cmd_no])();
-	return 1;
+	pid = fork();
+	if (pid < 0)
+		printf("Error:%s\n", strerror(errno));
+	else if (pid == 0)
+	{
+		// child
+		cmd_no = parse_command(cmd);
+		//if (cmds[cmd_no] != NULL)
+			//execve(cmds[cmd_no], arg, NULL);
+		exit(0);
+	}	
+	// parent
+	if (waitpid(pid, &status, 0) < 0)
+	{
+		printf("Error:%s\n", strerror(errno));
+		exit(0);
+	}
+	//printf("exit_code: %d\n", WEXITSTATUS(status));
+	return (1);
+	//if (!WIFEXITED(status))
+	//	return (0);
 }
 
-void lsh_loop()
+int lsh_loop()
 {
-	int status;
+	int p_status;
+	int run;
 	char *cmd;
+	pid_t pid;
 
-	status = 1;
-	while (status)
+	run = 1;
+	while (run != 0)
 	{
-		write(1, ">", 1);
-		get_next_line(0, &cmd);
-		execute(cmd);
-		sleep(1);
+		write(1, "$", 1);
+		run = get_next_line(0, &cmd);
+		pid = fork();
+		if (pid < 0)
+			printf("Error:%s\n", strerror(errno));
+		else if (pid == 0)
+			// child
+			return (execute(cmd));
+		// parent
+		if (waitpid(pid, &p_status, 0) < 0)
+		{
+			printf("Error:%s\n", strerror(errno));
+			exit(-1);
+		}
+		if (WIFSTOPPED(p_status))
 		free(cmd);
 	}
+	return (0);
 }
 
 int main()
