@@ -1,98 +1,123 @@
 #include "../includes/minishell.h"
 
-const char *cmds[] = {
-	"./cd",
-	"./echo",
-	"./env", 
-	"./exit", 
-	"./export",
-	"./pwd",
-	"./unset",
-	NULL
-};
-
-/*
-void (*builtin_func[]) () = {
-  	minish_cd,
-	minish_echo,
-  	minish_env,
-  	minish_exit,
-	minish_export,
-	minish_pwd,
-	minish_unset
-};
-*/
-
-int parse_command(char *cmd)
+int argc = 0;
+void do_cmd(int i, char ***args)
 {
-	int n;
+	int pp[2];
+	pid_t pid;
 
-	n = 0;
-	while (cmds[n] != NULL)
+	if (i >= argc - 1)
+		execve(args[0][0], args[0], NULL);
+	else
 	{
-		if (ft_strncmp(cmd, cmds[n], ft_strlen(cmds[n])) == 0) 
-			break;
-		n++;
+		pipe(pp);
+		pid = fork();
+		if (pid == 0)
+		{
+			// child
+			close(pp[0]);
+			dup2(pp[1], 1);
+			close(pp[1]);
+
+			do_cmd(i + 1, args);
+		}
+		else if (pid > 0)
+		{
+			// parent
+			close(pp[1]);
+			dup2(pp[0], 0);
+			close(pp[0]);
+
+			execve(args[argc - i - 1][0], args[argc - i - 1], NULL);
+		}
 	}
-	return (n);
 }
 
-int execute(char *cmd)
+char ***split_line(char *line)
 {
-	int cmd_no;
-	int status;
-	pid_t pid;
-	//char *arg[];
+	char ***args;
+	int i;
 
-	pid = fork();
-	if (pid < 0)
-		printf("Error:%s\n", strerror(errno));
-	else if (pid == 0)
-	{
-		// child
-		cmd_no = parse_command(cmd);
-		//if (cmds[cmd_no] != NULL)
-			//execve(cmds[cmd_no], arg, NULL);
-		exit(0);
-	}	
-	// parent
-	if (waitpid(pid, &status, 0) < 0)
-	{
-		printf("Error:%s\n", strerror(errno));
-		exit(0);
-	}
-	//printf("exit_code: %d\n", WEXITSTATUS(status));
-	return (1);
-	//if (!WIFEXITED(status))
-	//	return (0);
+	line++;
+	// default
+	argc = 2;
+	args = (char ***)malloc(sizeof(char **) * argc);
+	for (i = 0; i < argc; i++)
+		args[i] = (char **)malloc(sizeof(char *) * 4);
+	args[1][0] = "export";
+	args[1][1] = "hello";
+	args[1][2] = "Hello";
+	args[1][3] = NULL;
+	args[0][0] = "echo";
+	args[0][1] = "$hello";
+	args[0][2] = NULL;
+	return (args);
+
+	/*
+	* asignees kkikuchi
+	* ex)
+	*	line = echo "Hello World" 
+	*		args[0][0] = "echo"
+	*		args[0][1] = "Hello World"
+	*		args[0][2] = NULL
+	*
+	*	line = echo "Hello World" >> output.txt
+	*		args[0][0] = "echo"
+	*		args[0][1] = "Hello World"
+	*		args[0][2] = NULL
+	*		args[1][0] = text.txt 
+	*		args[1][1] = NULL
+	*
+	*	line = export hello="Hello"; echo $hello
+	*		args[0][0] = "export"
+	*		args[0][1] = hello
+	*		args[0][2] = "Hello"
+	*		args[0][3] = NULL
+	*		args[1][0] = echo
+	*		args[1][1] = $hello
+	*		args[1][2] = NULL
+	*	
+	*	line = export hello="Hello"; echo $hello >> output.txt
+	*		args[0][0] = "export"
+	*		args[0][1] = hello
+	*		args[0][2] = "Hello"
+	*		args[0][3] = NULL
+	*		args[1][0] = echo
+	*		args[1][1] = $hello
+	*		args[1][2] = NULL
+	*		args[2][0] = output.txt
+	*		args[2][1] = NULL
+	*
+	*	line = exit ;pwd
+	*		args[0][0] = "export"
+	*		args[0][1] = hello
+	*		args[0][2] = "Hello"
+	*		args[0][3] = NULL
+	*		args[1][0] = echo
+	*		args[1][1] = $hello
+	*		args[1][2] = NULL
+	*		args[2][0] = output.txt
+	*		args[2][1] = NULL
+	*/
 }
 
 int minish_loop(void)
 {
-	int p_status;
 	int run;
-	char *cmd;
-	pid_t pid;
+	char *line;
+	char ***args;
 
 	run = 1;
 	while (run != 0)
 	{
-		write(1, "$", 1);
-		run = get_next_line(0, &cmd);
-		pid = fork();
-		if (pid < 0)
-			printf("Error:%s\n", strerror(errno));
-		else if (pid == 0)
-			// child
-			return (execute(cmd));
-		// parent
-		if (waitpid(pid, &p_status, 0) < 0)
-		{
-			printf("Error:%s\n", strerror(errno));
-			exit(-1);
-		}
-		if (WIFSTOPPED(p_status))
-		free(cmd);
+		write(1, ">", 1);
+		run = get_next_line(0, &line);
+		args = split_line(line);
+		if (fork() == 0)
+			do_cmd(0, args);
+		else 
+			wait(NULL);
+		free(line);
 	}
 	return (0);
 }

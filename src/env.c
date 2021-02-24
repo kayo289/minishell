@@ -1,6 +1,13 @@
 #include "../includes/minishell.h"
 
-void minish_env(){
+int main(int argc, char **argv)
+{
+	int i = 0;
+
 	printf("call env\n");
-	return ;
+	while (i < argc){
+		printf("argv[%d]: %s\n", i , argv[i]);
+		i++;
+	}
+	exit(EXIT_SUCCESS);
 }

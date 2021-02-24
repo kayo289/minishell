@@ -1,6 +1,15 @@
 #include "../includes/minishell.h"
 
-void minish_unset(){
+int main(int argc, char **argv)
+{
+	int i;
+
+	i = 0;
 	printf("call unset\n");
-	return ;
+	while (i < argc)
+	{
+		printf("argv[%d]: %s\n", i, argv[i]);
+		i++;
+	}
+	exit(EXIT_SUCCESS);
 }
