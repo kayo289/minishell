@@ -6,10 +6,10 @@ int main(int argc, char **argv)
 
 	i = 0;
 	printf("call unset\n");
-	while(i < argc)
+	while (i < argc)
 	{
 		printf("argv[%d]: %s\n", i, argv[i]);
 		i++;
-		}
+	}
 	exit(EXIT_SUCCESS);
 }
