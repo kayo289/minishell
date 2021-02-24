@@ -1,7 +1,7 @@
 #include "../includes/minishell.h"
 
 int argc = 0;
-void do_cmd(int i, char ***args)
+void exe_cmd(int i, char ***args)
 {
 	int pp[2];
 	pid_t pid;
@@ -19,7 +19,7 @@ void do_cmd(int i, char ***args)
 			dup2(pp[1], 1);
 			close(pp[1]);
 
-			do_cmd(i + 1, args);
+			exe_cmd(i + 1, args);
 		}
 		else if (pid > 0)
 		{
@@ -114,7 +114,7 @@ int minish_loop(void)
 		run = get_next_line(0, &line);
 		args = split_line(line);
 		if (fork() == 0)
-			do_cmd(0, args);
+			exe_cmd(0, args);
 		else 
 			wait(NULL);
 		free(line);
