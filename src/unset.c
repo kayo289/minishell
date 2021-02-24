@@ -4,6 +4,7 @@ int main(int argc, char **argv)
 {
 	int i;
 
+	i = 0;
 	printf("call unset\n");
 	while(i < argc)
 	{
