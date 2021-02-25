@@ -89,18 +89,61 @@ char next_ch(char *line)
 
 void check_token(char *line, t_ip *ip)
 {
+	char *line2;
+
 	if (ip->ch == '\"')
 	{
+		ip->ch = next_ch(line);
+		while (ip->ch != '\"')
+		{
+			ip->ch = next_ch(line);
+			if (ip->ch == '\0')
+			{
+				write(1, ">", 1);
+				get_next_line(0, &line2);
+				line = ft_strjoin(line, "\n");
+				line = ft_strjoin(line, line2);
+			}
+			else
+				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		}
 		ip->ch = next_ch(line);
 		ip->sy = DQU;
 	}
 	else if (ip->ch == '\'')
 	{
 		ip->ch = next_ch(line);
+		while (ip->ch != '\'')
+		{
+			ip->ch = next_ch(line);
+			if (ip->ch == '\0')
+			{
+				write(1, ">", 1);
+				get_next_line(0, &line2);
+				ft_strjoin(line, "\n");
+				ft_strjoin(line, line2);
+			}
+			else
+				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		}
+		ip->ch = next_ch(line);
 		ip->sy = SQU;
 	}
 	else if (ip->ch == '`')
 	{
+		ip->ch = next_ch(line);
+		while (ip->ch != '`')
+		{
+			ip->ch = next_ch(line);
+			if (ip->ch == '\0')
+			{
+				write(1, ">", 1);
+				get_next_line(0, &line2);
+				ft_strjoin(line, "\n");
+				ft_strjoin(line, line2);
+			}
+			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		}
 		ip->ch = next_ch(line);
 		ip->sy = BQU;
 	}
@@ -139,6 +182,8 @@ void check_token(char *line, t_ip *ip)
 
 void get_token(char *line, t_ip *ip)
 {
+	free(ip->id_string);
+	ip->id_string = ft_calloc(sizeof(char), 1);
 	while (ip->ch == ' ' || ip->ch == '\t')
 		ip->ch = next_ch(line);
 	if (ip->ch == '\0')
@@ -166,7 +211,6 @@ int main(int argc, char **argv)
 	t_ip ip;
 
 	ip.id_string = malloc(1);
-	ip.id_string[0] = '\0';
 	ip.ch = ' ';
 	get_token(argv[1], &ip);
 	//* To debug *//
