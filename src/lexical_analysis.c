@@ -1,26 +1,11 @@
 #include "../includes/minishell.h"
 
-//0	DQU: "
-//1	SQU: '
-//2	BQU: ` 
-//3	PIPE: |
-//4	GT: >
-//5	LT: <
-//6	DGT: >>
-//7	DOLLAR: $
-//8	SEMICOLON: ;
-//9	IDENTIFY: String
-//10 INPUT_END: End Of Input
 typedef enum u_token
 {
-	DQU,		// "
-	SQU,		// '
-	BQU,		// `
 	PIPE,		// |
 	GT,			// >
 	LT,			// < 
 	DGT,		// >>
-	DOLLAR,		// $
 	SEMICOLON,	// ;
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
@@ -30,14 +15,10 @@ typedef enum u_token
 
 //* To degug *//
 char *command_name[TOKEN_NUM] = {
-	"DQU",		// "
-	"SQU",		// '
-	"BQU",		// `
 	"PIPE",		// |
 	"GT",		// >
 	"LT",		// < 
 	"DGT",		// >>
-	"DOLLAR",	// $
 	"SEMICOLON",// ;
 	"IDENTIFY", // String
 	"INPUT_END"	// End Of Input
@@ -77,8 +58,7 @@ char *ft_charjoin(char *old, char c)
 }
 
 char next_ch(char *line)
-{
-	char		ch;
+{ char		ch;
 	static int index;
 
 	ch = line[index];
@@ -87,75 +67,74 @@ char next_ch(char *line)
 	return (ch);
 }
 
-void check_token(char *line, t_ip *ip)
+void check_token2_sub(char *line, t_ip *ip)
 {
 	char *line2;
 
+	if (ip->ch == '\0')
+	{
+		write(1, ">", 1);
+		get_next_line(0, &line2);
+		ft_strjoin(line, "\n");
+		ft_strjoin(line, line2);
+	}
+	else
+		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+	ip->ch = next_ch(line);
+}
+
+void check_token2(char *line, t_ip *ip)
+{
 	if (ip->ch == '\"')
 	{
 		ip->ch = next_ch(line);
 		while (ip->ch != '\"')
-		{
-			ip->ch = next_ch(line);
-			if (ip->ch == '\0')
-			{
-				write(1, ">", 1);
-				get_next_line(0, &line2);
-				line = ft_strjoin(line, "\n");
-				line = ft_strjoin(line, line2);
-			}
-			else
-				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
-		}
+			check_token2_sub(line, ip);
 		ip->ch = next_ch(line);
-		ip->sy = DQU;
 	}
 	else if (ip->ch == '\'')
 	{
 		ip->ch = next_ch(line);
 		while (ip->ch != '\'')
-		{
-			ip->ch = next_ch(line);
-			if (ip->ch == '\0')
-			{
-				write(1, ">", 1);
-				get_next_line(0, &line2);
-				ft_strjoin(line, "\n");
-				ft_strjoin(line, line2);
-			}
-			else
-				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
-		}
+			check_token2_sub(line, ip);
 		ip->ch = next_ch(line);
-		ip->sy = SQU;
 	}
 	else if (ip->ch == '`')
 	{
 		ip->ch = next_ch(line);
 		while (ip->ch != '`')
+			check_token2_sub(line, ip);
+		ip->ch = next_ch(line);
+	}
+	else if (ip->ch == '$')
+	{
+		ip->ch = next_ch(line);
+		if (ip->ch == '{')
 		{
 			ip->ch = next_ch(line);
-			if (ip->ch == '\0')
-			{
-				write(1, ">", 1);
-				get_next_line(0, &line2);
-				ft_strjoin(line, "\n");
-				ft_strjoin(line, line2);
-			}
-			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+			while (ip->ch != '}')
+				check_token2_sub(line, ip);
+			ip->ch = next_ch(line);
 		}
-		ip->ch = next_ch(line);
-		ip->sy = BQU;
 	}
-	else if (ip->ch == '|')
+	else if (ip->ch == '\\')
+	{
+		ip->ch = next_ch(line);
+		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		ip->ch = next_ch(line);
+	}
+}
+
+void check_token(char *line, t_ip *ip)
+{
+	if (ip->ch == '|')
 	{
 		ip->ch = next_ch(line);
 		ip->sy = PIPE;
 	}
 	else if (ip->ch == '>')
 	{
-		ip->ch = next_ch(line);
-		if (ip->ch == '>')
+		if ((ip->ch = next_ch(line)) == '>')
 		{
 			ip->ch = next_ch(line);
 			ip->sy = DGT;
@@ -167,11 +146,6 @@ void check_token(char *line, t_ip *ip)
 	{
 		ip->ch = next_ch(line);
 		ip->sy = LT;
-	}
-	else if (ip->ch == '$')
-	{
-		ip->ch = next_ch(line);
-		ip->sy = DOLLAR;
 	}
 	else if (ip->ch == ';')
 	{
@@ -190,12 +164,14 @@ void get_token(char *line, t_ip *ip)
 		ip->sy = INPUT_END;
 	else
 	{
-		if (ft_strchr("\"\'`|><$;", ip->ch) == NULL)
+		if (ft_strchr("|><;", ip->ch) == NULL)
 		{
-			while (ft_strchr("\"\'`|><$; \0", ip->ch) == NULL)
+			while (ft_strchr("|><;/ \0", ip->ch) == NULL)
 			{
 				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 				ip->ch = next_ch(line);
+				if (ft_strchr("\\\"\'", ip->ch) != NULL)
+					check_token2(line, ip);
 			}
 			ip->sy = IDENTIFY;
 		}
@@ -216,9 +192,8 @@ int main(int argc, char **argv)
 	//* To debug *//
 	while (ip.sy != INPUT_END)
 	{
-		printf("%s ", command_name[ip.sy]); 
+		printf("[%s]:%s\n", ip.id_string,command_name[ip.sy]); 
 		get_token(argv[1], &ip);
 	}
-	printf("\n");
 	return 0;
 }
