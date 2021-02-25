@@ -166,7 +166,7 @@ void get_token(char *line, t_ip *ip)
 	{
 		if (ft_strchr("|><;", ip->ch) == NULL)
 		{
-			while (ft_strchr("|><;/ \0", ip->ch) == NULL)
+			while (ft_strchr("|><; \0", ip->ch) == NULL)
 			{
 				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 				ip->ch = next_ch(line);
@@ -176,7 +176,10 @@ void get_token(char *line, t_ip *ip)
 			ip->sy = IDENTIFY;
 		}
 		else
+		{
+			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 			check_token(line, ip);
+		}
 	}
 	return ;
 }
