@@ -58,7 +58,8 @@ char *ft_charjoin(char *old, char c)
 }
 
 char next_ch(char *line)
-{ char		ch;
+{
+	char		ch;
 	static int index;
 
 	ch = line[index];
@@ -90,31 +91,39 @@ void check_token2(char *line, t_ip *ip)
 		ip->ch = next_ch(line);
 		while (ip->ch != '\"')
 			check_token2_sub(line, ip);
-		ip->ch = next_ch(line);
+		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 	}
 	else if (ip->ch == '\'')
 	{
 		ip->ch = next_ch(line);
 		while (ip->ch != '\'')
 			check_token2_sub(line, ip);
-		ip->ch = next_ch(line);
+		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 	}
 	else if (ip->ch == '`')
 	{
 		ip->ch = next_ch(line);
 		while (ip->ch != '`')
 			check_token2_sub(line, ip);
-		ip->ch = next_ch(line);
+		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 	}
 	else if (ip->ch == '$')
 	{
 		ip->ch = next_ch(line);
+		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 		if (ip->ch == '{')
 		{
 			ip->ch = next_ch(line);
 			while (ip->ch != '}')
 				check_token2_sub(line, ip);
+			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		}
+		if (ip->ch == '(')
+		{
 			ip->ch = next_ch(line);
+			while (ip->ch != ')')
+				check_token2_sub(line, ip);
+			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 		}
 	}
 	else if (ip->ch == '\\')
@@ -170,9 +179,9 @@ void get_token(char *line, t_ip *ip)
 			while (ft_strchr("|><; \0", ip->ch) == NULL)
 			{
 				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
-				ip->ch = next_ch(line);
-				if (ft_strchr("\\\"\'", ip->ch) != NULL)
+				if (ft_strchr("\\\"\'`$", ip->ch) != NULL)
 					check_token2(line, ip);
+				ip->ch = next_ch(line);
 			}
 			ip->sy = IDENTIFY;
 		}
@@ -182,7 +191,7 @@ void get_token(char *line, t_ip *ip)
 			check_token(line, ip);
 		}
 	}
-	return ;
+	return;
 }
 
 
@@ -190,6 +199,7 @@ int main(int argc, char **argv)
 {
 	t_ip ip;
 
+	printf("argv[1]:[%s]\n", argv[1]);
 	ip.id_string = malloc(1);
 	ip.ch = ' ';
 	get_token(argv[1], &ip);
