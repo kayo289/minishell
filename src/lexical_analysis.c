@@ -176,12 +176,9 @@ void get_token(char **line, t_ip *ip)
 			while (ft_strchr("|><; \0", ip->ch) == NULL)
 			{
 				if (ft_strchr("\"\'$\\", ip->ch) != NULL)
-				{
 					check_token2(line, ip);
-					next_ch(*line, ip);
-					break;
-				}
-				ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+				else
+					ip->id_string = ft_charjoin(ip->id_string, ip->ch);
 				next_ch(*line, ip);
 			}
 			ip->sy = IDENTIFY;
