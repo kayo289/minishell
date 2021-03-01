@@ -45,6 +45,6 @@ void get_token(char **line, t_ip *ip);
 void input(char **line, t_ip *ip);
 void command(char **line, t_ip *ip);
 bool equal(char *s, char *t);
-void error(char *s);
+void error(char *message, char *token);
 
 #endif
