@@ -1,36 +1,5 @@
 #include "../includes/minishell.h"
 
-typedef enum u_token
-{
-	PIPE,		// |
-	GT,			// >
-	LT,			// < 
-	DGT,		// >>
-	SEMICOLON,	// ;
-	IDENTIFY,	// String
-	INPUT_END,	// End Of Input
-
-	TOKEN_NUM	// don't care
-} t_token;
-
-//* To degug *//
-char *command_name[TOKEN_NUM] = {
-	"PIPE",		// |
-	"GT",		// >
-	"LT",		// < 
-	"DGT",		// >>
-	"SEMICOLON",// ;
-	"IDENTIFY", // String
-	"INPUT_END"	// End Of Input
-};
-
-typedef struct	s_ip
-{
-	t_token		sy;
-	char		ch;
-	char		*id_string;
-}				t_ip;
-
 bool equal(char *s, char *t)
 {
 	if (ft_strlen(s) != ft_strlen(t))
@@ -135,8 +104,7 @@ void check_token(char **line, t_ip *ip)
 		}
 		ip->sy = PIPE;
 	}
-	else if (ip->ch == '>')
-	{
+	else if (ip->ch == '>') {
 		if (next_ch(*line, ip) == '>')
 		{
 			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
@@ -191,12 +159,13 @@ void get_token(char **line, t_ip *ip)
 			check_token(line, ip);
 		}
 	}
-	//* To debug *//
+	/* To debug 
 	while (ip->sy != INPUT_END)
 	{
 		printf("[%s]:%s\n", ip->id_string,command_name[ip->sy]); 
 		get_token(line, ip);
 	}
+	*/
 	return;
 }
 
@@ -209,5 +178,6 @@ int main(int argc, char **argv)
 	ip.id_string = malloc(1);
 	ip.ch = ' ';
 	get_token(&argv[1], &ip);
+	input(&argv[1], &ip);
 	return 0;
 }
