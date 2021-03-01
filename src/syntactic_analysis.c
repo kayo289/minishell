@@ -1,8 +1,9 @@
 #include "../includes/minishell.h"
 
-void error(char *s)
+void error(char *message, char *token)
 {
-	ft_putendl_fd(s, 2);
+	ft_putstr_fd(message, 2);
+	ft_putendl_fd(token, 2);
 	exit(1);
 }
 
@@ -11,14 +12,13 @@ void input(char **line, t_ip *ip)
 	if (ip->sy == IDENTIFY)
 	{
 		command(line, ip);
-		if (ip->sy == GT || ip->sy == LT || ip->sy == DGT)
+		while (ip->sy == GT || ip->sy == LT || ip->sy == DGT)
 		{
 			get_token(line, ip);
 			if (ip->sy == IDENTIFY) 
 				get_token(line, ip);
 			else
-				error(ft_strjoin("syntax error near unexpected token ", 
-														ip->id_string));
+				error("syntax error near unexpected token ", ip->id_string);
 		}
 		if (ip->sy == PIPE)
 		{
@@ -26,22 +26,19 @@ void input(char **line, t_ip *ip)
 			if (ip->sy == IDENTIFY)
 				input(line, ip);
 			else
-				error(ft_strjoin("syntax error near unexpected token ", 
-														ip->id_string));
+				error("syntax error near unexpected token ", ip->id_string);
 		}
 		if (ip->sy == SEMICOLON)
 		{
 			get_token(line, ip);
 			if (ip->sy == IDENTIFY)
 				input(line, ip);
-			else
-				error(ft_strjoin("syntax error near unexpected token ", 
-														ip->id_string));
+			else if (ip->sy != INPUT_END)
+				error("syntax error near unexpected token ", ip->id_string);
 		}
 	}
-	else
-		error(ft_strjoin("syntax error near unexpected token ", 
-													ip->id_string));
+	else if (ip->sy != INPUT_END)
+		error("syntax error near unexpected token ", ip->id_string);
 }
 
 void command(char **line, t_ip *ip)
@@ -58,7 +55,7 @@ void command(char **line, t_ip *ip)
 		i++;
 	}
 	if (cmds[i] == NULL)
-		error(ft_strjoin(*line, ": command not found"));
+		error(*line, ": command not found");
 	else
 	{
 		while (ip->sy == IDENTIFY)
