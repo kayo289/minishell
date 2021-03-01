@@ -118,7 +118,9 @@ void check_token(char **line, t_ip *ip)
 
 	if (ip->ch == '|')
 	{
-		if (next_ch(*line, ip) == '\0')
+		while (next_ch(*line, ip) == ' ')
+			continue;
+		if (ip->ch == '\0')
 		{
 			write(1, ">", 1);
 			get_next_line(0, &line2);
@@ -175,7 +177,7 @@ void get_token(char **line, t_ip *ip)
 		{
 			while (ft_strchr("|><; \0", ip->ch) == NULL)
 			{
-				if (ft_strchr("\"\'$\\", ip->ch) != NULL)
+				if (ft_strchr("\"\'\\$", ip->ch) != NULL)
 					check_token2(line, ip);
 				else
 					ip->id_string = ft_charjoin(ip->id_string, ip->ch);
