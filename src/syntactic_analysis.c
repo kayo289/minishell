@@ -61,7 +61,6 @@ void command(char **line, t_ip *ip)
 		error(ft_strjoin(*line, ": command not found"));
 	else
 	{
-		get_token(line, ip);
 		while (ip->sy == IDENTIFY)
 			get_token(line, ip);
 	}
