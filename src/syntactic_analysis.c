@@ -60,8 +60,9 @@ void command(char **line, t_ip *ip)
 	if (cmds[i] == NULL)
 		error(ft_strjoin(*line, ": command not found"));
 	else
+	{
+		get_token(line, ip);
 		while (ip->sy == IDENTIFY)
-		{
 			get_token(line, ip);
-		}
+	}
 }
