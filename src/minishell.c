@@ -1,4 +1,5 @@
 #include "../includes/minishell.h"
+#include <signal.h>
 
 int argc = 0;
 void exe_cmd(int i, char ***args)
@@ -122,8 +123,24 @@ int minish_loop(void)
 	return (0);
 }
 
+void sig_handler(int p_signame)
+{
+	write(1, "\n>", 2);
+	set_signal(p_signame);
+	return;
+}
+
+void set_signal(int p_signame)
+{
+	if (signal(p_signame, sig_handler) == SIG_ERR){
+		printf("cannot catch signal");
+		exit(1);
+	}
+}
+
 int main()
 {
+	set_signal(SIGINT);
 	minish_loop();
 	return (0);
 }
