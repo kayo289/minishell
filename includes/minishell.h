@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include <stdbool.h>
 #include "get_next_line.h"
 
@@ -46,5 +47,7 @@ void input(char **line, t_ip *ip);
 void command(char **line, t_ip *ip);
 bool equal(char *s, char *t);
 void error(char *message, char *token);
+void set_signal(int p_signame);
+void sig_handler(int p_signame);
 
 #endif
