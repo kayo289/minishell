@@ -1,5 +1,8 @@
 #include "../includes/minishell.h"
 
+#define MESSAGE1 "syntax error near unexpected token " 
+#define MESSAGE2 ": command not found"
+
 // issue #64 search execute file form PATH
 char **fetch_path(char ****args)
 {
@@ -39,7 +42,7 @@ void input(char **line, t_ip *ip, char ****args)
 			if (ip->sy == IDENTIFY) 
 				get_token(line, ip);
 			else
-				error("syntax error near unexpected token ", ip->id_string);
+				error(MESSAGE1, ip->id_string);
 		}
 		if (ip->sy == PIPE)
 		{
@@ -47,7 +50,7 @@ void input(char **line, t_ip *ip, char ****args)
 			if (ip->sy == IDENTIFY)
 				input(line, ip, args);
 			else
-				error("syntax error near unexpected token ", ip->id_string);
+				error(MESSAGE1, ip->id_string);
 		}
 		if (ip->sy == SEMICOLON)
 		{
@@ -59,13 +62,13 @@ void input(char **line, t_ip *ip, char ****args)
 				input(line, ip, args);
 			}
 			else if (ip->sy != INPUT_END)
-				error("syntax error near unexpected token ", ip->id_string);
+				error(MESSAGE1, ip->id_string);
 		}
 		else if (ip->sy == INPUT_END)
 			exe_cmd(0, *args, fetch_path(args));
 	}
 	else if (ip->sy != INPUT_END)
-		error("syntax error near unexpected token ", ip->id_string);
+		error(MESSAGE1, ip->id_string);
 }
 
 void command(char **line, t_ip *ip, char ****args)
@@ -83,7 +86,7 @@ void command(char **line, t_ip *ip, char ****args)
 		i++;
 	}
 	if (cmds[i] == NULL)
-		error(*line, ": command not found");
+		error(*line, MESSAGE2);
 	else
 	{
 		arg = (char**)ft_calloc2(sizeof(char*), 1);
