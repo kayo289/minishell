@@ -129,7 +129,7 @@ void check_token(char **line, t_ip *ip)
 void get_token(char **line, t_ip *ip)
 {
 	/* init */
-	free(ip->id_string);
+	//free(ip->id_string);
 	ip->id_string = ft_calloc(sizeof(char), 1);
 
 	/* skip blank */
@@ -170,14 +170,15 @@ void get_token(char **line, t_ip *ip)
 }
 
 
-int main(int argc, char **argv)
+void parse_line(char *line)
 {
 	t_ip ip;
+	char ***args;
 
-	printf("argv[1]:[%s]\n", argv[1]);
+	//printf("line:[%s]\n", line);
 	ip.id_string = malloc(1);
 	ip.ch = ' ';
-	get_token(&argv[1], &ip);
-	input(&argv[1], &ip);
-	return 0;
+	get_token(&line, &ip);
+	args = (char ***)ft_calloc3(sizeof(char **), 1);
+	input(&line, &ip, &args);
 }
