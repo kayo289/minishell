@@ -79,6 +79,7 @@ void command(char **line, t_ip *ip, char ****args)
 	int i;
 
 	i = 0;
+	arg = (char**)ft_calloc2(sizeof(char*), 1);
 	while (cmds[i] != NULL)
 	{
 		if (equal((char*)cmds[i], ip->id_string))
@@ -89,7 +90,6 @@ void command(char **line, t_ip *ip, char ****args)
 		error(*line, MESSAGE2);
 	else
 	{
-		arg = (char**)ft_calloc2(sizeof(char*), 1);
 		while (ip->sy == IDENTIFY)
 		{
 			arg = ft_realloc2(arg, ip->id_string);
