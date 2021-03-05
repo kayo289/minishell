@@ -37,7 +37,11 @@ unset: unset.c
 	$(CC) $(CFLAGS) -o $@ $<
 export: export.c
 	$(CC) $(CFLAGS) -o $@ $<
-minishell: minishell.c get_next_line.c libft/libft.a
+minishell:	minishell.c \
+			get_next_line.c \
+			lexical_analysis.c \
+			syntactic_analysis.c \
+			libft/libft.a
 	$(CC) $(CFLAGS) -o $@ -L./libft $^ -lft
 libft/libft.a:
 	$(MAKE) -C ./libft
