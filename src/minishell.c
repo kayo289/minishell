@@ -7,7 +7,6 @@ void exe_cmd(int i, char ***args, char **path)
 
 	if (args[i + 1] == NULL)
 	{
-		printf("args[%d]:%s\n", i, args[i][0]);
 		execve(path[i], args[i], NULL);
 		return;
 	}
@@ -29,7 +28,6 @@ void exe_cmd(int i, char ***args, char **path)
 		dup2(pp[0], 0);
 		close(pp[0]);
 
-		printf("args[%d]:%s\n", i, args[i][0]);
 		execve(path[i], args[i], NULL);
 	}
 }
@@ -42,7 +40,7 @@ int minish_loop(void)
 	run = 1;
 	while (run != 0)
 	{
-		write(1, ">", 1);
+		write(1, "minishell$ ", 11);
 		run = get_next_line(0, &line);
 		if (fork() == 0)
 			parse_line(line);
@@ -55,7 +53,7 @@ int minish_loop(void)
 
 void sig_handler(int p_signame)
 {
-	write(1, "\n>", 2);
+	write(1, "\nminishell$ ", 12);
 	set_signal(p_signame);
 	return;
 }
