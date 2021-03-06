@@ -4,9 +4,74 @@
 #define MESSAGE2 ": command not found"
 
 // issue #64 search execute file form PATH
+
+char *get_env_value(char *key)
+{
+	extern char **environ;
+	char **str;
+	char  *value;
+	int	i;
+	int j;
+
+	value = (char *)ft_calloc(sizeof(char), 1);
+	i = 0;
+	while (environ[i] != NULL) 
+	{
+		str = ft_split(environ[i], '=');
+		if (equal(str[0], key) == true)
+		{
+			j = 1;
+			while (str[j] != NULL)
+			{
+				value = ft_strjoin(value, str[j]);
+				j++;
+			}
+		}
+		i++;
+	}
+	return (value);
+}
+
+bool find_command(char *cmd, char ***paths)
+{
+	int i;
+	char *value;
+	char **dir_names;
+	DIR *dir;
+	struct dirent *dp;
+	struct stat sb;
+	char *cmd_path;
+
+	value = get_env_value("PATH");
+	dir_names = ft_split(value, ':');
+	i = 0;
+	while (dir_names[i] != NULL)
+	{
+		if ((dir = opendir(dir_names[i])) == NULL)
+			continue;
+		while ((dp = readdir(dir)) != NULL)
+		{
+			if (lstat(dp->d_name, &sb) > 0)
+				continue;
+			if (S_ISREG(sb.st_mode) || S_ISLNK(sb.st_mode))
+			{
+				if (equal(cmd, dp->d_name))
+				{
+					cmd_path = ft_strjoin("/", dp->d_name);
+					cmd_path = ft_strjoin(dir_names[i], cmd_path);
+					*paths = ft_realloc2(*paths, cmd_path); 
+					return (true);
+				}
+			}
+		}
+		closedir(dir);
+		i++;
+	}
+	return (false);
+}
+
 char **fetch_path(char ****args)
 {
-	char **path;
 	// fetch absolute path from PATH.
 	//ex)
 	// cat	-> /bin/cat
@@ -14,14 +79,19 @@ char **fetch_path(char ****args)
 	// grep -> /bin/cat
 	// return ({/bin/grep, /usr/bin/head, /bin/cat, NULL});
 
-	// === dummy ===
+	char **paths;
 	int i;
-	for (i = 0; (*args)[i] != NULL; i++)
-	path = (char **)malloc (sizeof(char *) * i);
-	for (i = 0; (*args)[i] != NULL; i++)
-		path[i] = ft_strdup((*args)[i][0]);
-	// === dummy ===
-	return (path);
+
+	//search_current_dir();
+	paths = (char **)ft_calloc2(sizeof(char *), 1);
+	i = 0;
+	while ((*args)[i] != NULL)
+	{
+		if (!find_command((*args)[i][0], &paths))
+			error((*args)[i][0], MESSAGE2);
+		i++;
+	}
+	return (paths);
 }
 
 void error(char *message, char *token)
@@ -73,28 +143,13 @@ void input(char **line, t_ip *ip, char ****args)
 
 void command(char **line, t_ip *ip, char ****args)
 {
-	const char *cmds[] =
-		{"cd", "echo", "pwd", "env", "export", "unset", "exit", NULL};
 	char **arg;
-	int i;
 
-	i = 0;
 	arg = (char**)ft_calloc2(sizeof(char*), 1);
-	while (cmds[i] != NULL)
+	while (ip->sy == IDENTIFY)
 	{
-		if (equal((char*)cmds[i], ip->id_string))
-			break;
-		i++;
-	}
-	if (cmds[i] == NULL)
-		error(*line, MESSAGE2);
-	else
-	{
-		while (ip->sy == IDENTIFY)
-		{
-			arg = ft_realloc2(arg, ip->id_string);
-			get_token(line, ip);
-		}
+		arg = ft_realloc2(arg, ip->id_string);
+		get_token(line, ip);
 	}
 	*args = ft_realloc3(*args, arg);
 	return;
