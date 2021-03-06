@@ -4,7 +4,6 @@
 #define MESSAGE2 ": command not found"
 
 // issue #64 search execute file form PATH
-
 char *get_env_value(char *key)
 {
 	extern char **environ;
@@ -32,20 +31,16 @@ char *get_env_value(char *key)
 	return (value);
 }
 
-bool find_command(char *cmd, char ***paths)
+bool find_command(char *cmd, char ***cmd_paths, char **dir_names)
 {
-	int i;
-	char *value;
-	char **dir_names;
-	DIR *dir;
-	struct dirent *dp;
-	struct stat sb;
-	char *cmd_path;
+	int				i;
+	DIR				*dir;
+	struct dirent	*dp;
+	struct stat		sb;
+	char			*cmd_path;
 
-	value = get_env_value("PATH");
-	dir_names = ft_split(value, ':');
-	i = 0;
-	while (dir_names[i] != NULL)
+	i = -1;
+	while (dir_names[++i] != NULL)
 	{
 		if ((dir = opendir(dir_names[i])) == NULL)
 			continue;
@@ -59,13 +54,12 @@ bool find_command(char *cmd, char ***paths)
 				{
 					cmd_path = ft_strjoin("/", dp->d_name);
 					cmd_path = ft_strjoin(dir_names[i], cmd_path);
-					*paths = ft_realloc2(*paths, cmd_path); 
+					*cmd_paths = ft_realloc2(*cmd_paths, cmd_path); 
 					return (true);
 				}
 			}
 		}
 		closedir(dir);
-		i++;
 	}
 	return (false);
 }
@@ -79,19 +73,22 @@ char **fetch_path(char ****args)
 	// grep -> /bin/cat
 	// return ({/bin/grep, /usr/bin/head, /bin/cat, NULL});
 
-	char **paths;
-	int i;
+	char	*env_value;
+	char	**dir_names;
+	char	**cmd_paths;
+	int 	i;
 
-	//search_current_dir();
-	paths = (char **)ft_calloc2(sizeof(char *), 1);
+	env_value = get_env_value("PATH");
+	dir_names = ft_split(env_value, ':');
+	cmd_paths = (char **)ft_calloc2(sizeof(char *), 1);
 	i = 0;
 	while ((*args)[i] != NULL)
 	{
-		if (!find_command((*args)[i][0], &paths))
+		if (!find_command((*args)[i][0], &cmd_paths, dir_names))
 			error((*args)[i][0], MESSAGE2);
 		i++;
 	}
-	return (paths);
+	return (cmd_paths);
 }
 
 void error(char *message, char *token)
