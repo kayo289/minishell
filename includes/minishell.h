@@ -49,8 +49,6 @@ void input(char **line, t_ip *ip, char ****args);
 void command(char **line, t_ip *ip, char ****args);
 bool equal(char *s, char *t);
 void error(char *message, char *token);
-void set_signal(int p_signame);
-void sig_handler(int p_signame);
 char  **ft_realloc2(char **old, char *add);
 char  ***ft_realloc3(char ***old, char **add);
 char  **ft_calloc2(size_t nmemb, size_t size);
