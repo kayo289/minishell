@@ -6,6 +6,9 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
 #include <signal.h>
 #include <stdbool.h>
 #include "get_next_line.h"
