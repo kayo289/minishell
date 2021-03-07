@@ -1,8 +1,11 @@
 #include "../includes/minishell.h"
 
+void sigint(int p_signame);
+void set_signal(int p_signame);
+
 void exe_cmd(int i, char ***args, char **path)
 {
-	int pp[2];
+	int pp[2]; 
 	pid_t pid;
 
 	if (args[i + 1] == NULL)
@@ -35,40 +38,45 @@ void exe_cmd(int i, char ***args, char **path)
 int minish_loop(void)
 {
 	int run;
+	int status;
 	char *line;
+	pid_t pid;
 
 	run = 1;
 	while (run != 0)
 	{
+		signal(SIGINT, SIG_IGN);
 		write(1, "minishell$ ", 11);
-		run = get_next_line(0, &line);
-		if (fork() == 0)
+		if ((pid = fork()) == 0)
+		{
+			set_signal(SIGINT);
+			run = get_next_line(0, &line);
 			parse_line(line);
+			free(line);
+		}
 		else 
-			wait(NULL);
-		free(line);
+			waitpid(pid, &status, 0);
 	}
 	return (0);
-}
-
-void sig_handler(int p_signame)
-{
-	write(1, "\nminishell$ ", 12);
-	set_signal(p_signame);
-	return;
-}
+} 
 
 void set_signal(int p_signame)
 {
-	if (signal(p_signame, sig_handler) == SIG_ERR){
-		printf("cannot catch signal");
+	if (signal(p_signame, sigint) == SIG_ERR)
+	{
+		ft_putstr_fd(strerror(errno), 2);
 		exit(1);
 	}
 }
 
+void sigint(int p_signame)
+{
+	write(1, "\n", 1);
+	exit(128 + p_signame);
+}
+
 int main()
 {
-	set_signal(SIGINT);
 	minish_loop();
 	return (0);
 }
