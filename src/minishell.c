@@ -43,12 +43,12 @@ void minish_loop(void)
 	pid_t pid;
 
 	run = 1;
-	while (run != 0)
+	while (run > 0)
 	{
 		write(1, "minishell$ ", 11);
 		set_signal(SIGINT);
 		if ((run = get_next_line(0, &line)) == 0)
-			write(1, "exit\n", 5);
+			break;
 		signal(SIGINT, SIG_IGN);
 		if ((pid = fork()) == 0)
 			parse_line(line);
@@ -56,6 +56,9 @@ void minish_loop(void)
 			waitpid(pid, &status, 0);
 		free(line);
 	}
+	write(1, "exit\n", 5);
+	free(line);
+	exit(0);
 } 
 
 static void sigint(int p_signame)
