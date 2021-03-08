@@ -51,10 +51,7 @@ void minish_loop(void)
 		if ((pid = fork()) == 0)
 			parse_line(line);
 		else 
-		{
-			printf("minishell pid:%d\n", pid);
 			waitpid(pid, &status, 0);
-		}
 		free(line);
 		if (!WIFEXITED(status))
 			exit(1);
