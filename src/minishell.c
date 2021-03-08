@@ -37,24 +37,27 @@ void exe_cmd(int i, char ***args, char **path)
 
 void minish_loop(void)
 {
-	int run;
 	int status;
 	char *line;
 	pid_t pid;
 
-	run = 1;
-	while (run > 0)
+	while (1)
 	{
 		write(1, "minishell$ ", 11);
 		set_signal(SIGINT);
-		if ((run = get_next_line(0, &line)) == 0)
+		if (get_next_line(0, &line) == 0)
 			break;
 		signal(SIGINT, SIG_IGN);
 		if ((pid = fork()) == 0)
 			parse_line(line);
 		else 
+		{
+			printf("minishell pid:%d\n", pid);
 			waitpid(pid, &status, 0);
+		}
 		free(line);
+		if (!WIFEXITED(status))
+			exit(1);
 	}
 	write(1, "exit\n", 5);
 	free(line);

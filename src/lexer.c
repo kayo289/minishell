@@ -1,5 +1,15 @@
 #include "../includes/minishell.h"
 
+#define MESSAGE1 "minishell: unexpected EOF while looking for matching "
+#define MESSAGE2 "minishell: syntax error: unexpected end of file"
+
+void error2(char *message, char token)
+{
+	ft_putstr_fd(message, 2);
+	ft_putchar_fd(token, 2);
+	ft_putchar_fd('\n', 2);
+}
+
 bool equal(char *s, char *t)
 {
 	if (ft_strlen(s) != ft_strlen(t))
@@ -42,8 +52,13 @@ void check_token2_sub(char **line, t_ip *ip, char find_ch)
 	{
 		if (ip->ch == '\0')
 		{
-			write(1, ">", 1);
-			get_next_line(0, &line2);
+			write(1, "> ", 2);
+			if (get_next_line(0, &line2) == 0)
+			{
+				error2(MESSAGE1, find_ch);
+				error2(MESSAGE2, '\0');
+				exit(1);
+			}
 			*line = ft_strjoin(*line, "\n");
 			*line = ft_strjoin(*line, line2);
 		}
@@ -89,13 +104,21 @@ void check_token(char **line, t_ip *ip)
 			continue;
 		if (ip->ch == '\0')
 		{
-			write(1, ">", 1);
-			get_next_line(0, &line2);
+			write(1, "> ", 2);
+			if (get_next_line(0, &line2) == 0)
+			{
+				error2(MESSAGE2, '\0');
+				exit(1);
+			}
 			while (*line2 == '\0')
 			{
-				write(1, ">", 1);
+				write(1, "> ", 2);
 				free(line2);
-				get_next_line(0, &line2);
+				if (get_next_line(0, &line2) == 0)
+				{
+					error2(MESSAGE2, '\0');
+					exit(1);
+				}
 			}
 			*line = ft_strjoin(*line, line2);
 			next_ch(*line, ip);
@@ -195,4 +218,5 @@ void parse_line(char *line)
 	get_token(&line, &ip);
 	args = (char ***)ft_calloc3(sizeof(char **), 1);
 	input(&line, &ip, &args);
+	exit(0);
 }

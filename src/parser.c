@@ -107,6 +107,7 @@ void go_exe_cmd(char ****args)
 		exe_cmd(0, *args, fetch_path(args));
 	else
 	{
+		printf("go_exe_cmd pid:%d\n", pid);
 		waitpid(pid, &status, 0);
 		free(*args);
 	}
