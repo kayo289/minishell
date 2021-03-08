@@ -167,12 +167,27 @@ void get_token(char **line, t_ip *ip)
 	return;
 }
 
+static void sigint(int p_signame)
+{
+	write(1, "\b\b  \n", 5);
+	exit(128 + p_signame);
+}
+
+static void set_signal(int p_signame)
+{
+	if (signal(p_signame, sigint) == SIG_ERR)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit(1);
+	}
+}
 
 void parse_line(char *line)
 {
 	t_ip ip;
 	char ***args;
 
+	set_signal(SIGINT);
 	//printf("line:[%s]\n", line);
 	ip.id_string = malloc(1);
 	ip.ch = ' ';
