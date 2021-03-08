@@ -98,6 +98,20 @@ void error(char *message, char *token)
 	exit(1);
 }
 
+void go_exe_cmd(char ****args)
+{
+	pid_t pid;
+	int status;
+
+	if ((pid = fork()) == 0)
+		exe_cmd(0, *args, fetch_path(args));
+	else
+	{
+		waitpid(pid, &status, 0);
+		free(*args);
+	}
+}
+
 void input(char **line, t_ip *ip, char ****args)
 {
 	if (ip->sy == IDENTIFY)
@@ -121,18 +135,18 @@ void input(char **line, t_ip *ip, char ****args)
 		}
 		if (ip->sy == SEMICOLON)
 		{
+			go_exe_cmd(args);
 			get_token(line, ip);
 			if (ip->sy == IDENTIFY)
 			{
-				exe_cmd(0, *args, fetch_path(args));
-				free(*args);
+				*args = ft_calloc3(sizeof(char **), 1);
 				input(line, ip, args);
 			}
 			else if (ip->sy != INPUT_END)
 				error(MESSAGE1, ip->id_string);
 		}
 		else if (ip->sy == INPUT_END)
-			exe_cmd(0, *args, fetch_path(args));
+			go_exe_cmd(args);
 	}
 	else if (ip->sy != INPUT_END)
 		error(MESSAGE1, ip->id_string);
