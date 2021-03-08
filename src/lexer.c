@@ -28,11 +28,9 @@ char *ft_charjoin(char *old, char c)
 
 char next_ch(char *line, t_ip *ip)
 {
-	static int index;
-
-	ip->ch = line[index];
-	if (line[index] != '\0')
-		index++;
+	ip->ch = line[ip->index];
+	if (line[ip->index] != '\0')
+		ip->index++;
 	return (ip->ch);
 }
 
@@ -178,6 +176,7 @@ void parse_line(char *line)
 	//printf("line:[%s]\n", line);
 	ip.id_string = malloc(1);
 	ip.ch = ' ';
+	ip.index = 0;
 	get_token(&line, &ip);
 	args = (char ***)ft_calloc3(sizeof(char **), 1);
 	input(&line, &ip, &args);
