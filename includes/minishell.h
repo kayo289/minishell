@@ -43,6 +43,7 @@ typedef struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
+	int			index;
 }				t_ip;
 
 void exe_cmd(int i, char ***args, char **path);
