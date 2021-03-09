@@ -1,9 +1,22 @@
 #include "../includes/minishell.h"
 
-static void sigint(int p_signame);
-static void set_signal(int p_signame);
+static void sigint(int p_signame)
+{
+	p_signame++;
+	write(1, "\b\b  ", 4);
+	write(1, "\nminishell$ ", 12);
+}
 
-void exe_cmd(int i, char ***args, char **path)
+static void set_signal(int p_signame)
+{
+	if (signal(p_signame, sigint) == SIG_ERR)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit(1);
+	}
+}
+
+void exec_cmd(int i, char ***args, char **path)
 {
 	int pp[2]; 
 	pid_t pid;
@@ -22,7 +35,7 @@ void exe_cmd(int i, char ***args, char **path)
 		close(pp[0]);
 		close(pp[1]);
 
-		exe_cmd(i + 1, args, path);
+		exec_cmd(i + 1, args, path);
 	}
 	else if (pid > 0)
 	{
@@ -61,23 +74,7 @@ void minish_loop(void)
 	exit(0);
 } 
 
-static void sigint(int p_signame)
-{
-	p_signame++;
-	write(1, "\b\b  ", 4);
-	write(1, "\nminishell$ ", 12);
-}
-
-static void set_signal(int p_signame)
-{
-	if (signal(p_signame, sigint) == SIG_ERR)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-}
-
-int main()
+int main(void)
 {
 	minish_loop();
 	return (0);

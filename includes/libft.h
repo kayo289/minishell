@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/01/11 21:50:27 by kikuchika        ###   ########.fr       */
+/*   Updated: 2021/03/09 14:29:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,13 @@ int					ft_isprint(int c);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 void				*ft_calloc(size_t count, size_t size);
+char 				**ft_calloc2(size_t nmemb, size_t size);
+char 				***ft_calloc3(size_t nmemb, size_t size);
+char 				**ft_realloc2(char **old, char *add);
+char 				***ft_realloc3(char ***old, char **add);
 char				*ft_strdup(const char *src);
 char				*ft_substr(char const *s, size_t start, size_t len);
+char				*ft_charjoin(char *old, char c);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(const char *s, char c);

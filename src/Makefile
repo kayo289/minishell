@@ -1,17 +1,29 @@
-SRCS = \
-	cd.c \
-	env.c \
-	pwd.c \
-	echo.c \
-	exit.c \
-	unset.c \
-	export.c \
-	minishell.c
-NAME=$(SRCS:%.c=%)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
+NAME = \
+	cd \
+	pwd \
+	env \
+	echo \
+	exit \
+	unset \
+	export \
+	minishell
+MINISHELL_SRC = \
+			lexer/lexer.c \
+			lexer/parameter.c \
+			lexer/quoting.c \
+			lexer/metacharacter.c \
+			parser/parser.c \
+			parser/fetch_path.c \
+			get_next_line_for_minishell.c \
+			ft_getenv.c \
+			error.c \
+			equal.c \
+			minishell.c
+MINISHELL_OBJ=$(MINISHELL_SRC:.c=.o)
 
-all: $(NAME)
+all: libft/libft.a $(NAME)
 
 clean:
 	$(MAKE) clean -C ./libft
@@ -21,8 +33,10 @@ fclean: clean
 	$(MAKE) fclean -C ./libft
 	rm -rf $(NAME)
 
-re:fclean all
+re:	fclean all
 
+minishell: $(MINISHELL_OBJ)
+	$(CC) $(CFLAGS) -o $@ -L./libft $^ -lft
 cd: cd.c
 	$(CC) $(CFLAGS) -o $@ $<
 pwd: pwd.c
@@ -37,12 +51,6 @@ unset: unset.c
 	$(CC) $(CFLAGS) -o $@ $<
 export: export.c
 	$(CC) $(CFLAGS) -o $@ $<
-minishell:	minishell.c \
-			get_next_line.c \
-			lexer.c \
-			parser.c \
-			libft/libft.a
-	$(CC) $(CFLAGS) -o $@ -L./libft $^ -lft
 libft/libft.a:
 	$(MAKE) -C ./libft
 
