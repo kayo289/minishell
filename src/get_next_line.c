@@ -65,21 +65,20 @@ static int get_line(int fd, char *buf, char **line)
 		ft_strmove(buf, p + 1);
 		return (SUCESS);
 	}
-	if ((len = read(fd, buf, 1000)) < 0)
+	if ((len = read(fd, buf, BUFFER_SIZE)) < 0)
 		return (ERROR);
 	buf[len] = '\0';
-	if (len == 0)
-		return ((**line == '\0') ? END : SUCESS);
+	if (len == 0 && **line == '\0')
+		return (END);
 	return (get_line(fd, buf, line));
-	// return (len == 0 ? END : get_line(buf, line,fd));
 }
 
 int get_next_line(int fd, char **line)
 {
 	static char buf[1024];
 
-	if ((*line = malloc(1)) == NULL || fd < 0 || fd == 1 || fd == 2)
+	*line = ft_calloc(sizeof(char *), 1);
+	if (*line == NULL || fd < 0 || fd == 1 || fd == 2)
 		return (ERROR);
-	*line[0] = '\0';
 	return (get_line(fd, buf, line));
 }
