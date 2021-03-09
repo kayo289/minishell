@@ -1,8 +1,5 @@
 #include "../../includes/minishell.h"
 
-#define MESSAGE1 "syntax error near unexpected token " 
-#define MESSAGE2 ": command not found"
-
 static bool find_command(char *cmd, char ***cmd_paths, char **dir_names)
 {
 	int				i;
@@ -22,7 +19,7 @@ static bool find_command(char *cmd, char ***cmd_paths, char **dir_names)
 				continue;
 			if (S_ISREG(sb.st_mode) || S_ISLNK(sb.st_mode))
 			{
-				if (equal(cmd, dp->d_name))
+				if (ft_strcmp(cmd, dp->d_name) == 0)
 				{
 					cmd_path = ft_strjoin("/", dp->d_name);
 					cmd_path = ft_strjoin(dir_names[i], cmd_path);
@@ -49,8 +46,7 @@ char **fetch_path(char ****args)
 	i = 0;
 	while ((*args)[i] != NULL)
 	{
-		if (!find_command((*args)[i][0], &cmd_paths, dir_names))
-			error((*args)[i][0], MESSAGE2);
+		find_command((*args)[i][0], &cmd_paths, dir_names);
 		i++;
 	}
 	return (cmd_paths);

@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/libft.h"
 
 char *ft_getenv(char *key)
 {
@@ -13,7 +13,7 @@ char *ft_getenv(char *key)
 	while (environ[i] != NULL) 
 	{
 		str = ft_split(environ[i], '=');
-		if (equal(str[0], key) == true)
+		if (ft_strcmp(str[0], key) == 0)
 		{
 			j = 1;
 			while (str[j] != NULL)

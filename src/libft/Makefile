@@ -14,6 +14,7 @@ SRCS = ft_memset.c\
 		ft_strchr.c\
 		ft_strrchr.c\
 		ft_strnstr.c\
+		ft_strcmp.c\
 		ft_strncmp.c\
 		ft_atoi.c\
 		ft_isalpha.c\
@@ -48,7 +49,8 @@ SRCS = ft_memset.c\
 		ft_lstdelone.c\
 		ft_lstclear.c\
 		ft_lstiter.c\
-		ft_lstmap.c
+		ft_lstmap.c\
+		ft_getenv.c\
 
 OBJS = ${SRCS:.c=.o}
 

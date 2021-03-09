@@ -64,6 +64,5 @@ void error2(char *message, char token);
 
 // share
 char *ft_getenv(char *key);
-bool equal(char *s, char *t);
 
 #endif

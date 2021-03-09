@@ -1,5 +1,7 @@
 #include "../includes/minishell.h"
 
+#define MESSAGE ": command not found"
+
 static void sigint(int p_signame)
 {
 	p_signame++;
@@ -24,7 +26,7 @@ void exec_cmd(int i, char ***args, char **path)
 	if (args[i + 1] == NULL)
 	{
 		execve(path[i], args[i], NULL);
-		return;
+		error(args[i][0], MESSAGE);
 	}
 	pipe(pp);
 	pid = fork();
@@ -45,6 +47,7 @@ void exec_cmd(int i, char ***args, char **path)
 		close(pp[0]);
 
 		execve(path[i], args[i], NULL);
+		error(args[i][0], MESSAGE);
 	}
 }
 

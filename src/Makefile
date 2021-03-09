@@ -17,9 +17,7 @@ MINISHELL_SRC = \
 			parser/parser.c \
 			parser/fetch_path.c \
 			get_next_line_for_minishell.c \
-			ft_getenv.c \
 			error.c \
-			equal.c \
 			minishell.c
 MINISHELL_OBJ=$(MINISHELL_SRC:.c=.o)
 
@@ -28,6 +26,7 @@ all: libft/libft.a $(NAME)
 clean:
 	$(MAKE) clean -C ./libft
 	rm -rf *.o
+	rm -rf */*.o
 
 fclean: clean
 	$(MAKE) fclean -C ./libft
