@@ -56,6 +56,6 @@ char  **ft_realloc2(char **old, char *add);
 char  ***ft_realloc3(char ***old, char **add);
 char  **ft_calloc2(size_t nmemb, size_t size);
 char  ***ft_calloc3(size_t nmemb, size_t size);
-
+char *get_env_value(char *key);
 
 #endif

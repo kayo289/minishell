@@ -34,10 +34,11 @@ int main(int argc, char **argv)
 	char *path;
 	char *old_path;
 
-	printf("call cd\n");
 	old_path = getcwd(NULL, 0);
-	if (argv[1] == NULL)
+	if (argc == 1)
 		path = get_env_value("HOME");
+	else
+		path = argv[2];
 	if (chdir(path) != 0)
 		ft_putstr_fd("cd: no such file or directory", 2);
 	else
