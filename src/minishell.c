@@ -5,7 +5,7 @@ void set_signal(int p_signame);
 
 void exe_cmd(int i, char ***args, char **path)
 {
-	int pp[2]; 
+	int pp[2];
 	pid_t pid;
 
 	if (args[i + 1] == NULL)
@@ -54,11 +54,11 @@ int minish_loop(void)
 			parse_line(line);
 			free(line);
 		}
-		else 
+		else
 			waitpid(pid, &status, 0);
 	}
 	return (0);
-} 
+}
 
 void set_signal(int p_signame)
 {
@@ -75,8 +75,8 @@ void sigint(int p_signame)
 	exit(128 + p_signame);
 }
 
-int main()
-{
-	minish_loop();
-	return (0);
-}
+// int main()
+// {
+// 	minish_loop();
+// 	return (0);
+// }
