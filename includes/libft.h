@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/03/09 18:19:48 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/10 09:47:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char 				**ft_realloc2(char **old, char *add);
 char 				***ft_realloc3(char ***old, char **add);
 char				*ft_strdup(const char *src);
 char				*ft_substr(char const *s, size_t start, size_t len);
-char				*ft_charjoin(char *old, char c);
+void				ft_charjoin(char **old, char c);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(const char *s, char c);

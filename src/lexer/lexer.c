@@ -42,14 +42,14 @@ void get_token(char **line, t_ip *ip)
 				else if (ft_strchr("$", ip->ch) != NULL)
 					parameter(line, ip);
 				else
-					ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+					ft_charjoin(&ip->id_string, ip->ch);
 				next_ch(*line, ip);
 			}
 			ip->sy = IDENTIFY;
 		}
 		else
 		{
-			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+			ft_charjoin(&ip->id_string, ip->ch);
 			metacharacter(line, ip);
 		}
 	}

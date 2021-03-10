@@ -22,7 +22,7 @@ static void input_waiting(char **line, t_ip *ip, char find_ch)
 			*line = ft_strjoin(*line, line2);
 		}
 		else
-			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+			ft_charjoin(&ip->id_string, ip->ch);
 	}
 }
 
@@ -30,16 +30,16 @@ void parameter(char **line, t_ip *ip)
 {
 	if (ip->ch == '$')
 	{
-		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		ft_charjoin(&ip->id_string, ip->ch);
 		next_ch(*line, ip);
 		if (ip->ch == '{' || ip->ch == '(')
 		{
-			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+			ft_charjoin(&ip->id_string, ip->ch);
 			if (ip->ch == '{')
 				input_waiting(line, ip, '}');
 			else if (ip->ch == '(')
 				input_waiting(line, ip, ')');
-			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+			ft_charjoin(&ip->id_string, ip->ch);
 		}
 	}
 }
