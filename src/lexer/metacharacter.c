@@ -37,7 +37,7 @@ static void meta_gt(char **line, t_ip *ip)
 {
 	if (next_ch(*line, ip) == '>')
 	{
-		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		ft_charjoin(&ip->id_string, ip->ch);
 		next_ch(*line, ip);
 		ip->sy = DGT;
 	}

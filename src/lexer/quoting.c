@@ -22,7 +22,7 @@ static void input_waiting(char **line, t_ip *ip, char find_ch)
 			*line = ft_strjoin(*line, line2);
 		}
 		else
-			ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+			ft_charjoin(&ip->id_string, ip->ch);
 	}
 }
 
@@ -35,7 +35,7 @@ void quoting(char **line, t_ip *ip)
 	else if (ip->ch == '\\')
 	{
 		next_ch(*line, ip);
-		ip->id_string = ft_charjoin(ip->id_string, ip->ch);
+		ft_charjoin(&ip->id_string, ip->ch);
 	}
 }
 
