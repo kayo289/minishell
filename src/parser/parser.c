@@ -13,7 +13,7 @@ static void go_exec_cmd(char ****args)
 	else
 	{
 		waitpid(pid, &status, 0);
-		free(*args);
+		//free(*args);
 	}
 }
 
