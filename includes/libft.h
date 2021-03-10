@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/01/11 21:50:27 by kikuchika        ###   ########.fr       */
+/*   Updated: 2021/03/09 18:19:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ size_t				ft_strlcat(char *dest, const char *src, size_t size);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *str, const char *to_find, size_t n);
+int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_substr(char const *s, size_t start, size_t len);
 int					ft_atoi(const char *str);
@@ -47,8 +48,13 @@ int					ft_isprint(int c);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 void				*ft_calloc(size_t count, size_t size);
+char 				**ft_calloc2(size_t nmemb, size_t size);
+char 				***ft_calloc3(size_t nmemb, size_t size);
+char 				**ft_realloc2(char **old, char *add);
+char 				***ft_realloc3(char ***old, char **add);
 char				*ft_strdup(const char *src);
 char				*ft_substr(char const *s, size_t start, size_t len);
+char				*ft_charjoin(char *old, char c);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(const char *s, char c);
@@ -68,5 +74,6 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 				void (*del)(void *));
+char				*ft_getenv(char *key);
 
 #endif

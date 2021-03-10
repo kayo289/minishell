@@ -14,6 +14,7 @@ SRCS = ft_memset.c\
 		ft_strchr.c\
 		ft_strrchr.c\
 		ft_strnstr.c\
+		ft_strcmp.c\
 		ft_strncmp.c\
 		ft_atoi.c\
 		ft_isalpha.c\
@@ -24,8 +25,13 @@ SRCS = ft_memset.c\
 		ft_toupper.c\
 		ft_tolower.c\
 		ft_calloc.c\
+		ft_calloc2.c\
+		ft_calloc3.c\
+		ft_realloc2.c\
+		ft_realloc3.c\
 		ft_strdup.c\
 		ft_substr.c\
+		ft_charjoin.c\
 		ft_strjoin.c\
 		ft_strtrim.c\
 		ft_putchar_fd.c\
@@ -43,7 +49,8 @@ SRCS = ft_memset.c\
 		ft_lstdelone.c\
 		ft_lstclear.c\
 		ft_lstiter.c\
-		ft_lstmap.c
+		ft_lstmap.c\
+		ft_getenv.c\
 
 OBJS = ${SRCS:.c=.o}
 

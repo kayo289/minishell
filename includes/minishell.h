@@ -26,37 +26,43 @@ typedef enum u_token
 	TOKEN_NUM	// don't care
 } t_token;
 
-/* To degug 
-char *command_name[TOKEN_NUM] = {
-	"PIPE",		// |
-	"GT",		// >
-	"LT",		// < 
-	"DGT",		// >>
-	"SEMICOLON",// ;
-	"IDENTIFY", // String
-	"INPUT_END"	// End Of Input
-};
-*/
-
 typedef struct	s_ip
 {
 	t_token		sy;
 	char		ch;
 	char		*id_string;
 	int			index;
+	/* To degug 
+	char *command_name[TOKEN_NUM] = {
+		"PIPE",		// |
+		"GT",		// >
+		"LT",		// < 
+		"DGT",		// >>
+		"SEMICOLON",// ;
+		"IDENTIFY", // String
+		"INPUT_END"	// End Of Input
+	};
+	*/
 }				t_ip;
 
-void exe_cmd(int i, char ***args, char **path);
+// minishell.c
+void exec_cmd(int i, char ***args, char **path);
+
+// lexer
 void parse_line(char *line);
 void get_token(char **line, t_ip *ip);
-void input(char **line, t_ip *ip, char ****args);
-void command(char **line, t_ip *ip, char ****args);
-bool equal(char *s, char *t);
+char next_ch(char *line, t_ip *ip);
+void quoting(char **line, t_ip *ip);
+void parameter(char **line, t_ip *ip);
+void metacharacter(char **line, t_ip *ip);
 void error(char *message, char *token);
-char  **ft_realloc2(char **old, char *add);
-char  ***ft_realloc3(char ***old, char **add);
-char  **ft_calloc2(size_t nmemb, size_t size);
-char  ***ft_calloc3(size_t nmemb, size_t size);
 
+// parser
+void input(char **line, t_ip *ip, char ****args);
+char **fetch_path(char ****args);
+void error2(char *message, char token);
+
+// share
+char *ft_getenv(char *key);
 
 #endif
