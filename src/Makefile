@@ -11,7 +11,7 @@ NAME = \
 	minishell
 MINISHELL_SRC = \
 			lexer/lexer.c \
-			lexer/parameter.c \
+			lexer/parameter_expansion.c \
 			lexer/quoting.c \
 			lexer/metacharacter.c \
 			parser/parser.c \

@@ -50,10 +50,10 @@ void exec_cmd(int i, char ***args, char **path);
 
 // lexer
 void parse_line(char *line);
+void parameter_expansion(char **line, t_ip *ip);
 void get_token(char **line, t_ip *ip);
 char next_ch(char *line, t_ip *ip);
 void quoting(char **line, t_ip *ip);
-void parameter(char **line, t_ip *ip);
 void metacharacter(char **line, t_ip *ip);
 void error(char *message, char *token);
 

@@ -59,6 +59,7 @@ static void meta_semicolon(char **line, t_ip *ip)
 
 void metacharacter(char **line, t_ip *ip)
 {
+	ft_charjoin(&ip->id_string, ip->ch);
 	if (ip->ch == '|')
 		meta_pipe(line, ip);
 	else if (ip->ch == '>')
