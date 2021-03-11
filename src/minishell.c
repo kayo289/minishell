@@ -1,9 +1,24 @@
 #include "../includes/minishell.h"
 
-void sigint(int p_signame);
-void set_signal(int p_signame);
+#define MESSAGE ": command not found"
 
-void exe_cmd(int i, char ***args, char **path)
+static void sigint(int p_signame)
+{
+	p_signame++;
+	write(1, "\b\b  ", 4);
+	write(1, "\nminishell$ ", 12);
+}
+
+static void set_signal(int p_signame)
+{
+	if (signal(p_signame, sigint) == SIG_ERR)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit(1);
+	}
+}
+
+void exec_cmd(int i, char ***args, char **path)
 {
 	int pp[2];
 	pid_t pid;
@@ -11,7 +26,7 @@ void exe_cmd(int i, char ***args, char **path)
 	if (args[i + 1] == NULL)
 	{
 		execve(path[i], args[i], NULL);
-		return;
+		error(args[i][0], MESSAGE);
 	}
 	pipe(pp);
 	pid = fork();
@@ -22,7 +37,7 @@ void exe_cmd(int i, char ***args, char **path)
 		close(pp[0]);
 		close(pp[1]);
 
-		exe_cmd(i + 1, args, path);
+		exec_cmd(i + 1, args, path);
 	}
 	else if (pid > 0)
 	{
@@ -32,51 +47,38 @@ void exe_cmd(int i, char ***args, char **path)
 		close(pp[0]);
 
 		execve(path[i], args[i], NULL);
+		error(args[i][0], MESSAGE);
 	}
 }
 
-int minish_loop(void)
+void minish_loop(void)
 {
-	int run;
 	int status;
 	char *line;
 	pid_t pid;
 
-	run = 1;
-	while (run != 0)
+	while (1)
 	{
-		signal(SIGINT, SIG_IGN);
 		write(1, "minishell$ ", 11);
+		set_signal(SIGINT);
+		if (get_next_line(0, &line) == 0)
+			break;
+		signal(SIGINT, SIG_IGN);
 		if ((pid = fork()) == 0)
-		{
-			set_signal(SIGINT);
-			run = get_next_line(0, &line);
 			parse_line(line);
-			free(line);
-		}
-		else
+		else 
 			waitpid(pid, &status, 0);
+		free(line);
+		if (!WIFEXITED(status))
+			exit(1);
 	}
+	write(1, "exit\n", 5);
+	free(line);
+	exit(0);
+} 
+
+int main(void)
+{
+	minish_loop();
 	return (0);
 }
-
-void set_signal(int p_signame)
-{
-	if (signal(p_signame, sigint) == SIG_ERR)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-}
-
-void sigint(int p_signame)
-{
-	write(1, "\n", 1);
-	exit(128 + p_signame);
-}
-
-// int main()
-// {
-// 	minish_loop();
-// 	return (0);
-// }
