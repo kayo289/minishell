@@ -1,7 +1,4 @@
 #include "../includes/minishell.h"
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
 
 static int ft_setenv(char *name, char *value)
 {
@@ -33,14 +30,15 @@ int main(int argc, char **argv)
 {
 	char *path;
 	char *old_path;
+	DIR *dir;
 
 	old_path = getcwd(NULL, 0);
 	if (argc == 1)
 		path = get_env_value("HOME");
 	else
-		path = argv[2];
+		path = argv[1];
 	if (chdir(path) != 0)
-		ft_putstr_fd("cd: no such file or directory", 2);
+		ft_putstr_fd(strerror(errno), 2);
 	else
 	{
 		ft_setenv("OLDPWD", old_path);
@@ -49,6 +47,6 @@ int main(int argc, char **argv)
 		free(path);
 	}
 	free(old_path);
-	printf("現在地:%s\n", getcwd(NULL, 0));
+	//printf("現在地:%s\n", getcwd(NULL, 0));
 	return (0);
 }
