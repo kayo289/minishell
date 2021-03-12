@@ -6,7 +6,7 @@
 static void sigint(int p_signame)
 {
 	write(1, "\b\b  \n", 5);
-	p_signame++;
+	exit(p_signame + 128);
 }
 
 static void set_signal(int p_signame)
