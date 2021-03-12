@@ -5,8 +5,8 @@
 static void sigint(int p_signame)
 {
 	p_signame++;
-	write(1, "\b\b  ", 4);
-	write(1, "\nminishell$ ", 12);
+	write(1, "\b\b  \n", 5);
+	write(1, "minishell$ ", 11);
 }
 
 static void set_signal(int p_signame)
@@ -53,28 +53,21 @@ void exec_cmd(int i, char ***args, char **path)
 
 void minish_loop(void)
 {
-	int status;
 	char *line;
-	pid_t pid;
 
 	while (1)
 	{
 		write(1, "minishell$ ", 11);
 		set_signal(SIGINT);
 		if (get_next_line(0, &line) == 0)
-			break;
-		signal(SIGINT, SIG_IGN);
-		if ((pid = fork()) == 0)
-			parse_line(line);
-		else 
-			waitpid(pid, &status, 0);
+		{
+			write(1, "exit\n", 5);
+			free(line);
+			exit(0);
+		}
+		parse_line(line);
 		free(line);
-		if (!WIFEXITED(status))
-			exit(1);
 	}
-	write(1, "exit\n", 5);
-	free(line);
-	exit(0);
 } 
 
 int main(void)

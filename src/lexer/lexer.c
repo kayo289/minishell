@@ -1,20 +1,5 @@
 #include "../../includes/minishell.h"
 
-static void sigint(int p_signame)
-{
-	write(1, "\b\b  \n", 5);
-	exit(128 + p_signame);
-}
-
-static void set_signal(int p_signame)
-{
-	if (signal(p_signame, sigint) == SIG_ERR)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-}
-
 char next_ch(char *line, t_ip *ip)
 {
 	ip->ch = line[ip->index];
@@ -60,12 +45,10 @@ void parse_line(char *line)
 	t_ip ip;
 	char ***args;
 
-	set_signal(SIGINT);
 	ip.ch = ' ';
 	ip.index = 0;
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	args = (char ***)ft_calloc3(sizeof(char **), 1);
 	get_token(&line, &ip);
 	input(&line, &ip, &args);
-	exit(0);
 }
