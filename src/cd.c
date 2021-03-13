@@ -4,7 +4,6 @@ int main(int argc, char **argv)
 {
 	char *path;
 	char *old_path;
-	DIR *dir;
 
 	old_path = getcwd(NULL, 0);
 	if (argc == 1)
