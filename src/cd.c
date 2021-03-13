@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 
 	old_path = getcwd(NULL, 0);
 	if (argc == 1)
-		path = get_env_value("HOME");
+		path = ft_getenv("HOME");
 	else
 		path = argv[1];
 	if (chdir(path) != 0)
