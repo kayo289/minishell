@@ -1,31 +1,5 @@
 #include "../includes/minishell.h"
 
-static int ft_setenv(char *name, char *value)
-{
-	extern char **environ;
-	char **str;
-	char *tmp;
-	int i;
-
-	i = 0;
-	if (name == NULL || ft_strchr(name, '=') != NULL)
-		return (-1);
-	tmp = ft_strjoin(name, "=");
-	tmp = ft_strjoin(tmp, value);
-	while (environ[i] != NULL)
-	{
-		str = ft_split(environ[i], '=');
-		if (equal(str[0], name) == true)
-		{
-			environ[i] = tmp;
-			return (0);
-		}
-		i++;
-	}
-	environ[i] = ft_strdup(tmp);
-	return (0);
-}
-
 int main(int argc, char **argv)
 {
 	char *path;
@@ -38,7 +12,10 @@ int main(int argc, char **argv)
 	else
 		path = argv[1];
 	if (chdir(path) != 0)
+	{
 		ft_putstr_fd(strerror(errno), 2);
+		exit(1);
+	}
 	else
 	{
 		ft_setenv("OLDPWD", old_path);
@@ -47,6 +24,6 @@ int main(int argc, char **argv)
 		free(path);
 	}
 	free(old_path);
-	//printf("現在地:%s\n", getcwd(NULL, 0));
+	printf("現在地:%s\n", getcwd(NULL, 0));
 	return (0);
 }
