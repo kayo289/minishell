@@ -37,10 +37,10 @@ void get_token(char **line, t_ip *ip)
 		{
 			while (ft_strchr("|><; \0", ip->ch) == NULL)
 			{
-				if (ft_strchr("\"\'\\", ip->ch) != NULL)
+				if (ft_strchr("$", ip->ch) != NULL)
+					parameter_expansion(line, ip);
+				else if (ft_strchr("\"\'\\", ip->ch) != NULL)
 					quoting(line, ip);
-				else if (ft_strchr("$", ip->ch) != NULL)
-					parameter(line, ip);
 				else
 					ft_charjoin(&ip->id_string, ip->ch);
 				next_ch(*line, ip);
@@ -48,10 +48,7 @@ void get_token(char **line, t_ip *ip)
 			ip->sy = IDENTIFY;
 		}
 		else
-		{
-			ft_charjoin(&ip->id_string, ip->ch);
 			metacharacter(line, ip);
-		}
 	}
 }
 
@@ -60,11 +57,11 @@ void parse_line(char *line)
 	t_ip ip;
 	char ***args;
 
-	set_signal(SIGINT);
 	ip.ch = ' ';
 	ip.index = 0;
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	args = (char ***)ft_calloc3(sizeof(char **), 1);
+	set_signal(SIGINT);
 	get_token(&line, &ip);
 	input(&line, &ip, &args);
 	exit(0);
