@@ -1,14 +1,5 @@
 #include "../../includes/libft.h"
 
-static int equal(char *s, char *t)
-{
-	if (ft_strlen(s) != ft_strlen(t))
-		return (0);
-	else if (ft_strncmp(s, t, ft_strlen(s)) == 0)
-		return (1);
-	return (0);
-}
-
 int ft_setenv(char *name, char *value)
 {
 	extern char **environ;
@@ -24,14 +15,13 @@ int ft_setenv(char *name, char *value)
 	while (environ[i] != NULL)
 	{
 		str = ft_split(environ[i], '=');
-		if (equal(str[0], name) == 1)
+		if (ft_strcmp(str[0], name) == 0)
 		{
 			environ[i] = parameter;
 			return (0);
 		}
 		i++;
 	}
-	environ[i] = ft_strdup(parameter);
-	environ[i + 1] = NULL;
+	environ = ft_realloc2(environ, parameter);
 	return (0);
 }
