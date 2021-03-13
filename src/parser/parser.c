@@ -3,11 +3,28 @@
 #define MESSAGE1 "syntax error near unexpected token " 
 #define MESSAGE2 ": command not found"
 
+static void sigint(int p_signame)
+{
+	write(1, "\b\b  \n", 5);
+	exit(p_signame + 128);
+}
+
+static void set_signal(int p_signame)
+{
+	if (signal(p_signame, sigint) == SIG_ERR)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit(1);
+	}
+}
+
 static void go_exec_cmd(char ****args)
 {
 	pid_t pid;
 	int status;
 
+	signal(SIGINT, SIG_IGN);
+	set_signal(SIGINT);
 	if ((pid = fork()) == 0)
 		exec_cmd(0, *args, fetch_path(args));
 	else
