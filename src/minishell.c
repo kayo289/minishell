@@ -20,7 +20,7 @@ static void set_signal(int p_signame)
 
 void exec_cmd(int i, char ***args, char **path)
 {
-	int pp[2]; 
+	int pp[2];
 	pid_t pid;
 
 	if (args[i + 1] == NULL)
