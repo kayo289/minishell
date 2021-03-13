@@ -37,7 +37,7 @@ re:	fclean all
 minishell: $(MINISHELL_OBJ)
 	$(CC) $(CFLAGS) -o $@ -L./libft $^ -lft
 cd: cd.c
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
 pwd: pwd.c
 	$(CC) $(CFLAGS) -o $@ $<
 env: env.c
@@ -53,4 +53,4 @@ export: export.c
 libft/libft.a:
 	$(MAKE) -C ./libft
 
-.PHONY: clear fclean re all 
+.PHONY: clear fclean re all
