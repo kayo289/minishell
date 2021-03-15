@@ -2,12 +2,9 @@
 
 int main(int argc, char **argv)
 {
-	int i = 0;
+	char *path;
 
-	printf("call pwd\n");
-	while (i < argc){
-		printf("argv[%d]: %s\n", i , argv[i]);
-		i++;
-	}
-	exit(EXIT_SUCCESS);
+	path = getcwd(NULL, 0);
+	ft_putendl_fd(path, 1);
+	return (0);
 }
