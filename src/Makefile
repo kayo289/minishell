@@ -39,7 +39,7 @@ minishell: $(MINISHELL_OBJ)
 cd: cd.c
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
 pwd: pwd.c
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
 env: env.c
 	$(CC) $(CFLAGS) -o $@ $<
 echo: echo.c
