@@ -22,7 +22,7 @@ static void quote(char **line, t_ip *ip, char find_ch)
 			*line = ft_strjoin(*line, line2);
 		}
 		else if (ip->ch == '$')
-			parameter_expansion(line, ip);
+			expand_parameter(line, ip);
 		else
 			ft_charjoin(&ip->id_string, ip->ch);
 	}
