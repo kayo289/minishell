@@ -3,7 +3,7 @@
 #define MESSAGE1 "minishell: unexpected EOF while looking for matching "
 #define MESSAGE2 "minishell: syntax error: unexpected end of file"
 
-static void line_continuation(char **line, t_ip *ip, char find_ch)
+static void quote(char **line, t_ip *ip, char find_ch)
 {
 	char *line2;
 
@@ -21,12 +21,14 @@ static void line_continuation(char **line, t_ip *ip, char find_ch)
 			*line = ft_strjoin(*line, "\n");
 			*line = ft_strjoin(*line, line2);
 		}
+		else if (ip->ch == '$')
+			expand_parameter(line, ip);
 		else
 			ft_charjoin(&ip->id_string, ip->ch);
 	}
 }
 
-void escape_char(char **line, t_ip *ip)
+static void escape_character(char **line, t_ip *ip)
 {
 	char *line2;
 
@@ -44,10 +46,10 @@ void escape_char(char **line, t_ip *ip)
 void quoting(char **line, t_ip *ip)
 {
 	if (ip->ch == '\"')
-		line_continuation(line, ip, '\"');
+		quote(line, ip, '\"');
 	else if (ip->ch == '\'')
-		line_continuation(line, ip, '\'');
+		quote(line, ip, '\'');
 	else if (ip->ch == '\\')
-		escape_char(line, ip);
+		escape_character(line, ip);
 }
 

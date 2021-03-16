@@ -51,8 +51,9 @@ $(NAME): $(NAME_OBJ) $(LIBFT) $(LIBCMDS)
 
 cd: cd.o
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
+
 pwd: pwd.o
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
 env: env.o
 	$(CC) $(CFLAGS) -o $@ $<
 echo: echo.o
