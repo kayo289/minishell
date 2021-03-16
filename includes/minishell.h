@@ -50,19 +50,17 @@ void exec_cmd(int i, char ***args, char **path);
 
 // lexer
 void parse_line(char *line);
-void parameter_expansion(char **line, t_ip *ip);
-void get_token(char **line, t_ip *ip);
+void expand_parameter(char **line, t_ip *ip);
 char next_ch(char *line, t_ip *ip);
 void quoting(char **line, t_ip *ip);
 void metacharacter(char **line, t_ip *ip);
-void error(char *message, char *token);
 
 // parser
-void input(char **line, t_ip *ip, char ****args);
+void list(t_ip **ip, char ****args, t_list **queue);
+void next_token(t_ip **ip, t_list **queue);
 char **fetch_path(char ****args);
-void error2(char *message, char token);
 
-// share
-char *ft_getenv(char *key);
+void error(char *message, char *token);
+void error2(char *message, char token);
 
 #endif

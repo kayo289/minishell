@@ -27,7 +27,7 @@ static void brace(char **line, t_ip *ip, char **key)
 	ip->index++;
 }
 
-void parameter_expansion(char **line, t_ip *ip)
+void expand_parameter(char **line, t_ip *ip)
 {
 	char *key;
 	char *val;
