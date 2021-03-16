@@ -46,7 +46,7 @@ void parse_line(char *line)
 	ip.index = 0;
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	args = (char ***)ft_calloc3(sizeof(char **), 1);
-	set_signal(SIGINT);
+	//set_signal(SIGINT);
 	get_token(&line, &ip);
 	input(&line, &ip, &args);
 }

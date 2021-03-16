@@ -12,6 +12,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include "get_next_line.h"
+#include "libcmds.h"
 
 typedef enum u_token
 {
@@ -61,8 +62,5 @@ void error(char *message, char *token);
 void input(char **line, t_ip *ip, char ****args);
 char **fetch_path(char ****args);
 void error2(char *message, char token);
-
-// share
-char *ft_getenv(char *key);
 
 #endif
