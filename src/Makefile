@@ -16,7 +16,10 @@ MINISHELL_SRC = \
 			lexer/metacharacter.c \
 			parser/parser.c \
 			parser/fetch_path.c \
+			parser/exec_pipeline.c \
 			get_next_line_for_minishell.c \
+			get_shell_var.c \
+			set_shell_var.c \
 			error.c \
 			minishell.c
 MINISHELL_OBJ=$(MINISHELL_SRC:.c=.o)

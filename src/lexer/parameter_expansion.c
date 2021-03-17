@@ -27,7 +27,7 @@ static void brace(char **line, t_ip *ip, char **key)
 	ip->index++;
 }
 
-void expand_parameter(char **line, t_ip *ip)
+void expand_parameter(char **line, t_ip *ip, char ***shell_var)
 {
 	char *key;
 	char *val;
@@ -40,7 +40,7 @@ void expand_parameter(char **line, t_ip *ip)
 		while (ft_isalpha((*line)[ip->index]))
 			ft_charjoin(&key, (*line)[ip->index++]);
 	}
-	val = ft_getenv(key);
+	val = get_shell_var(key, shell_var);
 	ip->id_string = ft_strjoin(ip->id_string, val);
 }
 

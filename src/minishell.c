@@ -1,7 +1,5 @@
 #include "../includes/minishell.h"
 
-#define MESSAGE ": command not found"
-
 static void sigint(int p_signame)
 {
 	p_signame++;
@@ -18,46 +16,13 @@ static void set_signal(int p_signame)
 	}
 }
 
-void exec_cmd(int i, char ***args, char **path)
-{
-	int pp[2];
-	pid_t pid;
-
-	if (args[i + 1] == NULL)
-	{
-		execve(path[i], args[i], NULL);
-		error(args[i][0], MESSAGE);
-	}
-	pipe(pp);
-	pid = fork();
-	if (pid == 0)
-	{
-		// child
-		dup2(pp[1], 1);
-		close(pp[0]);
-		close(pp[1]);
-
-		exec_cmd(i + 1, args, path);
-	}
-	else if (pid > 0)
-	{
-		// parent
-		close(pp[1]);
-		dup2(pp[0], 0);
-		close(pp[0]);
-
-		execve(path[i], args[i], NULL);
-		error(args[i][0], MESSAGE);
-	}
-}
-
-void minish_loop(void)
+static void primary_prompt(char ***shell_var)
 {
 	char *line;
 
 	while (1)
 	{
-		write(1, "minishell$ ", 11);
+		ft_putstr_fd(get_shell_var("PS1", shell_var), 1);
 		set_signal(SIGINT);
 		if (get_next_line(0, &line) == 0)
 		{
@@ -65,13 +30,27 @@ void minish_loop(void)
 			free(line);
 			exit(0);
 		}
-		parse_line(line);
+		parse_line(line, shell_var);
 		free(line);
 	}
 } 
 
+static void boot_minishell(char ***shell_var)
+{
+	int	fd;
+	char *line;
+
+	fd = open(".minishellrc", O_RDONLY);
+	while (get_next_line(fd, &line) > 0)
+		*shell_var = ft_realloc2(*shell_var, line);
+}
+
 int main(void)
 {
-	minish_loop();
+	char **shell_var;
+
+	shell_var = ft_calloc2(sizeof(char*), 1);
+	boot_minishell(&shell_var);
+	primary_prompt(&shell_var);
 	return (0);
 }
