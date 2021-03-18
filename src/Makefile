@@ -14,7 +14,10 @@ NAME_SRC = \
 	lexer/metacharacter.c \
 	parser/parser.c \
 	parser/fetch_path.c \
+	parser/exec_pipeline.c \
 	get_next_line_for_minishell.c \
+	get_shell_var.c \
+	set_shell_var.c \
 	error.c \
 	minishell.c
 CMDS_SRC = \
@@ -51,13 +54,12 @@ $(NAME): $(NAME_OBJ) $(LIBFT) $(LIBCMDS)
 
 cd: cd.o
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-
 pwd: pwd.o
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
 env: env.o
 	$(CC) $(CFLAGS) -o $@ $<
 echo: echo.o
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
 exit: exit.o
 	$(CC) $(CFLAGS) -o $@ $<
 unset: unset.o
