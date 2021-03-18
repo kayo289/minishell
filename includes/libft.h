@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/03/13 22:42:42 by kikuchika        ###   ########.fr       */
+/*   Updated: 2021/03/16 09:21:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 
 # include <stdlib.h>
 # include <string.h>
+
+#define __GNU_SOURCE
 # include <unistd.h>
+
 
 typedef struct		s_list
 {
@@ -75,6 +78,6 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 				void (*del)(void *));
 int					ft_setenv(char *name, char *value);
-char				*ft_getenv(char *key);
+char				*ft_getenv(char *name);
 
 #endif
