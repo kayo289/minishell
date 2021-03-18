@@ -33,14 +33,14 @@ static bool find_command(char *cmd, char ***cmd_paths, char **dir_names)
 	return (false);
 }
 
-char **fetch_path(char ****args)
+char **fetch_path(char ****args, char ***shell_var)
 {
 	char	*env_value;
 	char	**dir_names;
 	char	**cmd_paths;
 	int 	i;
 
-	env_value = ft_getenv("PATH");
+	env_value = get_shell_var("PATH", shell_var);
 	dir_names = ft_split(env_value, ':');
 	cmd_paths = (char **)ft_calloc2(sizeof(char *), 1);
 	i = 0;
