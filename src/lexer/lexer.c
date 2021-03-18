@@ -8,7 +8,7 @@ char next_ch(char *line, t_ip *ip)
 	return (ip->ch);
 }
 
-static void save_token(t_ip *ip, t_list **queue)
+static void save_token(t_ip *ip, t_queue *tokens)
 {
 	t_list	*lst;
 	t_ip	*tmp;
@@ -16,13 +16,30 @@ static void save_token(t_ip *ip, t_list **queue)
 	tmp = malloc(sizeof(t_ip) * 1);
 	*tmp = *ip;
 	lst = ft_lstnew(tmp);
-	ft_lstadd_back(queue, lst);
+	ft_lstadd_back(tokens, lst);
+	// init ip->id_string
+	ip->id_string = ft_calloc(sizeof(char), 1);
 }
 
-static void get_token(line, ip, queue, shell_var)
-	char **line; t_ip *ip; t_list **queue; char ***shell_var;
+static void dollar(line, ip, tokens, sv)
+	char **line; t_ip *ip; t_queue *tokens; t_shell_var sv;
 {
-	ip->id_string = ft_calloc(sizeof(char), 1);
+	char *val;
+
+	val = expand_parameter(line, ip, sv);
+	if (ft_strchr(" \t", val[0]) != NULL)
+		save_token(ip, tokens);
+	if (ft_strchr(" \t", val[ft_strlen(val) - 1]) != NULL)
+	{
+		ip->id_string = ft_strjoin(ip->id_string, val);
+		save_token(ip, tokens);
+	}
+	return;
+}
+
+static void get_token(line, ip, tokens, sv)
+	char **line; t_ip *ip; t_queue *tokens; t_shell_var sv;
+{
 	while (ip->ch == ' ' || ip->ch == '\t')
 		next_ch(*line, ip);
 	if (ip->ch == '\0')
@@ -36,8 +53,10 @@ static void get_token(line, ip, queue, shell_var)
 		{
 			while (ft_strchr("|><; \0", ip->ch) == NULL)
 			{
-				if (ft_strchr("\"\'\\", ip->ch) != NULL)
-					quoting(line, ip, shell_var);
+				if (ft_strchr("$", ip->ch) != NULL)
+					dollar(line, ip, tokens, sv);
+				else if (ft_strchr("\"\'\\", ip->ch) != NULL)
+					quoting(line, ip, sv);
 				else
 					ft_charjoin(&ip->id_string, ip->ch);
 				next_ch(*line, ip);
@@ -47,35 +66,18 @@ static void get_token(line, ip, queue, shell_var)
 		else
 			metacharacter(line, ip);
 	}
-	save_token(ip, queue);
-	get_token(line, ip, queue, shell_var);
+	save_token(ip, tokens);
+	get_token(line, ip, tokens, sv);
 }
 
-void parse_line(char *line, char ***shell_var)
+void lexer(char *line, t_queue *tokens, t_shell_var sv)
 {
 	t_ip	ip;
-	t_list	*queue;
-	char	***args;
-	t_ip	*head;
 
 	ip.ch = ' ';
 	ip.index = 0;
-	queue = NULL;
-	get_token(&line, &ip, &queue, shell_var);
-	save_token(&ip, &queue);
-	/* To debug */
-	/*
-	t_list *debug = queue;
-	while (debug != NULL)
-	{ 
-		printf("%s -> ", ((t_ip *)debug->content)->id_string);
-		debug = debug->next;
-	}
-	printf("NULL\n");
-	*/
-
-	args = (char ***)ft_calloc3(sizeof(char **), 1);
-	next_token(&head, &queue);
-	list(&head, &args, &queue, shell_var);
-	(void)*shell_var;
+	ip.id_string = ft_calloc(sizeof(char), 1);
+	*tokens = NULL;
+	get_token(&line, &ip, tokens, sv);
+	save_token(&ip, tokens);
 }

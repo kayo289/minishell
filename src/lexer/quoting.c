@@ -3,9 +3,10 @@
 #define MESSAGE1 "minishell: unexpected EOF while looking for matching "
 #define MESSAGE2 "minishell: syntax error: unexpected end of file"
 
-static void double_quote(char **line, t_ip *ip, char ***shell_var)
+static void double_quote(char **line, t_ip *ip, t_shell_var sv)
 {
 	char *line2;
+	char *val;
 
 	while (next_ch(*line, ip) != '\"')
 	{
@@ -22,7 +23,10 @@ static void double_quote(char **line, t_ip *ip, char ***shell_var)
 			*line = ft_strjoin(*line, line2);
 		}
 		else if (ip->ch == '$')
-			expand_parameter(line, ip, shell_var);
+		{
+			val = expand_parameter(line, ip, sv);
+			ip->id_string = ft_strjoin(ip->id_string, val);
+		}
 		else
 			ft_charjoin(&ip->id_string, ip->ch);
 	}
@@ -66,10 +70,10 @@ static void escape_character(char **line, t_ip *ip)
 		ft_charjoin(&ip->id_string, ip->ch);
 }
 
-void quoting(char **line, t_ip *ip, char ***shell_var)
+void quoting(char **line, t_ip *ip, t_shell_var sv)
 {
 	if (ip->ch == '\"')
-		double_quote(line, ip, shell_var);
+		double_quote(line, ip, sv);
 	else if (ip->ch == '\'')
 		single_quote(line, ip);
 	else if (ip->ch == '\\')

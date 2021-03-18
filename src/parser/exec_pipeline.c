@@ -50,7 +50,7 @@ static void exec_pipeline(int i, char ***args, char **path)
 	}
 }
 
-void go_exec_pipeline(char ****args, char ***shell_var)
+void go_exec_pipeline(char ****args, t_shell_var sv)
 {
 	pid_t pid;
 	int status;
@@ -58,7 +58,7 @@ void go_exec_pipeline(char ****args, char ***shell_var)
 	signal(SIGINT, SIG_IGN);
 	set_signal(SIGINT);
 	if ((pid = fork()) == 0)
-		exec_pipeline(0, *args, fetch_path(args, shell_var));
+		exec_pipeline(0, *args, fetch_path(args, sv));
 	else
 	{
 		waitpid(pid, &status, 0);
