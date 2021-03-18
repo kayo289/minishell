@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "get_next_line.h"
 #include "libcmds.h"
+#include "shell_variable.h"
 
 typedef enum u_token
 {
@@ -45,23 +46,20 @@ typedef struct	s_ip
 	};
 	*/
 }				t_ip;
-
-char *get_shell_var(char *name, char ***shell_var);
-int set_shell_var(char *name, char *value, char ***shell_var);
+typedef t_list * t_queue;
+typedef char *** t_args;
 
 // lexer
-void parse_line(char *line, char ***shell);
-void expand_parameter(char **line, t_ip *ip, char ***shell_var);
+void lexer(char *line, t_queue *tokens, t_shell_var sv);
 char next_ch(char *line, t_ip *ip);
-void quoting(char **line, t_ip *ip, char ***shell_var);
+char *expand_parameter(char **line, t_ip *ip, t_shell_var sv);
+void quoting(char **line, t_ip *ip, t_shell_var sv);
 void metacharacter(char **line, t_ip *ip);
 
 // parser
-void list(t_ip **ip, char ****args, t_list **queue, char ***shell_var);
-void next_token(t_ip **ip, t_list **queue);
-char **fetch_path(char ****args, char ***shell_var);
-void go_exec_pipeline(char ****args, char ***shell_var);
-
+void parser(t_queue *tokens, t_shell_var sv);
+char **fetch_path(t_args *args, t_shell_var sv);
+void go_exec_pipeline(t_args *args, t_shell_var sv);
 
 void error(char *message, char *token);
 void error2(char *message, char token);

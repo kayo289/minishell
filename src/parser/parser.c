@@ -1,18 +1,28 @@
 #include "../../includes/minishell.h"
 
+char *command_name[TOKEN_NUM] = {
+	"PIPE",		// |
+	"GT",		// >
+	"LT",		// < 
+	"DGT",		// >>
+	"SEMICOLON",// ;
+	"IDENTIFY", // String
+	"INPUT_END"	// End Of Input
+};
+
 #define MESSAGE1 "syntax error near unexpected token " 
 #define MESSAGE2 ": command not found"
 
-void 	next_token(t_ip **ip, t_list **queue)
+static void 	next_token(t_ip **ip, t_queue *tokens)
 {
 	t_list *head;
 
-	head = *queue;
-	*queue = (*queue)->next;
+	head = *tokens;
+	*tokens = (*tokens)->next;
 	*ip = (t_ip*)head->content;
 }
 
-static void command(t_ip **ip, char ****args, t_list **queue)
+static void command(t_ip **ip, t_args *args, t_list **queue)
 {
 	char **arg;
 
@@ -26,43 +36,53 @@ static void command(t_ip **ip, char ****args, t_list **queue)
 	return;
 }
 
-void list(t_ip **ip, char ****args, t_list **queue, char ***shell_var)
+static void list(t_ip **ip, t_args *args, t_queue *tokens, t_shell_var sv)
 {
 	if ((*ip)->sy == IDENTIFY)
 	{
-		command(ip, args, queue);
+		command(ip, args, tokens);
 		while ((*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 		{
-			next_token(ip, queue);
+			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY) 
-				next_token(ip, queue);
+				next_token(ip, tokens);
 			else
 				error(MESSAGE1, (*ip)->id_string);
 		}
 		if ((*ip)->sy == PIPE)
 		{
-			next_token(ip, queue);
+			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY)
-				list(ip, args, queue, shell_var);
+				list(ip, args, tokens, sv);
 			else
 				error(MESSAGE1, (*ip)->id_string);
 		}
 		if ((*ip)->sy == SEMICOLON)
 		{
-			go_exec_pipeline(args, shell_var);
-			next_token(ip, queue);
+			go_exec_pipeline(args, sv);
+			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY)
 			{
 				*args = ft_calloc3(sizeof(char **), 1);
-				list(ip, args, queue, shell_var);
+				list(ip, args, tokens, sv);
 			}
 			else if ((*ip)->sy != INPUT_END)
 				error(MESSAGE1, (*ip)->id_string);
 		}
 		else if ((*ip)->sy == INPUT_END)
-			go_exec_pipeline(args, shell_var);
+			go_exec_pipeline(args, sv);
 	}
 	else if ((*ip)->sy != INPUT_END)
 		error(MESSAGE1, (*ip)->id_string);
 }
 
+void parser(t_queue *tokens, t_shell_var sv)
+{
+	t_ip	*head;
+	t_args	args;
+	
+	args = ft_calloc3(sizeof(char **), 1);
+	args[0] = NULL;
+	next_token(&head, tokens);
+	list(&head, &args, tokens, sv);
+}

@@ -15,9 +15,11 @@ NAME_SRC = \
 	parser/parser.c \
 	parser/fetch_path.c \
 	parser/exec_pipeline.c \
+	shell_variable/get_shell_var.c \
+	shell_variable/set_shell_var.c \
+	shell_variable/new_shell_var.c \
+	shell_variable/hash.c \
 	get_next_line_for_minishell.c \
-	get_shell_var.c \
-	set_shell_var.c \
 	error.c \
 	minishell.c
 CMDS_SRC = \

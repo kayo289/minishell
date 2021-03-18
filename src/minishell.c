@@ -16,13 +16,15 @@ static void set_signal(int p_signame)
 	}
 }
 
-static void primary_prompt(char ***shell_var)
+static void primary_prompt(t_shell_var sv)
 {
 	char *line;
+	t_queue tokens;
 
 	while (1)
 	{
-		ft_putstr_fd(get_shell_var("PS1", shell_var), 1);
+		//ft_putstr_fd(get_shell_var(sv, "PS1"), 1);
+		ft_putstr_fd("minishell$ ", 1);
 		set_signal(SIGINT);
 		if (get_next_line(0, &line) == 0)
 		{
@@ -30,27 +32,17 @@ static void primary_prompt(char ***shell_var)
 			free(line);
 			exit(0);
 		}
-		parse_line(line, shell_var);
+		lexer(line, &tokens, sv);
+		parser(&tokens, sv);
 		free(line);
 	}
 } 
 
-static void boot_minishell(char ***shell_var)
-{
-	int	fd;
-	char *line;
-
-	fd = open(".minishellrc", O_RDONLY);
-	while (get_next_line(fd, &line) > 0)
-		*shell_var = ft_realloc2(*shell_var, line);
-}
-
 int main(void)
 {
-	char **shell_var;
+	t_shell_var sv;
 
-	shell_var = ft_calloc2(sizeof(char*), 1);
-	boot_minishell(&shell_var);
-	primary_prompt(&shell_var);
+	sv = new_shell_var();
+	primary_prompt(sv);
 	return (0);
 }
