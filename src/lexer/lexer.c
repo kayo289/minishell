@@ -13,11 +13,10 @@ static void save_token(t_ip *ip, t_queue *tokens)
 	t_list	*lst;
 	t_ip	*tmp;
 
-	tmp = malloc(sizeof(t_ip) * 1);
+	tmp = malloc(sizeof(t_ip));
 	*tmp = *ip;
 	lst = ft_lstnew(tmp);
 	ft_lstadd_back(tokens, lst);
-	// init ip->id_string
 	ip->id_string = ft_calloc(sizeof(char), 1);
 }
 
@@ -25,16 +24,28 @@ static void dollar(line, ip, tokens, sv)
 	char **line; t_ip *ip; t_queue *tokens; t_shell_var sv;
 {
 	char *val;
+	char *str;
 
-	val = expand_parameter(line, ip, sv);
-	if (ft_strchr(" \t", val[0]) != NULL)
-		save_token(ip, tokens);
-	if (ft_strchr(" \t", val[ft_strlen(val) - 1]) != NULL)
+	if ((val = expand_parameter(line, ip, sv)) == NULL)
+		return;
+	str = ft_strtrim(val, " \t\n");
+	if (ft_strchr(" \t\n", val[0]) != NULL)
 	{
-		ip->id_string = ft_strjoin(ip->id_string, val);
-		save_token(ip, tokens);
+		if (ft_strcmp(ip->id_string, "") != 0)
+		{
+			ip->sy = IDENTIFY;
+			save_token(ip, tokens);
+		}
 	}
-	return;
+	ip->id_string = ft_strjoin(ip->id_string, str);
+	if (ft_strchr(" \t\n", val[ft_strlen(val) - 1]) != NULL)
+	{
+		if (ft_strcmp(ip->id_string, "") != 0)
+		{
+			ip->sy = IDENTIFY;
+			save_token(ip, tokens);
+		}
+	}
 }
 
 static void get_token(line, ip, tokens, sv)
