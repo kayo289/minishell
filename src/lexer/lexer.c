@@ -58,25 +58,22 @@ static void get_token(line, ip, tokens, sv)
 		ip->sy = INPUT_END;
 		return;
 	}
-	else
+	if (ft_strchr("|><;", ip->ch) == NULL)
 	{
-		if (ft_strchr("|><;", ip->ch) == NULL)
+		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{
-			while (ft_strchr("|><; \0", ip->ch) == NULL)
-			{
-				if (ft_strchr("$", ip->ch) != NULL)
-					dollar(line, ip, tokens, sv);
-				else if (ft_strchr("\"\'\\", ip->ch) != NULL)
-					quoting(line, ip, sv);
-				else
-					ft_charjoin(&ip->id_string, ip->ch);
-				next_ch(*line, ip);
-			}
-			ip->sy = IDENTIFY;
+			if (ft_strchr("$", ip->ch) != NULL)
+				dollar(line, ip, tokens, sv);
+			else if (ft_strchr("\"\'\\", ip->ch) != NULL)
+				quoting(line, ip, sv);
+			else
+				ft_charjoin(&ip->id_string, ip->ch);
+			next_ch(*line, ip);
 		}
-		else
-			metacharacter(line, ip);
+		ip->sy = IDENTIFY;
 	}
+	else
+		metacharacter(line, ip);
 	save_token(ip, tokens);
 	get_token(line, ip, tokens, sv);
 }
