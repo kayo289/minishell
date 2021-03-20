@@ -66,7 +66,7 @@ static void prompt_loop(void)
 			esc(&pos);
 		else if (key == LF)
 			lf(&pos);
-		else if (key == BS)
+		else if (key == DEL)
 			bs(&pos);
 		else
 		{
@@ -84,11 +84,6 @@ void prompt(void)
 
 	ioctl(0, TCGETA, &tty);
 	tty_save = tty;
-	/*
-	tty.c_lflag &= ~ICANON;
-	tty.c_lflag &= ~ECHO;
-	tty.c_lflag |= ECHONL;
-	*/
 	tty.c_lflag ^= (ICANON | ECHO);
 	tty.c_lflag |= ECHONL; 
 	ioctl(0, TCSETA, &tty);
@@ -97,6 +92,7 @@ void prompt(void)
 	return;
 }
 
+// To debug
 int main(void)
 {
 	prompt();
