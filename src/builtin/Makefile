@@ -1,7 +1,9 @@
 CC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
 NAME		= libcmds.so
-NAME_SRC	= cd.c 
+NAME_SRC	= echo.c \
+			cd.c \
+			pwd.c
 NAME_OBJ	= $(NAME_SRC:.c=.o)
 
 
