@@ -41,6 +41,7 @@ char *expand_parameter(char **line, t_ip *ip, t_shell_var sv)
 			ft_charjoin(&key, (*line)[ip->index++]);
 	}
 	val = get_shell_var(sv, key);
+	val = ft_getenv(key);
 	return (val);
 }
 

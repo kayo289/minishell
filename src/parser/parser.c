@@ -1,15 +1,5 @@
 #include "../../includes/minishell.h"
 
-char *command_name[TOKEN_NUM] = {
-	"PIPE",		// |
-	"GT",		// >
-	"LT",		// < 
-	"DGT",		// >>
-	"SEMICOLON",// ;
-	"IDENTIFY", // String
-	"INPUT_END"	// End Of Input
-};
-
 #define MESSAGE1 "syntax error near unexpected token " 
 #define MESSAGE2 ": command not found"
 
