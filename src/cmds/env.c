@@ -1,10 +1,10 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int main(int argc, char **argv)
 {
 	int i = 0;
 
-	printf("call exit\n");
+	printf("call env\n");
 	while (i < argc){
 		printf("argv[%d]: %s\n", i , argv[i]);
 		i++;
