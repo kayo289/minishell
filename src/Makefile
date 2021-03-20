@@ -23,13 +23,13 @@ NAME_SRC = \
 	error.c \
 	minishell.c
 CMDS_SRC = \
-	cd.c \
-	echo.c \
-	pwd.c \
-	export.c \
-	unset.c \
-	env.c \
-	exit.c 
+	cmds/cd.c \
+	cmds/echo.c \
+	cmds/pwd.c \
+	cmds/export.c \
+	cmds/unset.c \
+	cmds/env.c \
+	cmds/exit.c
 NAME_OBJ=$(NAME_SRC:.c=.o)
 CMDS_OBJ=$(CMDS_SRC:.c=.o)
 
@@ -54,19 +54,19 @@ re:	fclean all
 $(NAME): $(NAME_OBJ) $(LIBFT) $(LIBCMDS)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(NAME_OBJ) $(LIBS)
 
-cd: cd.o
+cd: cmds/cd.o
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-pwd: pwd.o
+pwd: cmds/pwd.o
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-env: env.o
+env: cmds/env.o
 	$(CC) $(CFLAGS) -o $@ $<
-echo: echo.o
+echo: cmds/echo.o
 	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-exit: exit.o
+exit: cmds/exit.o
 	$(CC) $(CFLAGS) -o $@ $<
-unset: unset.o
+unset: cmds/unset.o
 	$(CC) $(CFLAGS) -o $@ $<
-export: export.o
+export: cmds/export.o
 	$(CC) $(CFLAGS) -o $@ $<
 	
 $(LIBFT):
