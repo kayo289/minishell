@@ -1,6 +1,6 @@
 #include "../includes/prompt.h"
 
-void bs(t_pos *pos)
+void del(t_pos *pos)
 {
 	if(pos->cursor > pos->max_lf)
 	{
@@ -67,7 +67,7 @@ static void prompt_loop(void)
 		else if (key == LF)
 			lf(&pos);
 		else if (key == DEL)
-			bs(&pos);
+			del(&pos);
 		else
 		{
 			pos.max_rg++;
