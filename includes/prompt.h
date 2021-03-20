@@ -9,7 +9,7 @@
 
 #define ESC 0x1b
 #define LF 0x0a
-#define BS 0x7f
+#define DEL 0x7f
 
 typedef struct s_pos
 {
