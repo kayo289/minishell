@@ -58,8 +58,10 @@ void metacharacter(char **line, t_ip *ip);
 
 // parser
 void parser(t_queue *tokens, t_shell_var sv);
+
+// exec_unit
+void exec(t_args *args, t_shell_var sv);
 char **fetch_path(t_args *args, t_shell_var sv);
-void go_exec_pipeline(t_args *args, t_shell_var sv);
 
 void error(char *message, char *token);
 void error2(char *message, char token);

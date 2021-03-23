@@ -48,11 +48,11 @@ static void pipeline(ip, args, tokens, sv)
 	}
 	if ((*ip)->sy == SEMICOLON)
 	{
-		go_exec_pipeline(args, sv);
+		exec(args, sv);
 		next_token(ip, tokens);
 	}
 	else if ((*ip)->sy == INPUT_END)
-		go_exec_pipeline(args, sv);
+		exec(args, sv);
 }
 
 static void list(t_ip **ip, t_args *args, t_queue *tokens, t_shell_var sv)
