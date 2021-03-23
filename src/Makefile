@@ -4,9 +4,16 @@ INCLUDE = -I../includes
 LDFLAGS = -L./builtin -L./libft
 LIBS	= -lcmds -lft
 NAME 	= minishell
+CMDS	= \
+		cmds/cd \
+		cmds/echo \
+		cmds/pwd \
+		cmds/export \
+		cmds/unset \
+		cmds/env \
+		cmds/exit
 LIBCMDS	= libcmds.so
 LIBFT 	= libft.a
-CMDS	= cd echo pwd export unset env exit
 NAME_SRC = \
 	lexer/lexer.c \
 	lexer/parameter_expansion.c \
@@ -22,16 +29,7 @@ NAME_SRC = \
 	get_next_line_for_minishell.c \
 	error.c \
 	minishell.c
-CMDS_SRC = \
-	cmds/cd.c \
-	cmds/echo.c \
-	cmds/pwd.c \
-	cmds/export.c \
-	cmds/unset.c \
-	cmds/env.c \
-	cmds/exit.c
 NAME_OBJ=$(NAME_SRC:.c=.o)
-CMDS_OBJ=$(CMDS_SRC:.c=.o)
 
 
 all: $(NAME) $(CMDS)
@@ -39,12 +37,14 @@ all: $(NAME) $(CMDS)
 clean:
 	$(MAKE) clean -C ./libft
 	$(MAKE) clean -C ./builtin
+	$(MAKE) clean -C ./cmds
 	rm -rf *.o
 	rm -rf */*.o
 
 fclean: clean
 	$(MAKE) fclean -C ./libft
 	$(MAKE) fclean -C ./builtin
+	$(MAKE) fclean -C ./cmds
 	rm -rf $(NAME)
 	rm -rf $(CMDS)
 
@@ -54,21 +54,9 @@ re:	fclean all
 $(NAME): $(NAME_OBJ) $(LIBFT) $(LIBCMDS)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(NAME_OBJ) $(LIBS)
 
-cd: cmds/cd.o
-	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-pwd: cmds/pwd.o
-	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-env: cmds/env.o
-	$(CC) $(CFLAGS) -o $@ $<
-echo: cmds/echo.o
-	$(CC) $(CFLAGS) -o $@ -L./libft $< -lft
-exit: cmds/exit.o
-	$(CC) $(CFLAGS) -o $@ $<
-unset: cmds/unset.o
-	$(CC) $(CFLAGS) -o $@ $<
-export: cmds/export.o
-	$(CC) $(CFLAGS) -o $@ $<
-	
+$(CMDS):
+	$(MAKE) -C ./cmds
+
 $(LIBFT):
 	$(MAKE) -C ./libft
 $(LIBCMDS):
