@@ -50,7 +50,7 @@ static void exec_pipeline(int i, char ***args, char **path)
 	}
 }
 
-void go_exec_pipeline(char ****args, t_shell_var sv)
+void exec(char ****args, t_shell_var sv)
 {
 	pid_t pid;
 	int status;
@@ -62,7 +62,8 @@ void go_exec_pipeline(char ****args, t_shell_var sv)
 	else
 	{
 		waitpid(pid, &status, 0);
-		//free(*args);
+		free(*args);
+		*args = ft_calloc3(sizeof(char **), 1);
 	}
 }
 
