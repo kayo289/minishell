@@ -62,7 +62,8 @@ void exec(char ****args, t_shell_var sv)
 	else
 	{
 		waitpid(pid, &status, 0);
-		//free(*args);
+		free(*args);
+		*args = ft_calloc3(sizeof(char **), 1);
 	}
 }
 
