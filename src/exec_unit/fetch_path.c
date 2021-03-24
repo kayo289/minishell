@@ -17,15 +17,12 @@ static bool find_command(char *cmd, char ***cmd_paths, char **dir_names)
 		{
 			if (lstat(dp->d_name, &sb) > 0)
 				continue;
-			if (S_ISREG(sb.st_mode) || S_ISLNK(sb.st_mode))
+			if (ft_strcmp(cmd, dp->d_name) == 0)
 			{
-				if (ft_strcmp(cmd, dp->d_name) == 0)
-				{
-					cmd_path = ft_strjoin("/", dp->d_name);
-					cmd_path = ft_strjoin(dir_names[i], cmd_path);
-					*cmd_paths = ft_realloc2(*cmd_paths, cmd_path); 
-					return (true);
-				}
+				cmd_path = ft_strjoin("/", dp->d_name);
+				cmd_path = ft_strjoin(dir_names[i], cmd_path);
+				*cmd_paths = ft_realloc2(*cmd_paths, cmd_path); 
+				return (true);
 			}
 		}
 		closedir(dir);

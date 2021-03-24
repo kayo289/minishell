@@ -38,8 +38,8 @@ static void command(t_ip **ip, t_args *args, t_queue *tokens)
 	return;
 }
 
-static void pipeline(ip, args, tokens, sv)
-	t_ip **ip; t_args *args; t_queue *tokens; t_shell_var sv;
+static void pipeline(ip, args, tokens)
+	t_ip **ip; t_args *args; t_queue *tokens;
 {
 	command(ip, args, tokens);
 	while ((*ip)->sy == PIPE)
@@ -63,7 +63,7 @@ static void list(t_ip **ip, t_args *args, t_queue *tokens, t_shell_var sv)
 		if ((*ip)->sy == SEMICOLON)
 			next_token(ip, tokens);
 	}
-	else if ((*ip)->sy != INPUT_END)
+	if ((*ip)->sy != INPUT_END)
 		error(MESSAGE1, (*ip)->id_string);
 }
 
