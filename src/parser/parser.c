@@ -17,11 +17,15 @@ static void command(t_ip **ip, t_args *args, t_queue *tokens)
 	char **arg;
 
 	arg = (char**)ft_calloc2(sizeof(char*), 1);
-	while ((*ip)->sy == IDENTIFY)
+	while ((*ip)->sy == IDENTIFY || \
+			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 	{
-		arg = ft_realloc2(arg, (*ip)->id_string);
-		next_token(ip, tokens);
-		while ((*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+		if ((*ip)->sy == IDENTIFY)
+		{
+			arg = ft_realloc2(arg, (*ip)->id_string);
+			next_token(ip, tokens);
+		}
+		if ((*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 		{
 			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY) 
@@ -34,31 +38,31 @@ static void command(t_ip **ip, t_args *args, t_queue *tokens)
 	return;
 }
 
-static void pipeline(ip, args, tokens, sv)
-	t_ip **ip; t_args *args; t_queue *tokens; t_shell_var sv;
+static void pipeline(ip, args, tokens)
+	t_ip **ip; t_args *args; t_queue *tokens;
 {
 	command(ip, args, tokens);
 	while ((*ip)->sy == PIPE)
 	{
 		next_token(ip, tokens);
-		if ((*ip)->sy == IDENTIFY)
+		if ((*ip)->sy == IDENTIFY || \
+			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 			command(ip, args, tokens);
 		else
 			error(MESSAGE1, (*ip)->id_string);
 	}
-	if ((*ip)->sy == SEMICOLON)
-	{
-		exec(args, sv);
-		next_token(ip, tokens);
-	}
-	else if ((*ip)->sy == INPUT_END)
-		exec(args, sv);
 }
 
 static void list(t_ip **ip, t_args *args, t_queue *tokens, t_shell_var sv)
 {
-	while ((*ip)->sy == IDENTIFY)
+	while ((*ip)->sy == IDENTIFY || \
+			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+	{
 		pipeline(ip, args, tokens, sv);
+		exec(args, sv);
+		if ((*ip)->sy == SEMICOLON)
+			next_token(ip, tokens);
+	}
 	if ((*ip)->sy != INPUT_END)
 		error(MESSAGE1, (*ip)->id_string);
 }
