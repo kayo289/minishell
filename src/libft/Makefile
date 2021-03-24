@@ -51,7 +51,13 @@ SRCS = ft_memset.c\
 		ft_lstiter.c\
 		ft_lstmap.c\
 		ft_setenv.c\
-		ft_getenv.c
+		ft_getenv.c\
+		ft_dlstnew.c\
+		ft_dlstlast.c\
+		ft_dlstadd_back.c\
+		ft_dlstadd_front.c\
+		ft_dlstdelone.c\
+		ft_dlstclear.c
 
 OBJS = ${SRCS:.c=.o}
 
