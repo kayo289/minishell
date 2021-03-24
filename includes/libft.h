@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/03/25 00:49:33 by kikuchika        ###   ########.fr       */
+/*   Updated: 2021/03/25 01:23:46 by kikuchika        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,7 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 int					ft_setenv(char *name, char *value);
 char				*ft_getenv(char *name);
 t_dlist				*ft_dlstnew(void *content);
+t_dlist				*ft_dlstlast(t_dlist *lst);
+void				ft_dlstadd_back(t_dlist **lst, t_dlist *new);
 
 #endif
