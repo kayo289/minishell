@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/03/16 09:21:47 by user42           ###   ########.fr       */
+/*   Updated: 2021/03/25 00:49:33 by kikuchika        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@
 #define __GNU_SOURCE
 # include <unistd.h>
 
+typedef struct		s_dlist
+{
+	struct s_dlist	*prev;
+	void			*content;
+	struct s_dlist	*next;
+}					t_dlist;
 
 typedef struct		s_list
 {
@@ -79,5 +85,6 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 				void (*del)(void *));
 int					ft_setenv(char *name, char *value);
 char				*ft_getenv(char *name);
+t_dlist				*ft_dlstnew(void *content);
 
 #endif
