@@ -22,7 +22,7 @@ void esc(t_pos *pos)
 	char key;
 
 	read(0, &key, 1);
-	while (key == 27)
+	while (key == ESC)
 		read(0, &key, 1);
 	if (key == '[')
 	{
