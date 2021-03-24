@@ -46,6 +46,13 @@ typedef struct	s_ip
 	};
 	*/
 }				t_ip;
+
+typedef struct s_echo_flag
+{
+	int			n;
+	int			another;
+}				t_echo_flag;
+
 typedef t_list * t_queue;
 typedef char *** t_args;
 
