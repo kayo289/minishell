@@ -56,7 +56,10 @@ int main(int argc, char **argv)
 
 	init_flag(&f);
 	if (argc <= 1)
+	{
+		ft_putstr_fd("\n", 1);
 		return (0);
+	}
 	output(1, argc, argv, &f);
 	if (f.n == 0)
 		ft_putstr_fd("\n", 1);
