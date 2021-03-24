@@ -9,9 +9,11 @@ static void check_flag(char *argv, t_echo_flag *f){
 	i = 0;
 	n = 0;
 	another = 0;
-	//printf("%s\n",argv);
-	if (argv[i++] != '-')
+	if (argv[i++] != '-' || f->another == 1)
+	{
+		f->another = 1;
 		return;
+	}
 	while(argv[i] != '\0')
 	{
 		if (argv[i] == 'n')
@@ -20,7 +22,6 @@ static void check_flag(char *argv, t_echo_flag *f){
 			another = 1;
 		i++;
 	}
-	//printf("n:%d,another:%d\n",n,another);
 	if (another == 1)
 		f->another = 1;
 	if (n == 1 && another == 0)
