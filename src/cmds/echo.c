@@ -9,12 +9,12 @@ static char check_opt_n(char ***argv)
 	while (**argv != NULL)
 	{
 		if (ft_strncmp(**argv, "-n", 2) != 0)
-			break;
-		opt_n = true;
+			return (opt_n);
 		i = 2;
 		while ((**argv)[i] != '\0')
 			if ((**argv)[i++] != 'n')
-				return (true);
+				return (opt_n);
+		opt_n = true;
 		(*argv)++;
 	}
 	return (opt_n);
