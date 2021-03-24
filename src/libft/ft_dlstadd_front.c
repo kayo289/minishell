@@ -4,7 +4,7 @@ void	ft_dlstadd_front(t_dlist **lst, t_dlist *new)
 {
 	if (lst && new)
 	{
-		new->new = *lst;
+		new->next = *lst;
 		*lst = new;
 	}
 }
