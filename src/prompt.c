@@ -19,12 +19,19 @@ void lf(t_pos *pos)
 
 void esc(t_pos *pos)
 {
-	char key;
+	char	key;
+	int		cnt;
 
+	cnt = 0;
 	read(0, &key, 1);
-	while (key == 27)
+	while (key == ESC)
+	{
+		cnt++;
 		read(0, &key, 1);
-	if (key == '[')
+	}
+	if(cnt%2==1)
+		ft_putstr_fd("[",1);
+	if (key == '[' && cnt % 2 == 0)
 	{
 		read(0, &key, 1);
 		if(key == 'C')
