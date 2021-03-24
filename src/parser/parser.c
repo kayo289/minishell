@@ -51,21 +51,19 @@ static void pipeline(ip, args, tokens, sv)
 		else
 			error(MESSAGE1, (*ip)->id_string);
 	}
-	if ((*ip)->sy == SEMICOLON)
-	{
-		exec(args, sv);
-		next_token(ip, tokens);
-	}
 }
 
 static void list(t_ip **ip, t_args *args, t_queue *tokens, t_shell_var sv)
 {
 	while ((*ip)->sy == IDENTIFY || \
 			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+	{
 		pipeline(ip, args, tokens, sv);
-	if ((*ip)->sy == INPUT_END)
 		exec(args, sv);
-	else
+		if ((*ip)->sy == SEMICOLON)
+			next_token(ip, tokens);
+	}
+	else if ((*ip)->sy != INPUT_END)
 		error(MESSAGE1, (*ip)->id_string);
 }
 
