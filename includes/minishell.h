@@ -46,6 +46,7 @@ typedef struct	s_ip
 	};
 	*/
 }				t_ip;
+
 typedef t_list * t_queue;
 typedef char *** t_args;
 

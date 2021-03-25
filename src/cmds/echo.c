@@ -1,25 +1,48 @@
 #include "../../includes/minishell.h"
 
-static void output(int pos, int argc, char **argv)
+static char check_opt_n(char ***argv)
 {
-	if (pos + 1 >= argc)
+	bool opt_n;
+	int i;
+
+	opt_n = false;
+	while (**argv != NULL)
 	{
-		ft_putstr_fd(argv[pos], 1);
-		return;
+		if (ft_strncmp(**argv, "-n", 2) != 0)
+			return (opt_n);
+		i = 2;
+		while ((**argv)[i] != '\0')
+			if ((**argv)[i++] != 'n')
+				return (opt_n);
+		opt_n = true;
+		(*argv)++;
 	}
-	ft_putstr_fd(argv[pos], 1);
-	ft_putstr_fd(" ", 1);
-	output(pos + 1, argc, argv);
+	return (opt_n);
+}
+
+static void output(char **argv)
+{
+	if (*argv == NULL)
+		return;
+	ft_putstr_fd(*argv, 1);
+	if (*(argv + 1) != NULL)
+		ft_putstr_fd(" ", 1);
+	output(argv + 1);
 }
 
 int main(int argc, char **argv)
 {
-	if (argc <= 1 || ft_strcmp(argv[1], "-n") != 0)
+	bool opt_n;
+
+	if (argc <= 1)
 	{
-		output(1, argc, argv);
 		ft_putendl_fd("", 1);
+		return(0);
 	}
-	else
-		output(2, argc, argv);
-	exit(0);
+	argv++;
+	opt_n = check_opt_n(&argv);
+	output(argv);
+	if (opt_n == false)
+		ft_putstr_fd("\n", 1);
+	return(0);
 }
