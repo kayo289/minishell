@@ -20,7 +20,6 @@ fclean: clean
 re:	fclean all
 
 
-VAL	= $(eval export LD_LIBRARY_PATH=${PWD})
 $(NAME): $(NAME_OBJ)
 	$(CC) $(CFLAGS) -shared -fPIC -o $@ $^
 	export LD_LIBRARY_PATH=${PWD}
