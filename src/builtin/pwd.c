@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../../includes/libcmds.h"
 
 void pwd(int argc, char **argv)
 {
