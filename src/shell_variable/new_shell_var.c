@@ -16,7 +16,6 @@ t_shell_var new_shell_var(void)
 	i = -1;
 	while (environ[++i] != NULL)
 		set_shell_var(this, environ[i]);
-	set_shell_var(this, "PATH=./cmds");
 	return (this);
 }
 
