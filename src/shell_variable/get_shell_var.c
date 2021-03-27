@@ -10,11 +10,9 @@ char *get_shell_var(t_shell_var this, char *name)
 	top = this->hash_table[h];
 	while (top != NULL)
 	{
-		key = ((t_map*)top->content)->key;
+		key = ((t_param*)top->content)->key;
 		if (ft_strcmp(key, name) == 0)
-		{
-			return (((t_map *)top->content)->value);
-		}
+			return (((t_param *)top->content)->value);
 		top = top->next;
 	}
 	return (NULL);

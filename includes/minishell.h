@@ -51,18 +51,18 @@ typedef t_list * t_queue;
 typedef char *** t_args;
 
 // lexer
-void lexer(char *line, t_queue *tokens, t_shell_var sv);
+void lexer(char *line, t_queue *tokens, t_shell_var *sv);
 char next_ch(char *line, t_ip *ip);
-char *expand_parameter(char **line, t_ip *ip, t_shell_var sv);
-void quoting(char **line, t_ip *ip, t_shell_var sv);
+char *expand_parameter(char **line, t_ip *ip);
+void quoting(char **line, t_ip *ip);
 void metacharacter(char **line, t_ip *ip);
 
 // parser
-void parser(t_queue *tokens, t_shell_var sv);
+void parser(t_queue *tokens, t_shell_var *sv);
 
 // exec_unit
-void exec(t_args *args, t_shell_var sv);
-char **fetch_path(t_args *args, t_shell_var sv);
+void exec(t_args *args, t_shell_var *sv, t_queue *vars);
+char **fetch_path(t_args *args, t_shell_var *sv);
 
 void error(char *message, char *token);
 void error2(char *message, char token);
