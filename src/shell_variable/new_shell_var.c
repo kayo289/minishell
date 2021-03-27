@@ -2,27 +2,21 @@
 
 t_shell_var new_shell_var(void)
 {
-	int	fd;
-	char *line;
+	extern char **environ;
 	t_shell_var this;
 	int i;
 
 	this = malloc(sizeof(t_shell_var));
-	i = 0;
-	while (i < HASH_SIZE)
+	i = -1;
+	while (++i < HASH_SIZE)
 	{
 		this->hash_table[i] = malloc(sizeof(t_list)); 
 		this->hash_table[i] = NULL;
-		i++;
 	}
-	// dummy
-	return (this);
-	fd = open(".minishellrc", O_RDONLY);
-	while (get_next_line(fd, &line) > 0)
-	{
-		printf("line:%s\n", line);
-		//parse_line(line, this);
-	}
+	i = -1;
+	while (environ[++i] != NULL)
+		set_shell_var(this, environ[i]);
+	set_shell_var(this, "PATH=./cmds");
 	return (this);
 }
 

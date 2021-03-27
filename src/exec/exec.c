@@ -50,20 +50,39 @@ static void exec_pipeline(int i, char ***args, char **path)
 	}
 }
 
-void exec(char ****args, t_shell_var sv)
+static char *pop(t_queue *queue)
+{
+	t_list *head;
+
+	head = *queue;
+	*queue = (*queue)->next;
+	return ((char *)head->content);
+}
+
+void exec(t_args *args, t_shell_var *sv, t_queue *vars)
 {
 	pid_t pid;
 	int status;
+	char *var;
 
 	signal(SIGINT, SIG_IGN);
 	set_signal(SIGINT);
-	if ((pid = fork()) == 0)
-		exec_pipeline(0, *args, fetch_path(args, sv));
+
+	if (***args == NULL)
+	{
+		var = pop(vars);
+		set_shell_var(*sv, var);
+	}
 	else
 	{
-		waitpid(pid, &status, 0);
-		free(*args);
-		*args = ft_calloc3(sizeof(char **), 1);
+		if ((pid = fork()) == 0)
+			exec_pipeline(0, *args, fetch_path(args, sv));
+		else
+		{
+			waitpid(pid, &status, 0);
+			free(*args);
+			*args = ft_calloc3(sizeof(char **), 1);
+		}
 	}
 }
 

@@ -20,17 +20,16 @@ static void save_token(t_ip *ip, t_queue *tokens)
 	ip->id_string = ft_calloc(sizeof(char), 1);
 }
 
-static void dollar(line, ip, tokens, sv)
-	char **line; t_ip *ip; t_queue *tokens; t_shell_var sv;
+static void dollar(line, ip, tokens)
+	char **line; t_ip *ip; t_queue *tokens;
 {
 	char *val;
 	char *str;
 
-	if ((val = expand_parameter(line, ip, sv)) == NULL)
+	if ((val = expand_parameter(line, ip)) == NULL)
 		return;
 	str = ft_strtrim(val, " \t\n");
-	if (ft_strchr(" \t\n", val[0]) != NULL)
-	{
+	if (ft_strchr(" \t\n", val[0]) != NULL) {
 		if (ft_strcmp(ip->id_string, "") != 0)
 		{
 			ip->sy = IDENTIFY;
@@ -49,7 +48,7 @@ static void dollar(line, ip, tokens, sv)
 }
 
 static void get_token(line, ip, tokens, sv)
-	char **line; t_ip *ip; t_queue *tokens; t_shell_var sv;
+	char **line; t_ip *ip; t_queue *tokens; t_shell_var *sv;
 {
 	while (ip->ch == ' ' || ip->ch == '\t')
 		next_ch(*line, ip);
@@ -65,7 +64,7 @@ static void get_token(line, ip, tokens, sv)
 			if (ft_strchr("$", ip->ch) != NULL)
 				dollar(line, ip, tokens, sv);
 			else if (ft_strchr("\"\'\\", ip->ch) != NULL)
-				quoting(line, ip, sv);
+				quoting(line, ip);
 			else
 				ft_charjoin(&ip->id_string, ip->ch);
 			next_ch(*line, ip);
@@ -78,7 +77,7 @@ static void get_token(line, ip, tokens, sv)
 	get_token(line, ip, tokens, sv);
 }
 
-void lexer(char *line, t_queue *tokens, t_shell_var sv)
+void lexer(char *line, t_queue *tokens, t_shell_var *sv)
 {
 	t_ip	ip;
 
