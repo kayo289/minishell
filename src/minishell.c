@@ -17,7 +17,7 @@ static void set_signal(int p_signame)
 	}
 }
 */
-static void primary_prompt(t_shell_var *sv)
+static void reader_loop(t_shell_var *sv)
 {
 	t_dlist *line;
 	t_queue tokens;
@@ -36,6 +36,6 @@ int main(void)
 	t_shell_var sv;
 
 	sv = new_shell_var();
-	primary_prompt(&sv);
+	reader_loop(&sv);
 	return (0);
 }
