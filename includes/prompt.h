@@ -21,7 +21,12 @@ typedef struct s_pos
 	unsigned int max_lf;
 }				t_pos;
 
+// prompt
+void prompt(char *ps, t_dlist **line);
 
-void prompt(void);
+// prompt_utils
+void 	term_mode(char *p);
+void	init_pos(t_pos *pos, char *ps1);
+void	insert(t_dlist **lst, char c, t_pos *pos);
 
 #endif

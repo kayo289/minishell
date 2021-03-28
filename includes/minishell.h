@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "get_next_line.h"
 #include "libcmds.h"
+#include "prompt.h"
 #include "shell_variable.h"
 
 typedef enum u_token
@@ -33,7 +34,6 @@ typedef struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
-	int			index;
 	/* To degug 
 	char *command_name[TOKEN_NUM] = {
 		"PIPE",		// |
@@ -51,11 +51,11 @@ typedef t_list * t_queue;
 typedef char *** t_args;
 
 // lexer
-void lexer(char *line, t_queue *tokens, t_shell_var *sv);
-char next_ch(char *line, t_ip *ip);
-char *expand_parameter(char **line, t_ip *ip);
-void quoting(char **line, t_ip *ip);
-void metacharacter(char **line, t_ip *ip);
+void lexer(t_dlist **line, t_queue *tokens, t_shell_var *sv);
+char next_ch(t_dlist **line, t_ip *ip);
+char *expand_parameter(t_dlist **line);
+void quoting(t_dlist **line, t_ip *ip);
+void metacharacter(t_dlist **line, t_ip *ip);
 
 // parser
 void parser(t_queue *tokens, t_shell_var *sv);

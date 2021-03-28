@@ -22,6 +22,7 @@ SRCS = ft_memset.c\
 		ft_isalnum.c\
 		ft_isascii.c\
 		ft_isprint.c\
+		ft_issnack_case.c\
 		ft_toupper.c\
 		ft_tolower.c\
 		ft_calloc.c\
@@ -57,7 +58,8 @@ SRCS = ft_memset.c\
 		ft_dlstadd_back.c\
 		ft_dlstadd_front.c\
 		ft_dlstdelone.c\
-		ft_dlstclear.c
+		ft_dlstclear.c\
+		ft_dlstinsert.c
 
 OBJS = ${SRCS:.c=.o}
 

@@ -1,37 +1,22 @@
-#include "../includes/prompt.h"
+#include "../../includes/prompt.h"
 
-static int outc(int c)
+void del(t_pos *pos, t_dlist **cursor)
 {
-	return write(1, &c, 1);
-}
+	t_dlist *save;
 
-static void term_mode(char *p)
-{
-	char buf[1024];
-	char *term;
-	char *cptr;
-
-	if ((term = getenv("TERM")) == NULL)
-		ft_putstr_fd("getenv\n", 2);
-	if (tgetent(buf, term) != 1)
-		ft_putstr_fd("tgetent\n", 2);
-	cptr = buf;
-	if (tgetstr(p, &cptr))
-		tputs(buf, 1, outc);
-}
-
-void del(t_pos *pos)
-{
-	if (pos->cursor >= pos->max_lf)
+	if (pos->cursor > pos->max_lf)
 	{
 		write(1, "\b", 1);
 		term_mode("dc");
+		save = (*cursor)->prev;
+		ft_dlstdelone(*cursor, free);
+		*cursor = save;
 		pos->cursor--;
-		pos->max_lf--;
+		pos->max_rg--;
 	}
 }
 
-void esc(t_pos *pos)
+void esc(t_pos *pos, t_dlist **cursor)
 {
 	char	key;
 
@@ -43,6 +28,7 @@ void esc(t_pos *pos)
 		{
 			if(pos->cursor < pos->max_rg)
 			{
+				*cursor = (*cursor)->next;
 				pos->cursor++;
 				term_mode("nd"); // cursor_right
 			}
@@ -51,6 +37,7 @@ void esc(t_pos *pos)
 		{
 			if(pos->max_lf < pos->cursor)
 			{
+				*cursor = (*cursor)->prev;
 				pos->cursor--;
 				term_mode("le"); // cursor_left
 			}
@@ -58,72 +45,76 @@ void esc(t_pos *pos)
 	}
 }
 
-void init_pos(t_pos *pos, char *ps1)
-{
-	pos->max_lf = ft_strlen(ps1);
-	pos->max_rg = ft_strlen(ps1);
-	pos->cursor = ft_strlen(ps1);
-	ft_putstr_fd(ps1, 1);
-}
-
-static void prompt_loop(char *ps1)
+static void prompt_loop(char *ps, t_dlist **cursor)
 {
 	char key;
 	t_pos pos;
 
 	term_mode("im"); // enter_insert_mode
-	init_pos(&pos, ps1);
+	init_pos(&pos, ps);
 	while(1)
 	{
 		read(0, &key, 1);
 		if (key == ESC)
-			esc(&pos);
+			esc(&pos, cursor);
 		else if (key == DEL)
-			del(&pos);
+			del(&pos, cursor);
 		else if (key == LF)
 		{
 			ft_putchar_fd('\n', 1);
-			init_pos(&pos, ps1);
+			return;
 		}
 		else if (key == ETX) // Ctrl+C
 		{
-			//parser(line);
 			ft_putchar_fd('\n', 1);
-			init_pos(&pos, ps1);
+			init_pos(&pos, ps);
 		}
 		else if (key == EOT) // Ctrl+D
 		{
 			ft_putendl_fd("exit", 1);
-			return;
+			term_mode("ei"); // exit_insert_mode
+			exit(0);
 		}
 		else if (ft_isprint(key))
 		{
+			ft_putchar_fd(key, 1);
+			insert(cursor, key, &pos);
+			*cursor = (*cursor)->next;
 			pos.max_rg++;
 			pos.cursor++;
-			ft_putchar_fd(key, 1);
 		}
 	}
 }
 
-void prompt(void)
+void prompt(char *ps, t_dlist **line)
 {
 	struct termio tty;
 	struct termio tty_save;
+	t_dlist *head;
 
+	head = ft_dlstnew(NULL);
+	*line = head;
 	ioctl(0, TCGETA, &tty);
 	tty_save = tty;
 	tty.c_lflag ^= (ICANON | ISIG | ECHO);
 	tty.c_lflag |= ECHONL; 
 	ioctl(0, TCSETA, &tty);
 
-	prompt_loop("minishell$ ");
+	prompt_loop(ps, &head);
 	term_mode("ei"); // exit_insert_mode
 
 	ioctl(0, TCSETA, &tty_save);
-}
+	ft_dlstadd_back(line, ft_dlstnew("\0"));
+	*line = (*line)->next;
 
-// To debug
-int main(void)
-{
-	prompt();
+	// To debug
+	/*
+	ft_putstr_fd("start output\n[", 1);
+	while(*line != NULL)
+	{
+		write(1, (char *)((*line)->content), 1);
+		*line = (*line)->next;
+	}
+	ft_putstr_fd("]\nend output\n", 1);
+	*/
 }

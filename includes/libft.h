@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/03/25 02:53:27 by kikuchika        ###   ########.fr       */
+/*   Updated: 2021/03/28 11:45:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int					ft_isdigit(int n);
 int					ft_isalnum(int n);
 int					ft_isascii(int c);
 int					ft_isprint(int c);
+int					ft_issnack_case(int n);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 void				*ft_calloc(size_t count, size_t size);
@@ -91,5 +92,6 @@ void				ft_dlstadd_back(t_dlist **lst, t_dlist *new);
 void				ft_dlstadd_front(t_dlist **lst, t_dlist *new);
 void				ft_dlstdelone(t_dlist *lst, void (*del)(void *));
 void				ft_dlstclear(t_dlist **lst, void (*del)(void *));
+void				ft_dlstinsert(t_dlist **lst, t_dlist *new);
 
 #endif

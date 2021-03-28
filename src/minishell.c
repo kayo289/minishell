@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
+/*
 static void sigint(int p_signame)
 {
 	p_signame++;
@@ -15,26 +16,18 @@ static void set_signal(int p_signame)
 		exit(1);
 	}
 }
-
+*/
 static void primary_prompt(t_shell_var *sv)
 {
-	char *line;
+	t_dlist *line;
 	t_queue tokens;
 
 	while (1)
 	{
-		//ft_putstr_fd(get_shell_var(*sv, "PS1"), 1);
-		ft_putstr_fd("minishell$ ", 1);
-		set_signal(SIGINT);
-		if (get_next_line(0, &line) == 0)
-		{
-			write(1, "exit\n", 5);
-			free(line);
-			exit(0);
-		}
-		lexer(line, &tokens, sv);
+		prompt("minishell$ ", &line);
+		lexer(&line, &tokens, sv);
 		parser(&tokens, sv);
-		free(line);
+		//ft_dlstclear(line);
 	}
 } 
 
