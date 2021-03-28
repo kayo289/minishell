@@ -11,7 +11,6 @@
 #include <dirent.h>
 #include <signal.h>
 #include <stdbool.h>
-#include "get_next_line.h"
 #include "libcmds.h"
 #include "prompt.h"
 #include "shell_variable.h"
