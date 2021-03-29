@@ -2,7 +2,7 @@ CC 		= gcc
 CFLAGS 	= -Wall -Wextra -Werror
 INCLUDE = -I../includes
 LDFLAGS = -L./builtin -L./libft
-LIBS	= -lcmds -lft
+LIBS	= -lcmds -lft -ltermcap
 NAME 	= minishell
 CMDS	= \
 		cmds/cd \
@@ -26,7 +26,8 @@ NAME_SRC = \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \
 	shell_variable/hash.c \
-	get_next_line_for_minishell.c \
+	prompt/prompt.c \
+	prompt/prompt_utils.c \
 	error.c \
 	minishell.c
 NAME_OBJ=$(NAME_SRC:.c=.o)

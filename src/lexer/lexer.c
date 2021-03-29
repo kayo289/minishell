@@ -1,10 +1,11 @@
 #include "../../includes/minishell.h"
 
-char next_ch(char *line, t_ip *ip)
+char next_ch(t_dlist **line, t_ip *ip)
 {
-	ip->ch = line[ip->index];
-	if (line[ip->index] != '\0')
-		ip->index++;
+	ip->ch = ((char*)(*line)->content)[0];
+	if ((*line)->next != NULL)
+		*line = (*line)->next;
+	//ft_dlstdelone();
 	return (ip->ch);
 }
 
@@ -21,12 +22,12 @@ static void save_token(t_ip *ip, t_queue *tokens)
 }
 
 static void dollar(line, ip, tokens)
-	char **line; t_ip *ip; t_queue *tokens;
+	t_dlist **line; t_ip *ip; t_queue *tokens;
 {
 	char *val;
 	char *str;
 
-	if ((val = expand_parameter(line, ip)) == NULL)
+	if ((val = expand_parameter(line)) == NULL)
 		return;
 	str = ft_strtrim(val, " \t\n");
 	if (ft_strchr(" \t\n", val[0]) != NULL) {
@@ -48,10 +49,10 @@ static void dollar(line, ip, tokens)
 }
 
 static void get_token(line, ip, tokens, sv)
-	char **line; t_ip *ip; t_queue *tokens; t_shell_var *sv;
+	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell_var *sv;
 {
 	while (ip->ch == ' ' || ip->ch == '\t')
-		next_ch(*line, ip);
+		next_ch(line, ip);
 	if (ip->ch == '\0')
 	{
 		ip->sy = INPUT_END;
@@ -67,7 +68,7 @@ static void get_token(line, ip, tokens, sv)
 				quoting(line, ip);
 			else
 				ft_charjoin(&ip->id_string, ip->ch);
-			next_ch(*line, ip);
+			next_ch(line, ip);
 		}
 		ip->sy = IDENTIFY;
 	}
@@ -77,14 +78,13 @@ static void get_token(line, ip, tokens, sv)
 	get_token(line, ip, tokens, sv);
 }
 
-void lexer(char *line, t_queue *tokens, t_shell_var *sv)
+void lexer(t_dlist **line, t_queue *tokens, t_shell_var *sv)
 {
 	t_ip	ip;
 
 	ip.ch = ' ';
-	ip.index = 0;
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	*tokens = NULL;
-	get_token(&line, &ip, tokens, sv);
+	get_token(line, &ip, tokens, sv);
 	save_token(&ip, tokens);
 }

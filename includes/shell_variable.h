@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include "get_next_line.h"
+#include "libft.h"
 
 #define HASH_SIZE 29999
 
