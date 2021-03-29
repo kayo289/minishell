@@ -80,6 +80,7 @@ void	insert(t_dlist **lst, char c, t_pos *pos);
 void 	del(t_pos *pos, t_dlist **cursor);
 void 	esc(t_pos *pos, t_dlist **cursor);
 void	init_pos(t_pos *pos, char *ps);
+void	ctrld(t_pos *pos, t_dlist **cursor);
 
 // lexer
 void lexer(t_dlist **line, t_queue *tokens, t_shell_var *sv);

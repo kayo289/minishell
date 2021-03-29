@@ -74,3 +74,13 @@ void	insert(t_dlist **lst, char c, t_pos *pos)
 	pos->cursor++;
 }
 
+void ctrld(t_pos *pos, t_dlist **cursor)
+{
+	if (pos->cursor != pos->max_rg)
+	{
+		*cursor = (*cursor)->next;
+		ft_dlstdelone(*cursor, free);
+		term_mode("dc");
+		pos->max_rg--;
+	}
+}

@@ -42,6 +42,7 @@ static int prompt_input(t_dlist **cursor, char *ps)
 		{
 			if ((*cursor)->next == NULL && (*cursor)->prev == NULL)
 				return (key);
+			ctrld(&pos, cursor);
 		}
 		else if (ft_isprint(key))
 			insert(cursor, key, &pos);
