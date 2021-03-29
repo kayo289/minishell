@@ -1,23 +1,59 @@
-#include "../../includes/prompt.h"
+#include "../../includes/minishell.h"
 
-static int outc(int c)
+void init_pos(t_pos *pos, char *ps)
 {
-	return write(1, &c, 1);
+	pos->max_lf = ft_strlen(ps);
+	pos->cursor = ft_strlen(ps);
+	pos->max_rg = ft_strlen(ps);
 }
 
-void term_mode(char *p)
+void del(t_pos *pos, t_dlist **cursor)
 {
-	char buf[1024];
-	char *term;
-	char *cptr;
+	t_dlist *save;
 
-	if ((term = getenv("TERM")) == NULL)
-		ft_putstr_fd("getenv\n", 2);
-	if (tgetent(buf, term) != 1)
-		ft_putstr_fd("tgetent\n", 2);
-	cptr = buf;
-	if (tgetstr(p, &cptr))
-		tputs(buf, 1, outc);
+	if (pos->cursor > pos->max_lf)
+	{
+		write(1, "\b", 1);
+		term_mode("dc");
+		save = (*cursor)->prev;
+		ft_dlstdelone(*cursor, free);
+		*cursor = save;
+		pos->cursor--;
+		pos->max_rg--;
+	}
+}
+
+void esc(t_pos *pos, t_dlist **cursor)
+{
+	char	key;
+
+	read(0, &key, 1);
+	if (key == '[')
+	{
+		read(0, &key, 1);
+		if(key == 'A')
+			return;// histroy
+		if(key == 'B')
+			return;// histroy
+		if(key == 'C')
+		{
+			if(pos->cursor < pos->max_rg)
+			{
+				*cursor = (*cursor)->next;
+				pos->cursor++;
+				term_mode("nd");
+			}
+		}
+		if(key == 'D')
+		{
+			if(pos->max_lf < pos->cursor)
+			{
+				*cursor = (*cursor)->prev;
+				pos->cursor--;
+				term_mode("le");
+			}
+		}
+	}
 }
 
 void	insert(t_dlist **lst, char c, t_pos *pos)
@@ -30,17 +66,11 @@ void	insert(t_dlist **lst, char c, t_pos *pos)
 	new = ft_dlstnew(s);
 	if (pos->cursor >= pos->max_rg)
 		ft_dlstadd_back(lst, new);
-	else if (pos->cursor <= pos->max_lf)
-		ft_dlstadd_front(lst, new);
-	else  // pos->max_lf < pos->cursor < pos->max_rg
+	else
 		ft_dlstinsert(lst, new);
-	return;
+	*lst = (*lst)->next;
+	ft_putchar_fd(c, 1);
+	pos->max_rg++;
+	pos->cursor++;
 }
 
-void init_pos(t_pos *pos, char *ps1)
-{
-	pos->max_lf = ft_strlen(ps1);
-	pos->max_rg = ft_strlen(ps1);
-	pos->cursor = ft_strlen(ps1);
-	ft_putstr_fd(ps1, 1);
-}
