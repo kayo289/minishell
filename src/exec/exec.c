@@ -17,6 +17,7 @@ static void set_signal(int p_signame)
 	}
 }
 
+/*
 static void exec_pipeline(int i, char ***args, char **path)
 {
 	int pp[2];
@@ -49,40 +50,47 @@ static void exec_pipeline(int i, char ***args, char **path)
 		error(args[i][0], MESSAGE);
 	}
 }
-
-static char *pop(t_queue *queue)
+*/
+void assign_variable(t_queue *vars, t_shell_var *sv)
 {
-	t_list *head;
-
-	head = *queue;
-	*queue = (*queue)->next;
-	return ((char *)head->content);
-}
-
-void exec(t_args *args, t_shell_var *sv, t_queue *vars)
-{
-	pid_t pid;
-	int status;
 	char *var;
 
-	signal(SIGINT, SIG_IGN);
-	set_signal(SIGINT);
-
-	if (***args == NULL)
+	//printf("shell_var\n");
+	while (*vars != NULL)
 	{
 		var = pop(vars);
 		set_shell_var(*sv, var);
 	}
+	return;
+}
+
+static void exec_command(int i, t_args args, char **path)
+{
+	//int pp[2];
+	//pid_t pid;
+	execve(path[i], args[i], NULL);
+	error(args[i][0], MESSAGE);
+}
+
+
+void exec(args, fds, sv)
+	t_args args; t_queue *fds; t_shell_var *sv;
+{
+	pid_t pid;
+	int status;
+
+	signal(SIGINT, SIG_IGN);
+	set_signal(SIGINT);
+	if ((pid = fork()) == 0)
+	{
+		redirect(fds);
+		exec_command(0, args, fetch_path(args, sv));
+	}
 	else
 	{
-		if ((pid = fork()) == 0)
-			exec_pipeline(0, *args, fetch_path(args, sv));
-		else
-		{
-			waitpid(pid, &status, 0);
-			free(*args);
-			*args = ft_calloc3(sizeof(char **), 1);
-		}
+		waitpid(pid, &status, 0);
+		free(*args);
+		//args = ft_calloc3(sizeof(char **), 1);
 	}
 }
 
