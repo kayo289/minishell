@@ -12,70 +12,75 @@ static void 	next_token(t_ip **ip, t_queue *tokens)
 	*ip = (t_ip*)head->content;
 }
 
-static void push(char *str, t_queue *queue)
+static void command(ip, tokens, sv)
+		t_ip **ip; t_queue *tokens; t_shell_var *sv;
 {
-	t_list *lst;
-	char *s;
-	
-	s = ft_strdup(str);
-	lst = ft_lstnew(s);
-	ft_lstadd_back(queue, lst);
-}
+	char **args;
+	t_queue fds;
 
-static void command(ip, args, tokens, sv)
-	t_ip **ip; t_args *args; t_queue *tokens; t_shell_var *sv;
-{
-	char **arg;
-	t_queue vars;
-
-	arg = (char**)ft_calloc2(sizeof(char*), 1);
-	vars = NULL;
+	args = (char **)ft_calloc2(sizeof(char*), 1);
+	fds = NULL;
 	while ((*ip)->sy == IDENTIFY || \
 			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 	{
 		if ((*ip)->sy == IDENTIFY)
 		{
-			if (ft_strchr((*ip)->id_string, '=') != NULL)
-				push((*ip)->id_string, &vars);
-			else
-				arg = ft_realloc2(arg, (*ip)->id_string);
+			args = ft_realloc2(args, (*ip)->id_string);
 			next_token(ip, tokens);
 		}
 		if ((*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 		{
+			push(((*ip)->id_string), &fds);
 			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY) 
+			{
+				push(((*ip)->id_string), &fds);
 				next_token(ip, tokens);
+			}
 			else
 				error(MESSAGE1, (*ip)->id_string);
 		}
 	}
-	*args = ft_realloc3(*args, arg);
-	exec(args, sv, &vars);
+	exec(&args, &fds, sv);
 }
 
-static void pipeline(ip, args, tokens, sv)
-	t_ip **ip; t_args *args; t_queue *tokens; t_shell_var *sv;
+static void pipeline(ip, tokens, sv)
+	t_ip **ip; t_queue *tokens; t_shell_var *sv;
 {
-	command(ip, args, tokens, sv);
+	command(ip, tokens, sv);
 	while ((*ip)->sy == PIPE)
 	{
 		next_token(ip, tokens);
 		if ((*ip)->sy == IDENTIFY || \
 			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
-			command(ip, args, tokens, sv);
+			command(ip, tokens, sv);
 		else
 			error(MESSAGE1, (*ip)->id_string);
 	}
 }
 
-static void list(ip, args, tokens, sv)
-	t_ip **ip; t_args *args; t_queue *tokens; t_shell_var *sv;
+static void list(ip, tokens, sv)
+	t_ip **ip; t_queue *tokens; t_shell_var *sv;
 {
+	t_queue vars;
+
+	vars = NULL;
+	while ((*ip)->sy == IDENTIFY)
+	{
+		if (ft_strchr((*ip)->id_string, '=') != NULL)
+		{
+			push((*ip)->id_string, &vars);
+			next_token(ip, tokens);
+			if ((*ip)->sy == INPUT_END)
+				assign_variable(&vars, sv);
+		}
+		else
+			break;
+	}
 	while ((*ip)->sy == IDENTIFY || \
 			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 	{
-		pipeline(ip, args, tokens, sv);
+		pipeline(ip, tokens, sv);
 		if ((*ip)->sy == SEMICOLON)
 			next_token(ip, tokens);
 	}
@@ -85,10 +90,8 @@ static void list(ip, args, tokens, sv)
 
 void parser(t_queue *tokens, t_shell_var *sv)
 {
-	t_ip	*head;
-	t_args	args;
+	t_ip	*ip;
 	
-	args = ft_calloc3(sizeof(char **), 1);
-	next_token(&head, tokens);
-	list(&head, &args, tokens, sv);
+	next_token(&ip, tokens);
+	list(&ip, tokens, sv);
 }

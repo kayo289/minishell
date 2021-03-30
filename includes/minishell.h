@@ -15,6 +15,7 @@
 #include <termios.h>
 #include <termcap.h>
 #include <ctype.h>
+#include <fcntl.h>
 #include "libcmds.h"
 #include "shell_variable.h"
 
@@ -80,7 +81,7 @@ void	insert(t_dlist **lst, char c, t_pos *pos);
 void 	del(t_pos *pos, t_dlist **cursor);
 void 	esc(t_pos *pos, t_dlist **cursor);
 void	init_pos(t_pos *pos, char *ps);
-void	ctrld(t_pos *pos, t_dlist **cursor);
+void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
 // lexer
 void lexer(t_dlist **line, t_queue *tokens, t_shell_var *sv);
@@ -92,10 +93,19 @@ void metacharacter(t_dlist **line, t_ip *ip);
 // parser
 void parser(t_queue *tokens, t_shell_var *sv);
 
-// exec_unit
-void exec(t_args *args, t_shell_var *sv, t_queue *vars);
-char **fetch_path(t_args *args, t_shell_var *sv);
+// exec
+//void exec(t_args *args, t_shell_var *sv, t_queue *vars);
+void exec(t_args args, t_queue *fds, t_shell_var *sv);
+void assign_variable(t_queue *vars, t_shell_var *sv);
+void redirect(t_queue *fds);
+//char **fetch_path(t_args *args, t_shell_var *sv);
+char **fetch_path(t_args args, t_shell_var *sv);
 
+// queue
+void push(char *str, t_queue *queue);
+char *pop(t_queue *queue);
+
+// error
 void error(char *message, char *token);
 void error2(char *message, char token);
 

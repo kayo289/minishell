@@ -20,8 +20,11 @@ NAME_SRC = \
 	lexer/quoting.c \
 	lexer/metacharacter.c \
 	parser/parser.c \
+	parser/push.c \
 	exec/exec.c \
+	exec/redirect.c \
 	exec/fetch_path.c \
+	exec/pop.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \
