@@ -20,15 +20,14 @@ static void command(ip, tokens, sv)
 
 	args = (char **)ft_calloc2(sizeof(char*), 1);
 	fds = NULL;
-	while ((*ip)->sy == IDENTIFY || \
-			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
 		if ((*ip)->sy == IDENTIFY)
 		{
 			args = ft_realloc2(args, (*ip)->id_string);
 			next_token(ip, tokens);
 		}
-		if ((*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+		if ((*ip)->sy == REDIRECT)
 		{
 			push(((*ip)->id_string), &fds);
 			next_token(ip, tokens);
@@ -50,14 +49,11 @@ static void command(ip, tokens, sv)
 static void pipeline(ip, tokens, sv)
 	t_ip **ip; t_queue *tokens; t_shell_var *sv;
 {
-	int pfd[2];
-
 	command(ip, tokens, sv);
 	while ((*ip)->sy == PIPE)
 	{
 		next_token(ip, tokens);
-		if ((*ip)->sy == IDENTIFY || \
-			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+		if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 			command(ip, tokens, sv);
 		else
 		{
@@ -85,8 +81,7 @@ static void list(ip, tokens, sv)
 		else
 			break;
 	}
-	while ((*ip)->sy == IDENTIFY || \
-			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
+	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
 		pipeline(ip, tokens, sv);
 		if ((*ip)->sy == SEMICOLON)
