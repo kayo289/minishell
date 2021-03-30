@@ -37,9 +37,7 @@ typedef char ***		t_args;
 enum u_token
 {
 	PIPE,		// |
-	GT,			// >
-	LT,			// < 
-	DGT,		// >>
+	REDIRECT,	// >>, >, <
 	SEMICOLON,	// ;
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
