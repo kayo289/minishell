@@ -38,7 +38,10 @@ static void command(ip, tokens, sv)
 				next_token(ip, tokens);
 			}
 			else
+			{
 				error(MESSAGE1, (*ip)->id_string);
+				(*ip)->sy = INPUT_END;
+			}
 		}
 	}
 	exec(&args, &fds, sv);
@@ -47,6 +50,8 @@ static void command(ip, tokens, sv)
 static void pipeline(ip, tokens, sv)
 	t_ip **ip; t_queue *tokens; t_shell_var *sv;
 {
+	int pfd[2];
+
 	command(ip, tokens, sv);
 	while ((*ip)->sy == PIPE)
 	{
@@ -55,7 +60,10 @@ static void pipeline(ip, tokens, sv)
 			(*ip)->sy == GT || (*ip)->sy == LT || (*ip)->sy == DGT)
 			command(ip, tokens, sv);
 		else
+		{
 			error(MESSAGE1, (*ip)->id_string);
+			(*ip)->sy = INPUT_END;
+		}
 	}
 }
 
