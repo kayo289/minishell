@@ -48,8 +48,8 @@ static void dollar(line, ip, tokens)
 	}
 }
 
-static void get_token(line, ip, tokens, sv)
-	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell_var *sv;
+static void get_token(line, ip, tokens, shell)
+	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell *shell;
 {
 	while (ip->ch == ' ' || ip->ch == '\t')
 		next_ch(line, ip);
@@ -75,16 +75,16 @@ static void get_token(line, ip, tokens, sv)
 	else
 		metacharacter(line, ip);
 	save_token(ip, tokens);
-	get_token(line, ip, tokens, sv);
+	get_token(line, ip, tokens, shell);
 }
 
-void lexer(t_dlist **line, t_queue *tokens, t_shell_var *sv)
+void lexer(t_dlist **line, t_queue *tokens, t_shell *shell)
 {
 	t_ip	ip;
 
 	ip.ch = ' ';
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	*tokens = NULL;
-	get_token(line, &ip, tokens, sv);
+	get_token(line, &ip, tokens, shell);
 	save_token(&ip, tokens);
 }

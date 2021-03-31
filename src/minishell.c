@@ -1,6 +1,6 @@
 #include "../includes/minishell.h"
 
-static void minishell_loop(t_shell_var *sv)
+static void minishell_loop(t_shell *shell)
 {
 	t_dlist *line;
 	t_queue tokens;
@@ -8,8 +8,8 @@ static void minishell_loop(t_shell_var *sv)
 	while (1)
 	{
 		prompt("minishell$ ", &line);
-		lexer(&line, &tokens, sv);
-		parser(&tokens, sv);
+		lexer(&line, &tokens, shell);
+		parser(&tokens, shell);
 		while (wait(NULL) > 0);
 		//ft_dlstclear(line);
 	}
@@ -17,9 +17,9 @@ static void minishell_loop(t_shell_var *sv)
 
 int main(void)
 {
-	t_shell_var sv;
+	t_shell shell;
 
-	sv = new_shell_var();
-	minishell_loop(&sv);
+	shell = new_shell_var();
+	minishell_loop(&shell);
 	return (0);
 }
