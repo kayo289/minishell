@@ -17,7 +17,7 @@ static void set_signal(int p_signame)
 	}
 }
 */
-static void reader_loop(t_shell_var *sv)
+static void minishell_loop(t_shell_var *sv)
 {
 	t_dlist *line;
 	t_queue tokens;
@@ -36,6 +36,6 @@ int main(void)
 	t_shell_var sv;
 
 	sv = new_shell_var();
-	reader_loop(&sv);
+	minishell_loop(&sv);
 	return (0);
 }
