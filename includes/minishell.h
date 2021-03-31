@@ -103,6 +103,7 @@ char next_ch(t_dlist **line, t_ip *ip);
 char *expand_parameter(t_dlist **line);
 void quoting(t_dlist **line, t_ip *ip);
 void metacharacter(t_dlist **line, t_ip *ip);
+void fd_redirect(t_dlist **line, t_ip *ip);
 
 // parser
 void parser(t_queue *tokens, t_shell *shell);
@@ -120,6 +121,7 @@ char *pop(t_queue *queue);
 // error
 void err_syntax(t_ip **ip);
 void err_notfound(char *cmd);
+void err_badfd(int n);
 
 // shell_var
 t_shell new_shell_var(void);

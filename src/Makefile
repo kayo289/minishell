@@ -19,6 +19,7 @@ NAME_SRC = \
 	lexer/parameter_expansion.c \
 	lexer/quoting.c \
 	lexer/metacharacter.c \
+	lexer/fd_redirect.c \
 	parser/parser.c \
 	parser/push.c \
 	interpreter/interpreter.c \

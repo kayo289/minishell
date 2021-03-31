@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void gt(char *file)
+static void gt(char *file, int n)
 {
 	int fd;
 
@@ -8,12 +8,12 @@ static void gt(char *file)
 	if (fd == -1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return;
+		exit(1);
 	}
-	dup2(fd, 1);
+	dup2(fd, n);
 }
 
-static void dgt(char *file)
+static void dgt(char *file, int n)
 {
 	int fd;
 
@@ -21,9 +21,9 @@ static void dgt(char *file)
 	if (fd == -1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return;
+		exit(1);
 	}
-	dup2(fd, 1);
+	dup2(fd, n);
 }
 
 static void lt(char *file)
@@ -33,25 +33,37 @@ static void lt(char *file)
 	if ((fd = open(file, O_RDWR)) == -1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return;
+		exit(1);
 	}
+	fprintf(stderr, "fd:%d\n", fd);
 	dup2(fd, 0);
 }
 
 void redirect(t_queue *fds)
 {
-	char *rdct;
-	char *file;
+	int		n;
+	char	*rdct;
+	char	*file;
 
 	while (*fds != NULL)
 	{
 		rdct = pop(fds);
+		n = 0;
+		while (ft_isalnum(*rdct))
+			n = n * 10 + (*rdct++ - '0');
 		file = pop(fds);
-		if (ft_strcmp(rdct, ">") == 0)
-			gt(file);
-		else if (ft_strcmp(rdct, ">>") == 0)
-			dgt(file);
-		else if (ft_strcmp(rdct, "<") == 0)
+		if (*rdct == '>')
+		{
+			if (n > 256)
+				err_badfd(n);
+			if (n != 2)
+				n = 1;
+			if (*++rdct == '>')
+				dgt(file, n);
+			else
+				gt(file, n);
+		}
+		else if (*rdct == '<')
 			lt(file);
 	}
 }
