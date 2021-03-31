@@ -34,10 +34,8 @@ char *fetch_path(t_args args, t_shell_var *sv)
 	char	**dir_names;
 	char	*cmd_path;
 
-	///fprintf(stderr, "(*args)[0]:%s\n", (*args)[0]);
 	env_value = get_shell_var(*sv, "PATH");
 	dir_names = ft_split(env_value, ':');
 	find_command((*args)[0], &cmd_path, dir_names);
-	//fprintf(stderr, "cmd_path:%s\n", cmd_path);
 	return (cmd_path);
 }

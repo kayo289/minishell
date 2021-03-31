@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 #define MESSAGE1 "minishell: unexpected EOF while looking for matching "
 #define MESSAGE2 "minishell: syntax error: unexpected end of file"
