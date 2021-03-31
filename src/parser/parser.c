@@ -1,8 +1,5 @@
 #include "../../includes/minishell.h"
 
-#define MESSAGE1 "syntax error near unexpected token " 
-#define MESSAGE2 ": command not found"
-
 static void 	next_token(t_ip **ip, t_queue *tokens)
 {
 	t_list *head;
@@ -37,10 +34,7 @@ static void command(ip, tokens, sv)
 				next_token(ip, tokens);
 			}
 			else
-			{
-				error(MESSAGE1, (*ip)->id_string);
-				(*ip)->sy = INPUT_END;
-			}
+				err_syntax(ip);
 		}
 	}
 	exec(&args, &fds, sv);
@@ -56,10 +50,7 @@ static void pipeline(ip, tokens, sv)
 		if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 			command(ip, tokens, sv);
 		else
-		{
-			error(MESSAGE1, (*ip)->id_string);
-			(*ip)->sy = INPUT_END;
-		}
+			err_syntax(ip);
 	}
 }
 
@@ -88,7 +79,7 @@ static void list(ip, tokens, sv)
 			next_token(ip, tokens);
 	}
 	if ((*ip)->sy != INPUT_END)
-		error(MESSAGE1, (*ip)->id_string);
+		err_syntax(ip);
 }
 
 void parser(t_queue *tokens, t_shell_var *sv)

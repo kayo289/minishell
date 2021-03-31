@@ -104,7 +104,7 @@ void push(char *str, t_queue *queue);
 char *pop(t_queue *queue);
 
 // error
-void error(char *message, char *token);
-void error2(char *message, char token);
+void err_syntax(t_ip **ip);
+void err_notfound(t_ip **ip);
 
 #endif
