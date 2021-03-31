@@ -1,7 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void brace(t_dlist **line, char **key)
-{
+static void brace(t_dlist **line, char **key) {
 	char ch;
 	t_dlist **line2;
 	

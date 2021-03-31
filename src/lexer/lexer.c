@@ -28,7 +28,10 @@ static void dollar(line, ip, tokens)
 	char *str;
 
 	if ((val = expand_parameter(line)) == NULL)
+	{
+		ip->sy = INPUT_END;
 		return;
+	}
 	str = ft_strtrim(val, " \t\n");
 	if (ft_strchr(" \t\n", val[0]) != NULL) {
 		if (ft_strcmp(ip->id_string, "") != 0)
@@ -60,6 +63,7 @@ static void get_token(line, ip, tokens, shell)
 	}
 	if (ft_strchr("|><;", ip->ch) == NULL)
 	{
+		ip->sy = IDENTIFY;
 		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{
 			if (ft_strchr("$", ip->ch) != NULL)
@@ -70,7 +74,6 @@ static void get_token(line, ip, tokens, shell)
 				ft_charjoin(&ip->id_string, ip->ch);
 			next_ch(line, ip);
 		}
-		ip->sy = IDENTIFY;
 	}
 	else
 		metacharacter(line, ip);

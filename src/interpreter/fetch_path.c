@@ -25,7 +25,8 @@ static void find_command(char *cmd, char **cmd_path, char **dir_names)
 		}
 		closedir(dir);
 	}
-	return;
+	err_notfound(cmd);
+	exit(1);
 }
 
 char *fetch_path(t_args args, t_shell *shell)
@@ -34,6 +35,7 @@ char *fetch_path(t_args args, t_shell *shell)
 	char	**dir_names;
 	char	*cmd_path;
 
+	cmd_path = NULL;
 	env_value = get_shell_var(*shell, "PATH");
 	dir_names = ft_split(env_value, ':');
 	find_command((*args)[0], &cmd_path, dir_names);
