@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void gt(char *file)
+static void gt(char *file, int n)
 {
 	int fd;
 
@@ -10,10 +10,10 @@ static void gt(char *file)
 		ft_putendl_fd(strerror(errno), 2);
 		return;
 	}
-	dup2(fd, 1);
+	dup2(fd, n);
 }
 
-static void dgt(char *file)
+static void dgt(char *file, int n)
 {
 	int fd;
 
@@ -23,7 +23,7 @@ static void dgt(char *file)
 		ft_putendl_fd(strerror(errno), 2);
 		return;
 	}
-	dup2(fd, 1);
+	dup2(fd, n);
 }
 
 static void lt(char *file)
@@ -40,18 +40,32 @@ static void lt(char *file)
 
 void redirect(t_queue *fds)
 {
-	char *rdct;
-	char *file;
+	int		n;
+	char	*rdct;
+	char	*file;
 
 	while (*fds != NULL)
 	{
 		rdct = pop(fds);
+		n = ft_atoi(rdct);
 		file = pop(fds);
-		if (ft_strcmp(rdct, ">") == 0)
-			gt(file);
-		else if (ft_strcmp(rdct, ">>") == 0)
-			dgt(file);
-		else if (ft_strcmp(rdct, "<") == 0)
+		if (ft_strnstr(rdct, ">>", 2) == 0)
+		{
+			if (n != 2)
+				n = 1;
+			else if (n > 256)
+				err_badfd(n);
+			gt(file, n);
+		}
+		else if (ft_strnstr(rdct, ">", 1) == 0)
+		{
+			if (n != 2)
+				n = 1;
+			else if (n > 256)
+				err_badfd(n);
+			dgt(file, n);
+		}
+		else if (ft_strnstr(rdct, "<", 1) == 0)
 			lt(file);
 	}
 }

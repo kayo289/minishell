@@ -15,3 +15,10 @@ void err_notfound(char *message)
 	ft_putstr_fd(message, 2);
 	ft_putendl_fd(": command not found", 2);
 }
+
+void err_badfd(int n)
+{
+	ft_putnbr_fd(n, 2);
+	ft_putendl_fd("Bad file descriptor", 2);
+	exit(1);
+}	

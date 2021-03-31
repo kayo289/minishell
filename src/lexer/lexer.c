@@ -61,9 +61,10 @@ static void get_token(line, ip, tokens, shell)
 		ip->sy = INPUT_END;
 		return;
 	}
-	if (ft_strchr("|><;", ip->ch) == NULL)
-	{
-		ip->sy = IDENTIFY;
+	ip->sy = IDENTIFY;
+	if (ft_isdigit(ip->ch))
+		fd_redirect(line, ip);
+	else if (ft_strchr("|><;", ip->ch) == NULL)
 		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{
 			if (ft_strchr("$", ip->ch) != NULL)
@@ -74,7 +75,6 @@ static void get_token(line, ip, tokens, shell)
 				ft_charjoin(&ip->id_string, ip->ch);
 			next_ch(line, ip);
 		}
-	}
 	else
 		metacharacter(line, ip);
 	save_token(ip, tokens);
