@@ -2,13 +2,26 @@
 
 static void sigint(int p_signame)
 {
-	write(1, "\b\b  \n", 5);
-	exit(p_signame + 128);
+	ft_putendl_fd("\b\b  ", 1);
+	(void)p_signame;
 }
 
-static void set_signal(int p_signame)
+static void sigquit(int p_signame)
 {
-	if (signal(p_signame, sigint) == SIG_ERR)
+	ft_putendl_fd("Quit (core dumped)", 1);
+	(void)p_signame;
+}
+
+static void set_signal(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	if (signal(SIGINT, sigint) == SIG_ERR)
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		exit(1);
+	}
+	if (signal(SIGQUIT, sigquit) == SIG_ERR)
 	{
 		ft_putstr_fd(strerror(errno), 2);
 		exit(1);
@@ -21,11 +34,12 @@ void exec_a(args, fds, ppfd, sv)
 	pid_t pid;
 	int pfd[2];
 
-	signal(SIGINT, SIG_IGN);
-	set_signal(SIGINT);
+	set_signal();
 	pipe(pfd);
 	if ((pid = fork()) == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2((*ppfd)[0], 0);
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
@@ -54,10 +68,11 @@ void exec_b(args, fds, ppfd, sv)
 	pid_t pid;
 	//int status;
 
-	signal(SIGINT, SIG_IGN);
-	set_signal(SIGINT);
+	set_signal();
 	if ((pid = fork()) == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2((*ppfd)[0], 0);
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
