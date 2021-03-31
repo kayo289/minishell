@@ -21,17 +21,17 @@ NAME_SRC = \
 	lexer/metacharacter.c \
 	parser/parser.c \
 	parser/push.c \
-	exec/exec.c \
-	exec/redirect.c \
-	exec/fetch_path.c \
-	exec/pop.c \
+	interpreter/interpreter.c \
+	interpreter/redirect.c \
+	interpreter/fetch_path.c \
+	interpreter/pop.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \
 	shell_variable/hash.c \
 	prompt/prompt.c \
 	prompt/prompt_utils.c \
-	error.c \
+	error/error.c \
 	minishell.c
 NAME_OBJ=$(NAME_SRC:.c=.o)
 
