@@ -2,6 +2,7 @@
 
 static void meta_redirect(t_dlist **line, t_ip *ip)
 {
+	ft_charjoin(&ip->id_string, ip->ch);
 	if (next_ch(line, ip) == '>')
 	{
 		ft_charjoin(&ip->id_string, ip->ch);

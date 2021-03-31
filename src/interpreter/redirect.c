@@ -8,7 +8,7 @@ static void gt(char *file, int n)
 	if (fd == -1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return;
+		exit(1);
 	}
 	dup2(fd, n);
 }
@@ -21,7 +21,7 @@ static void dgt(char *file, int n)
 	if (fd == -1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return;
+		exit(1);
 	}
 	dup2(fd, n);
 }
@@ -33,8 +33,9 @@ static void lt(char *file)
 	if ((fd = open(file, O_RDWR)) == -1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return;
+		exit(1);
 	}
+	fprintf(stderr, "fd:%d\n", fd);
 	dup2(fd, 0);
 }
 
@@ -47,25 +48,22 @@ void redirect(t_queue *fds)
 	while (*fds != NULL)
 	{
 		rdct = pop(fds);
-		n = ft_atoi(rdct);
+		n = 0;
+		while (ft_isalnum(*rdct))
+			n = n * 10 + (*rdct++ - '0');
 		file = pop(fds);
-		if (ft_strnstr(rdct, ">>", 2) == 0)
+		if (*rdct == '>')
 		{
+			if (n > 256)
+				err_badfd(n);
 			if (n != 2)
 				n = 1;
-			else if (n > 256)
-				err_badfd(n);
-			gt(file, n);
+			if (*++rdct == '>')
+				dgt(file, n);
+			else
+				gt(file, n);
 		}
-		else if (ft_strnstr(rdct, ">", 1) == 0)
-		{
-			if (n != 2)
-				n = 1;
-			else if (n > 256)
-				err_badfd(n);
-			dgt(file, n);
-		}
-		else if (ft_strnstr(rdct, "<", 1) == 0)
+		else if (*rdct == '<')
 			lt(file);
 	}
 }

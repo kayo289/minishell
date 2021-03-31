@@ -64,7 +64,7 @@ static void get_token(line, ip, tokens, shell)
 	ip->sy = IDENTIFY;
 	if (ft_isdigit(ip->ch))
 		fd_redirect(line, ip);
-	else if (ft_strchr("|><;", ip->ch) == NULL)
+	if (ft_strchr("|><;", ip->ch) == NULL)
 		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{
 			if (ft_strchr("$", ip->ch) != NULL)
