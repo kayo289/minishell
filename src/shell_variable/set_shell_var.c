@@ -1,6 +1,6 @@
-#include "../../includes/shell_variable.h"
+#include "../../includes/minishell.h"
 
-void set_shell_var(t_shell_var this, char *param)
+void set_shell_var(t_shell this, char *param)
 {
 	t_param *p;
 	t_list *lst;
@@ -16,8 +16,8 @@ void set_shell_var(t_shell_var this, char *param)
 	while (str[i] != NULL)
 		p->value = ft_strjoin(p->value, str[i++]);
 	h = hash(p->key);
-	if ((lst = this->hash_table[h]) == NULL)
-		this->hash_table[h] = ft_lstnew(p);
+	if ((lst = this->var[h]) == NULL)
+		this->var[h] = ft_lstnew(p);
 	else
 	{
 		while (lst != NULL)

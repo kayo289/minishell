@@ -28,13 +28,13 @@ static void find_command(char *cmd, char **cmd_path, char **dir_names)
 	return;
 }
 
-char *fetch_path(t_args args, t_shell_var *sv)
+char *fetch_path(t_args args, t_shell *shell)
 {
 	char	*env_value;
 	char	**dir_names;
 	char	*cmd_path;
 
-	env_value = get_shell_var(*sv, "PATH");
+	env_value = get_shell_var(*shell, "PATH");
 	dir_names = ft_split(env_value, ':');
 	find_command((*args)[0], &cmd_path, dir_names);
 	return (cmd_path);

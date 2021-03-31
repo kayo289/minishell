@@ -28,8 +28,8 @@ static void set_signal(void)
 	}
 }
 
-void exec_a(args, fds, ppfd, sv)
-	t_args args; t_queue *fds; int **ppfd; t_shell_var *sv;
+void exec_a(args, fds, ppfd, shell)
+	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
 {
 	pid_t pid;
 	int pfd[2];
@@ -49,7 +49,7 @@ void exec_a(args, fds, ppfd, sv)
 		close(pfd[1]);
 
 		redirect(fds);
-		execve(fetch_path(args, sv), *args, NULL);
+		execve(fetch_path(args, shell), *args, NULL);
 	}
 	else
 	{
@@ -62,8 +62,8 @@ void exec_a(args, fds, ppfd, sv)
 }
 
 
-void exec_b(args, fds, ppfd, sv)
-	t_args args; t_queue *fds; int **ppfd; t_shell_var *sv;
+void exec_b(args, fds, ppfd, shell)
+	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
 {
 	pid_t pid;
 	//int status;
@@ -77,7 +77,7 @@ void exec_b(args, fds, ppfd, sv)
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
 		redirect(fds);
-		execve(fetch_path(args, sv), *args, NULL);
+		execve(fetch_path(args, shell), *args, NULL);
 	}
 	else
 	{

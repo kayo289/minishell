@@ -1,13 +1,13 @@
-#include "../../includes/shell_variable.h"
+#include "../../includes/minishell.h"
 
-char *get_shell_var(t_shell_var this, char *name)
+char *get_shell_var(t_shell this, char *name)
 {
 	t_list *top;
 	char *key;
 	int h;
 
 	h = hash(name);
-	top = this->hash_table[h];
+	top = this->var[h];
 	while (top != NULL)
 	{
 		key = ((t_param*)top->content)->key;

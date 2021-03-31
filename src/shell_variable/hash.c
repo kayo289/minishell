@@ -1,4 +1,4 @@
-#include "../../includes/shell_variable.h"
+#include "../../includes/minishell.h"
 
 int hash(char *name)
 {
@@ -10,7 +10,7 @@ int hash(char *name)
 	while (name[i] != '\0')
 	{
 		h = h * 10 + name[i];
-		h %= HASH_SIZE;
+		h %= SIZE;
 		i++;
 	}
 	return (h);

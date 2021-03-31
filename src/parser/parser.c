@@ -36,8 +36,8 @@ static void command(ip, tokens, args, fds)
 	}
 }
 
-static void pipeline(ip, tokens, sv)
-	t_ip **ip; t_queue *tokens; t_shell_var *sv;
+static void pipeline(ip, tokens, shell)
+	t_ip **ip; t_queue *tokens; t_shell *shell;
 {
 	char	**args;
 	t_queue	fds;
@@ -53,17 +53,17 @@ static void pipeline(ip, tokens, sv)
 		next_token(ip, tokens);
 		if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 		{
-			exec_a(&args, &fds, ppfd, sv);
+			exec_a(&args, &fds, ppfd, shell);
 			command(ip, tokens, &args, &fds);
 		}
 		else
 			err_syntax(ip);
 	}
-	exec_b(&args, &fds, ppfd, sv);
+	exec_b(&args, &fds, ppfd, shell);
 }
 
-static void list(ip, tokens, sv)
-	t_ip **ip; t_queue *tokens; t_shell_var *sv;
+static void list(ip, tokens, shell)
+	t_ip **ip; t_queue *tokens; t_shell *shell;
 {
 	t_queue vars;
 
@@ -77,7 +77,7 @@ static void list(ip, tokens, sv)
 			if ((*ip)->sy == INPUT_END)
 			{
 				while (vars != NULL)
-					set_shell_var(*sv, pop(&vars));
+					set_shell_var(*shell, pop(&vars));
 			}
 		}
 		else
@@ -85,7 +85,7 @@ static void list(ip, tokens, sv)
 	}
 	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
-		pipeline(ip, tokens, sv);
+		pipeline(ip, tokens, shell);
 		if ((*ip)->sy == SEMICOLON)
 			next_token(ip, tokens);
 	}
@@ -93,10 +93,10 @@ static void list(ip, tokens, sv)
 		err_syntax(ip);
 }
 
-void parser(t_queue *tokens, t_shell_var *sv)
+void parser(t_queue *tokens, t_shell *shell)
 {
 	t_ip	*ip;
 	
 	next_token(&ip, tokens);
-	list(&ip, tokens, sv);
+	list(&ip, tokens, shell);
 }
