@@ -63,7 +63,7 @@ static void get_token(line, ip, tokens, sv)
 		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{
 			if (ft_strchr("$", ip->ch) != NULL)
-				dollar(line, ip, tokens, sv);
+				dollar(line, ip, tokens);
 			else if (ft_strchr("\"\'\\", ip->ch) != NULL)
 				quoting(line, ip);
 			else

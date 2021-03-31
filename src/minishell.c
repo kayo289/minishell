@@ -1,23 +1,6 @@
 #include "../includes/minishell.h"
 
-/*
-static void sigint(int p_signame)
-{
-	p_signame++;
-	write(1, "\b\b  \n", 5);
-	write(1, "minishell$ ", 11);
-}
-
-static void set_signal(int p_signame)
-{
-	if (signal(p_signame, sigint) == SIG_ERR)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-}
-*/
-static void reader_loop(t_shell_var *sv)
+static void minishell_loop(t_shell_var *sv)
 {
 	t_dlist *line;
 	t_queue tokens;
@@ -27,6 +10,7 @@ static void reader_loop(t_shell_var *sv)
 		prompt("minishell$ ", &line);
 		lexer(&line, &tokens, sv);
 		parser(&tokens, sv);
+		while (wait(NULL) > 0);
 		//ft_dlstclear(line);
 	}
 } 
@@ -36,6 +20,6 @@ int main(void)
 	t_shell_var sv;
 
 	sv = new_shell_var();
-	reader_loop(&sv);
+	minishell_loop(&sv);
 	return (0);
 }

@@ -92,12 +92,10 @@ void metacharacter(t_dlist **line, t_ip *ip);
 void parser(t_queue *tokens, t_shell_var *sv);
 
 // exec
-//void exec(t_args *args, t_shell_var *sv, t_queue *vars);
-void exec(t_args args, t_queue *fds, t_shell_var *sv);
-void assign_variable(t_queue *vars, t_shell_var *sv);
+void exec_a(t_args args, t_queue *fds, int *ppfd[], t_shell_var *sv);
+void exec_b(t_args args, t_queue *fds, int *ppfd[], t_shell_var *sv);
 void redirect(t_queue *fds);
-//char **fetch_path(t_args *args, t_shell_var *sv);
-char **fetch_path(t_args args, t_shell_var *sv);
+char *fetch_path(t_args args, t_shell_var *sv);
 
 // queue
 void push(char *str, t_queue *queue);
