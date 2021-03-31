@@ -10,9 +10,8 @@ void err_syntax(t_ip **ip)
 	(*ip)->sy = INPUT_END;
 }
 
-void err_notfound(t_ip **ip)
+void err_notfound(char *message)
 {
-	ft_putstr_fd((*ip)->id_string, 2);
+	ft_putstr_fd(message, 2);
 	ft_putendl_fd(": command not found", 2);
-	(*ip)->sy = INPUT_END;
 }

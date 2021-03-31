@@ -119,7 +119,7 @@ char *pop(t_queue *queue);
 
 // error
 void err_syntax(t_ip **ip);
-void err_notfound(t_ip **ip);
+void err_notfound(char *cmd);
 
 // shell_var
 t_shell new_shell_var(void);
