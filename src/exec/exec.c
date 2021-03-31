@@ -1,7 +1,5 @@
 #include "../../includes/minishell.h"
 
-#define MESSAGE ": command not found"
-
 static void sigint(int p_signame)
 {
 	write(1, "\b\b  \n", 5);

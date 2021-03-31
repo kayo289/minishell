@@ -1,8 +1,5 @@
 #include "../../includes/minishell.h"
 
-#define MESSAGE1 "minishell: unexpected EOF while looking for matching "
-#define MESSAGE2 "minishell: syntax error: unexpected end of file"
-
 static void meta_pipe(t_dlist **line, t_ip *ip)
 {
 	t_dlist **line2;
