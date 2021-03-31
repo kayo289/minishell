@@ -54,7 +54,7 @@ void exec_b(args, fds, ppfd, sv)
 	t_args args; t_queue *fds; int **ppfd; t_shell_var *sv;
 {
 	pid_t pid;
-	int status;
+	//int status;
 
 	signal(SIGINT, SIG_IGN);
 	set_signal(SIGINT);
@@ -68,11 +68,10 @@ void exec_b(args, fds, ppfd, sv)
 	}
 	else
 	{
+		wait(NULL);
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
 		free(*args);
-		while (wait(&status) > 0)
-			continue;
 	}
 }
 

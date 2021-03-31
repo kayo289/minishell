@@ -84,8 +84,10 @@ static void list(ip, tokens, sv)
 			push((*ip)->id_string, &vars);
 			next_token(ip, tokens);
 			if ((*ip)->sy == INPUT_END)
+			{
 				while (vars != NULL)
 					set_shell_var(*sv, pop(&vars));
+			}
 		}
 		else
 			break;
