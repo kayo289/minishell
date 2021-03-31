@@ -12,28 +12,25 @@ static void 	next_token(t_ip **ip, t_queue *tokens)
 	*ip = (t_ip*)head->content;
 }
 
-static void command(ip, tokens, sv)
-		t_ip **ip; t_queue *tokens; t_shell_var *sv;
+static void command(ip, tokens, args, fds)
+		t_ip **ip; t_queue *tokens, *fds; t_args args;
 {
-	char **args;
-	t_queue fds;
-
-	args = (char **)ft_calloc2(sizeof(char*), 1);
-	fds = NULL;
+	*args = (char **)ft_calloc2(sizeof(char*), 1);
+	*fds = NULL;
 	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
 		if ((*ip)->sy == IDENTIFY)
 		{
-			args = ft_realloc2(args, (*ip)->id_string);
+			*args = ft_realloc2(*args, (*ip)->id_string);
 			next_token(ip, tokens);
 		}
 		if ((*ip)->sy == REDIRECT)
 		{
-			push(((*ip)->id_string), &fds);
+			push(((*ip)->id_string), fds);
 			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY) 
 			{
-				push(((*ip)->id_string), &fds);
+				push(((*ip)->id_string), fds);
 				next_token(ip, tokens);
 			}
 			else
@@ -43,24 +40,35 @@ static void command(ip, tokens, sv)
 			}
 		}
 	}
-	exec(&args, &fds, sv);
 }
 
 static void pipeline(ip, tokens, sv)
 	t_ip **ip; t_queue *tokens; t_shell_var *sv;
 {
-	command(ip, tokens, sv);
+	char	**args;
+	t_queue	fds;
+	int		**ppfd;
+	int		pfd[2];
+
+	pipe(pfd);
+	ppfd = malloc(sizeof(int*));
+	*ppfd = pfd;
+	command(ip, tokens, &args, &fds);
 	while ((*ip)->sy == PIPE)
 	{
 		next_token(ip, tokens);
 		if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
-			command(ip, tokens, sv);
+		{
+			exec_a(&args, &fds, ppfd, sv);
+			command(ip, tokens, &args, &fds);
+		}
 		else
 		{
 			error(MESSAGE1, (*ip)->id_string);
 			(*ip)->sy = INPUT_END;
 		}
 	}
+	exec_b(&args, &fds, ppfd, sv);
 }
 
 static void list(ip, tokens, sv)
@@ -76,7 +84,8 @@ static void list(ip, tokens, sv)
 			push((*ip)->id_string, &vars);
 			next_token(ip, tokens);
 			if ((*ip)->sy == INPUT_END)
-				assign_variable(&vars, sv);
+				while (vars != NULL)
+					set_shell_var(*sv, pop(&vars));
 		}
 		else
 			break;

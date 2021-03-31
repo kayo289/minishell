@@ -17,64 +17,41 @@ static void set_signal(int p_signame)
 	}
 }
 
-/*
-static void exec_pipeline(int i, char ***args, char **path)
+void exec_a(args, fds, ppfd, sv)
+	t_args args; t_queue *fds; int **ppfd; t_shell_var *sv;
 {
-	int pp[2];
 	pid_t pid;
+	int pfd[2];
 
-	if (args[i + 1] == NULL)
+	signal(SIGINT, SIG_IGN);
+	set_signal(SIGINT);
+	pipe(pfd);
+	if ((pid = fork()) == 0)
 	{
-		execve(path[i], args[i], NULL);
-		error(args[i][0], MESSAGE);
+		dup2((*ppfd)[0], 0);
+		close((*ppfd)[0]);
+		close((*ppfd)[1]);
+
+		dup2(pfd[1], 1);
+		close(pfd[0]);
+		close(pfd[1]);
+
+		redirect(fds);
+		execve(fetch_path(args, sv), *args, NULL);
 	}
-	pipe(pp);
-	pid = fork();
-	if (pid == 0)
+	else
 	{
-		// child
-		dup2(pp[1], 1);
-		close(pp[0]);
-		close(pp[1]);
-
-		exec_pipeline(i + 1, args, path);
+		close((*ppfd)[0]);
+		close((*ppfd)[1]);
+		(*ppfd)[0] = pfd[0];
+		(*ppfd)[1] = pfd[1];
+		free(*args);
 	}
-	else if (pid > 0)
-	{
-		// parent
-		close(pp[1]);
-		dup2(pp[0], 0);
-		close(pp[0]);
-
-		execve(path[i], args[i], NULL);
-		error(args[i][0], MESSAGE);
-	}
-}
-*/
-void assign_variable(t_queue *vars, t_shell_var *sv)
-{
-	char *var;
-
-	//printf("shell_var\n");
-	while (*vars != NULL)
-	{
-		var = pop(vars);
-		set_shell_var(*sv, var);
-	}
-	return;
-}
-
-static void exec_command(int i, t_args args, char **path)
-{
-	//int pp[2];
-	//pid_t pid;
-	execve(path[i], args[i], NULL);
-	error(args[i][0], MESSAGE);
 }
 
 
-void exec(args, fds, sv)
-	t_args args; t_queue *fds; t_shell_var *sv;
+void exec_b(args, fds, ppfd, sv)
+	t_args args; t_queue *fds; int **ppfd; t_shell_var *sv;
 {
 	pid_t pid;
 	int status;
@@ -83,14 +60,19 @@ void exec(args, fds, sv)
 	set_signal(SIGINT);
 	if ((pid = fork()) == 0)
 	{
+		dup2((*ppfd)[0], 0);
+		close((*ppfd)[0]);
+		close((*ppfd)[1]);
 		redirect(fds);
-		exec_command(0, args, fetch_path(args, sv));
+		execve(fetch_path(args, sv), *args, NULL);
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
+		close((*ppfd)[0]);
+		close((*ppfd)[1]);
 		free(*args);
-		//args = ft_calloc3(sizeof(char **), 1);
+		while (wait(&status) > 0)
+			continue;
 	}
 }
 
