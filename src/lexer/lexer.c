@@ -9,7 +9,7 @@ char next_ch(t_dlist **line, t_ip *ip)
 	return (ip->ch);
 }
 
-static void save_token(t_ip *ip, t_queue *tokens)
+void save_token(t_ip *ip, t_queue *tokens)
 {
 	t_list	*lst;
 	t_ip	*tmp;
@@ -63,7 +63,7 @@ static void get_token(line, ip, tokens, shell)
 	}
 	ip->sy = IDENTIFY;
 	if (ft_isdigit(ip->ch))
-		fd_redirect(line, ip);
+		fd_redirect(line, ip, tokens);
 	if (ft_strchr("|><;", ip->ch) == NULL)
 		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{
