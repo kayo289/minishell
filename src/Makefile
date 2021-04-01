@@ -1,5 +1,5 @@
 CC 		= gcc
-CFLAGS 	= -Wall -Wextra -Werror -g
+CFLAGS 	= -Wall -Wextra -Werror
 INCLUDE = -I../includes
 LDFLAGS = -L./builtin -L./libft
 LIBS	= -lcmds -lft -ltermcap
