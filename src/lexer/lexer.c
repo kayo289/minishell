@@ -47,8 +47,8 @@ void lexer(t_dlist **line, t_queue *tokens, t_shell *shell)
 	next_ch(line, &ip);
 	if (ip.ch == '{')
 	{
-		next_ch(line, &ip);
 		ft_charjoin(&ip.id_string, ip.ch);
+		next_ch(line, &ip);
 		if (ip.ch == ' ')
 		{
 			ip.sy = LEFT_BRACE; 
