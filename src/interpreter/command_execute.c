@@ -25,8 +25,6 @@ static void find_command(char *cmd, char **cmd_path, char **dir_names)
 		}
 		closedir(dir);
 	}
-	err_notfound(cmd);
-	exit(1);
 }
 
 static char *search_path(char *cmd_name, t_shell *shell)
@@ -53,5 +51,7 @@ void	command_execute(t_args args, t_shell *shell)
 	else 
 		cmd_path = search_path(cmd, shell);
 	execve(cmd_path, *args, NULL);
+	err_notfound(cmd);
+	exit(1);
 }
 
