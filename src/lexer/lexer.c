@@ -21,36 +21,6 @@ void save_token(t_ip *ip, t_queue *tokens)
 	ip->id_string = ft_calloc(sizeof(char), 1);
 }
 
-static void dollar(line, ip, tokens)
-	t_dlist **line; t_ip *ip; t_queue *tokens;
-{
-	char *val;
-	char *str;
-
-	if ((val = expand_parameter(line)) == NULL)
-	{
-		ip->sy = INPUT_END;
-		return;
-	}
-	str = ft_strtrim(val, " \t\n");
-	if (ft_strchr(" \t\n", val[0]) != NULL) {
-		if (ft_strcmp(ip->id_string, "") != 0)
-		{
-			ip->sy = IDENTIFY;
-			save_token(ip, tokens);
-		}
-	}
-	ip->id_string = ft_strjoin(ip->id_string, str);
-	if (ft_strchr(" \t\n", val[ft_strlen(val) - 1]) != NULL)
-	{
-		if (ft_strcmp(ip->id_string, "") != 0)
-		{
-			ip->sy = IDENTIFY;
-			save_token(ip, tokens);
-		}
-	}
-}
-
 static void get_token(line, ip, tokens, shell)
 	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell *shell;
 {
@@ -63,7 +33,7 @@ static void get_token(line, ip, tokens, shell)
 	}
 	ip->sy = IDENTIFY;
 	if (ft_isdigit(ip->ch))
-		fd_redirect(line, ip, tokens);
+		number(line, ip, tokens);
 	if (ft_strchr("|><;", ip->ch) == NULL)
 		while (ft_strchr("|><; \0", ip->ch) == NULL)
 		{

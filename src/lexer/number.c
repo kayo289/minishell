@@ -12,7 +12,7 @@ static void meta_redirect(t_dlist **line, t_ip *ip, t_queue *tokens)
 	save_token(ip, tokens);
 }
 
-void fd_redirect(t_dlist **line, t_ip *ip, t_queue *tokens)
+void number(t_dlist **line, t_ip *ip, t_queue *tokens)
 {
 	while (ft_isdigit(ip->ch))
 	{

@@ -42,6 +42,8 @@ enum u_token
 {
 	PIPE,		// |
 	REDIRECT,	// >>, >, <
+	LEFT_BRACE,	// {
+	RIGHT_BRACE,// }
 	SEMICOLON,	// ;
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
@@ -99,11 +101,13 @@ void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
 // lexer
 void lexer(t_dlist **line, t_queue *tokens, t_shell *shell);
+void save_token(t_ip *ip, t_queue *tokens);
 char next_ch(t_dlist **line, t_ip *ip);
+void number(t_dlist **line, t_ip *ip, t_queue *tokens);
+void dollar(t_dlist **line, t_ip *ip, t_queue *tokens);
 char *expand_parameter(t_dlist **line);
 void quoting(t_dlist **line, t_ip *ip);
 void metacharacter(t_dlist **line, t_ip *ip);
-void fd_redirect(t_dlist **line, t_ip *ip);
 
 // parser
 void parser(t_queue *tokens, t_shell *shell);
