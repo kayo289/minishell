@@ -1,5 +1,5 @@
 CC 		= gcc
-CFLAGS 	= -Wall -Wextra -Werror
+CFLAGS 	= -Wall -Wextra -Werror -g
 INCLUDE = -I../includes
 LDFLAGS = -L./builtin -L./libft
 LIBS	= -lcmds -lft -ltermcap
@@ -19,14 +19,13 @@ NAME_SRC = \
 	lexer/parameter_expansion.c \
 	lexer/quoting.c \
 	lexer/metacharacter.c \
-	lexer/number.c \
-	lexer/dollar.c \
+	lexer/literal.c \
 	parser/parser.c \
-	parser/push.c \
+	parser/next_token.c \
+	parser/assign_variable.c \
 	interpreter/interpreter.c \
 	interpreter/redirect.c \
 	interpreter/fetch_path.c \
-	interpreter/pop.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \

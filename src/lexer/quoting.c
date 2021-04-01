@@ -69,5 +69,6 @@ void quoting(t_dlist **line, t_ip *ip)
 		single_quote(line, ip);
 	else if (ip->ch == '\\')
 		escape_character(line, ip);
+	ip->sy = IDENTIFY; 
 }
 

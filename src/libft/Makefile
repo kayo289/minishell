@@ -59,7 +59,9 @@ SRCS = ft_memset.c\
 		ft_dlstadd_front.c\
 		ft_dlstdelone.c\
 		ft_dlstclear.c\
-		ft_dlstinsert.c
+		ft_dlstinsert.c\
+		push.c\
+		pop.c
 
 OBJS = ${SRCS:.c=.o}
 

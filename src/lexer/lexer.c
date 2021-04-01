@@ -31,23 +31,10 @@ static void get_token(line, ip, tokens, shell)
 		ip->sy = INPUT_END;
 		return;
 	}
-	ip->sy = IDENTIFY;
-	if (ft_isdigit(ip->ch))
-		number(line, ip, tokens);
 	if (ft_strchr("|><;", ip->ch) == NULL)
-		while (ft_strchr("|><; \0", ip->ch) == NULL)
-		{
-			if (ft_strchr("$", ip->ch) != NULL)
-				dollar(line, ip, tokens);
-			else if (ft_strchr("\"\'\\", ip->ch) != NULL)
-				quoting(line, ip);
-			else
-				ft_charjoin(&ip->id_string, ip->ch);
-			next_ch(line, ip);
-		}
+		literal(line, ip, tokens);
 	else
-		metacharacter(line, ip);
-	save_token(ip, tokens);
+		metacharacter(line, ip, tokens);
 	get_token(line, ip, tokens, shell);
 }
 
@@ -55,9 +42,19 @@ void lexer(t_dlist **line, t_queue *tokens, t_shell *shell)
 {
 	t_ip	ip;
 
-	ip.ch = ' ';
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	*tokens = NULL;
+	next_ch(line, &ip);
+	if (ip.ch == '{')
+	{
+		next_ch(line, &ip);
+		ft_charjoin(&ip.id_string, ip.ch);
+		if (ip.ch == ' ')
+		{
+			ip.sy = LEFT_BRACE; 
+			save_token(&ip, tokens);
+		}
+	}
 	get_token(line, &ip, tokens, shell);
 	save_token(&ip, tokens);
 }
