@@ -26,7 +26,6 @@ static void find_command(char *cmd, char **cmd_path, char **dir_names)
 		closedir(dir);
 	}
 	err_notfound(cmd);
-	exit(1);
 }
 
 char *fetch_path(t_args args, t_shell *shell)

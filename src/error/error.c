@@ -14,6 +14,7 @@ void err_notfound(char *cmd)
 {
 	ft_putstr_fd(cmd, 2);
 	ft_putendl_fd(": command not found", 2);
+	exit(127);
 }
 
 void err_badfd(int n)
