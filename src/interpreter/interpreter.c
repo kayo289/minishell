@@ -49,7 +49,9 @@ void exec_a(args, fds, ppfd, shell)
 		close(pfd[1]);
 
 		redirect(fds);
-		execve(fetch_path(args, shell), *args, NULL);
+		if (builtin_execute(args))
+			exit(0);
+		command_execute(args, shell);
 	}
 	else
 	{
@@ -67,8 +69,9 @@ void exec_b(args, fds, ppfd, shell)
 {
 	pid_t pid;
 	//int status;
-
 	set_signal();
+	if (builtin_execute(args))
+		return;
 	if ((pid = fork()) == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -77,7 +80,7 @@ void exec_b(args, fds, ppfd, shell)
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
 		redirect(fds);
-		execve(fetch_path(args, shell), *args, NULL);
+		command_execute(args, shell);
 	}
 	else
 	{

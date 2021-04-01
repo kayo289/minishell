@@ -24,7 +24,8 @@ NAME_SRC = \
 	parser/push.c \
 	interpreter/interpreter.c \
 	interpreter/redirect.c \
-	interpreter/fetch_path.c \
+	interpreter/command_execute.c \
+	interpreter/builtin_execute.c \
 	interpreter/pop.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \

@@ -9,9 +9,9 @@
 #include <stdbool.h>
 #include "libft.h"
 
-void cd(int argc, char **argv);
-void pwd(int argc, char **argv);
-void echo(int argc, char **argv);
+void cd(char **argv);
+void pwd(char **argv);
+void echo(char **argv);
 
 
 #endif

@@ -112,7 +112,8 @@ void parser(t_queue *tokens, t_shell *shell);
 void exec_a(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void exec_b(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void redirect(t_queue *fds);
-char *fetch_path(t_args args, t_shell *shell);
+void command_execute(t_args args, t_shell *shell);
+int	 builtin_execute(t_args args);
 
 // queue
 void push(char *str, t_queue *queue);
