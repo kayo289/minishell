@@ -6,13 +6,15 @@ static void dollar(line, ip, tokens)
 	char *val;
 	char *str;
 
-	if ((val = expand_parameter(line)) == NULL)
+	if ((val = expand_parameter(line, ip, tokens)) == NULL)
 	{
-		ip->sy = INPUT_END;
+		if (((char *)(*line)->content)[0]== '\0')
+			save_token(ip, tokens);
 		return;
 	}
 	str = ft_strtrim(val, " \t\n");
-	if (ft_strchr(" \t\n", val[0]) != NULL) {
+	if (ft_strchr(" \t\n", val[0]) != NULL)
+	{
 		if (ft_strcmp(ip->id_string, "") != 0)
 		{
 			ip->sy = IDENTIFY;
@@ -61,10 +63,10 @@ void literal(t_dlist **line, t_ip *ip, t_queue *tokens)
 	{
 		if (ft_isdigit(ip->ch))
 			numeric(line, ip, tokens);
-		else if (ip->ch == '$') 
+		else if (ip->ch == '$')
 			dollar(line, ip, tokens);
 		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
-			quoting(line, ip);
+			quoting(line, ip, tokens);
 		else
 			ft_charjoin(&ip->id_string, ip->ch);
 		next_ch(line, ip);
