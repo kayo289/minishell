@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-void push(char *str, t_queue *queue)
+void	push(char *str, t_queue *queue)
 {
 	t_list *lst;
 	char *s;
