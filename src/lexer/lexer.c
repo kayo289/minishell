@@ -2,10 +2,15 @@
 
 char next_ch(t_dlist **line, t_ip *ip)
 {
+	t_dlist *tmp;
+
 	ip->ch = ((char*)(*line)->content)[0];
 	if ((*line)->next != NULL)
+	{
+		tmp = *line;
 		*line = (*line)->next;
-	//ft_dlstdelone();
+		ft_dlstdelone(tmp, free);
+	}
 	return (ip->ch);
 }
 
@@ -29,6 +34,7 @@ void get_token(line, ip, tokens)
 	if (ip->ch == '\0')
 	{
 		ip->sy = INPUT_END;
+		save_token(ip, tokens);
 		return;
 	}
 	if (ft_strchr("|><;", ip->ch) == NULL)
@@ -42,8 +48,8 @@ void lexer(t_dlist **line, t_queue *tokens)
 {
 	t_ip	ip;
 
-	ip.id_string = ft_calloc(sizeof(char), 1);
 	*tokens = NULL;
+	ip.id_string = ft_calloc(sizeof(char), 1);
 	if (next_ch(line, &ip) == '{')
 	{
 		ft_charjoin(&ip.id_string, ip.ch);
@@ -54,5 +60,4 @@ void lexer(t_dlist **line, t_queue *tokens)
 		}
 	}
 	get_token(line, &ip, tokens);
-	save_token(&ip, tokens);
 }
