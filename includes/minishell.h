@@ -99,12 +99,13 @@ void	init_pos(t_pos *pos, char *ps);
 void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
 // lexer
-void lexer(t_dlist **line, t_queue *tokens, t_shell *shell);
+void lexer(t_dlist **line, t_queue *tokens);
+void get_token(t_dlist **line, t_ip *ip, t_queue *tokens);
 void save_token(t_ip *ip, t_queue *tokens);
 char next_ch(t_dlist **line, t_ip *ip);
 void literal(t_dlist **line, t_ip *ip, t_queue *tokens);
-char *expand_parameter(t_dlist **line);
-void quoting(t_dlist **line, t_ip *ip);
+char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens);
+void quoting(t_dlist **line, t_ip *ip, t_queue *tokens);
 void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens);
 
 // parser

@@ -8,7 +8,7 @@ static void minishell_loop(t_shell *shell)
 	while (1)
 	{
 		prompt("minishell$ ", &line);
-		lexer(&line, &tokens, shell);
+		lexer(&line, &tokens);
 		parser(&tokens, shell);
 		while (wait(NULL) > 0);
 		//ft_dlstclear(line);
