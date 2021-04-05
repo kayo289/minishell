@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 04:59:17 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/06 01:21:17 by kkikuchi         ###   ########.fr       */
+/*   Updated: 2021/04/06 01:42:46 by kkikuchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int get_env_index(char *name)
 	}
 }
 
-int		ft_unset(char *name)
+int		ft_unsetenv(char *name)
 {
 	extern char **environ;
 	int i;

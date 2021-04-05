@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/03/28 11:45:45 by user42           ###   ########.fr       */
+/*   Updated: 2021/04/06 01:42:54 by kkikuchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ void				ft_dlstadd_front(t_dlist **lst, t_dlist *new);
 void				ft_dlstdelone(t_dlist *lst, void (*del)(void *));
 void				ft_dlstclear(t_dlist **lst, void (*del)(void *));
 void				ft_dlstinsert(t_dlist **lst, t_dlist *new);
+int					ft_unsetenv(char *name);
 
 #endif
