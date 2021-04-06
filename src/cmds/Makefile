@@ -37,10 +37,10 @@ echo: echo.o
 exit: exit.o
 	$(CC) $(CFLAGS) -o $@ $<
 unset: unset.o
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LIBS)
 export: export.o
 	$(CC) $(CFLAGS) -o $@ $<
-	
+
 $(LIBFT):
 	$(MAKE) -C ../libft
 
