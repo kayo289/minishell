@@ -11,7 +11,8 @@ CMDS	= \
 		cmds/export \
 		cmds/unset \
 		cmds/env \
-		cmds/exit
+		cmds/exit\
+		cmds/unset
 LIBCMDS	= libcmds.so
 LIBFT 	= libft.a
 NAME_SRC = \
