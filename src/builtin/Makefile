@@ -22,6 +22,5 @@ re:	fclean all
 
 $(NAME): $(NAME_OBJ)
 	$(CC) $(CFLAGS) -shared -fPIC -o $@ $^
-	export LD_LIBRARY_PATH=${PWD}
 
 .PHONY: clear fclean re all

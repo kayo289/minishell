@@ -3,6 +3,7 @@ CFLAGS 	= -Wall -Wextra -Werror
 INCLUDE = -I../includes
 LDFLAGS = -L./builtin -L./libft
 LIBS	= -lcmds -lft -ltermcap
+SHELL		= /bin/bash
 NAME 	= minishell
 CMDS	= \
 		cmds/cd \
@@ -39,6 +40,8 @@ NAME_OBJ=$(NAME_SRC:.c=.o)
 
 
 all: $(NAME) $(CMDS)
+	@source LDPATH_set.sh
+	@kill -USR1 `ps h -o %P -p $$PPID`
 
 clean:
 	$(MAKE) clean -C ./libft
