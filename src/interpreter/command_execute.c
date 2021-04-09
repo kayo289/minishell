@@ -42,6 +42,7 @@ static char *search_path(char *cmd_name, t_shell *shell)
 
 void	command_execute(t_args args, t_shell *shell)
 {
+	extern char	**environ;
 	char		*cmd;
 	char		*cmd_path;
 
@@ -50,7 +51,7 @@ void	command_execute(t_args args, t_shell *shell)
 		cmd_path = cmd;
 	else 
 		cmd_path = search_path(cmd, shell);
-	execve(cmd_path, *args, NULL);
+	execve(cmd_path, *args, environ);
 	err_notfound(cmd);
 }
 
