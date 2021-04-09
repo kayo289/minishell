@@ -2,7 +2,7 @@
 
 static void assign_shell_var(t_queue *vars, t_shell *shell)
 {
-	while (vars != NULL)
+	while (*vars != NULL)
 		set_shell_var(*shell, pop(vars));
 }
 
