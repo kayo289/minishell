@@ -2,33 +2,18 @@
 
 static void escape_character(t_dlist **line, t_ip *ip)
 {
-	t_dlist *line2;
-
 	next_ch(line, ip);
-	if (ip->ch == '\0')
-	{
-		prompt("> ", &line2);
-		ft_dlstadd_back(line, line2);
-		next_ch(line, ip);
-	}
-	else
-		ft_charjoin(&ip->id_string, ip->ch);
+	ft_charjoin(&ip->id_string, ip->ch);
 }
 
 static void double_quote(t_dlist **line, t_ip *ip, t_queue *tokens)
 {
 	char *val;
-	t_dlist *line2;
 
 	while (next_ch(line, ip) != '\"')
 	{
 		if (ip->ch == '\0')
-		{
-			prompt("> ", &line2);
-			ft_dlstadd_back(line, ft_dlstnew("\n"));
-			ft_dlstadd_back(line, line2);
-			next_ch(line, ip);
-		}
+			break;
 		else if (ip->ch == '$')
 		{
 			val = expand_parameter(line, ip, tokens);
@@ -43,17 +28,10 @@ static void double_quote(t_dlist **line, t_ip *ip, t_queue *tokens)
 
 static void single_quote(t_dlist **line, t_ip *ip)
 {
-	t_dlist *line2;
-
 	while (next_ch(line, ip) != '\'')
 	{
 		if (ip->ch == '\0')
-		{
-			prompt("> ", &line2);
-			ft_dlstadd_back(line, ft_dlstnew("\n"));
-			ft_dlstadd_back(line, line2);
-			next_ch(line, ip);
-		}
+			break;
 		else if (ip->ch == '\\')
 			escape_character(line, ip);
 		else
@@ -70,5 +48,6 @@ void quoting(t_dlist **line, t_ip *ip, t_queue *tokens)
 	else if (ip->ch == '\\')
 		escape_character(line, ip);
 	ip->sy = IDENTIFY; 
+	next_ch(line, ip);
 }
 

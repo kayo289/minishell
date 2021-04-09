@@ -68,8 +68,10 @@ void literal(t_dlist **line, t_ip *ip, t_queue *tokens)
 		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
 			quoting(line, ip, tokens);
 		else
+		{
 			ft_charjoin(&ip->id_string, ip->ch);
-		next_ch(line, ip);
+			next_ch(line, ip);
+		}
 	}
 	save_token(ip, tokens);
 }
