@@ -10,6 +10,7 @@ static void dollar(line, ip, tokens)
 	{
 		if (((char *)(*line)->content)[0]== '\0')
 			save_token(ip, tokens);
+		next_ch(line, ip);
 		return;
 	}
 	str = ft_strtrim(val, " \t\n");
@@ -30,6 +31,7 @@ static void dollar(line, ip, tokens)
 			save_token(ip, tokens);
 		}
 	}
+	next_ch(line, ip);
 }
 
 static void meta_redirect(t_dlist **line, t_ip *ip, t_queue *tokens)
