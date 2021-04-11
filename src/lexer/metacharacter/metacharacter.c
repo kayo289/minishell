@@ -1,39 +1,9 @@
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static void meta_pipe(t_dlist **line, t_ip *ip, t_queue *tokens)
 {
-	t_dlist **line2;
-
-	while (next_ch(line, ip) == ' ')
-		continue;
-	line2 = NULL;
-	if (ip->ch == '\0')
-	{
-		prompt("> ", line2);// == 0;
-		/*
-		{
-			error2(MESSAGE2, '\0');
-			exit(1);
-		}
-		*/
-		while (((char*)(*line2)->content)[0] == '\0')
-		{
-			//ft_dlstclear(line);
-			//free(line2);
-			prompt("> ", line2);
-			/*
-			if (get_next_line(0, &line2) == 0)
-			{
-				error2(MESSAGE2, '\0');
-				exit(1);
-			}
-			*/
-		}
-		ft_dlstadd_back(line, *line2);
-		//*line = ft_strjoin(*line, line2);
-		next_ch(line, ip);
-	}
 	ip->sy = PIPE;
+	next_ch(line, ip);
 	save_token(ip, tokens);
 }
 

@@ -28,7 +28,7 @@ static void set_signal(void)
 	}
 }
 
-void exec_a(args, fds, ppfd, shell)
+void exec_in_subshell(args, fds, ppfd, shell)
 	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
 {
 	pid_t pid;
@@ -64,11 +64,12 @@ void exec_a(args, fds, ppfd, shell)
 }
 
 
-void exec_b(args, fds, ppfd, shell)
+void exec_in_shell(args, fds, ppfd, shell)
 	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
 {
 	pid_t pid;
 	//int status;
+
 	set_signal();
 	if (builtin_execute(args))
 		return;
