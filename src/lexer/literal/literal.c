@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static void dollar(line, ip, tokens)
 	t_dlist **line; t_ip *ip; t_queue *tokens;

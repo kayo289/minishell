@@ -44,13 +44,13 @@ static void pipelines(ip, tokens, shell)
 		next_token(ip, tokens);
 		if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 		{
-			exec_a(&args, &fds, ppfd, shell);
+			exec_in_subshell(&args, &fds, ppfd, shell);
 			simple_commands(ip, tokens, &args, &fds);
 		}
 		else
 			err_syntax(ip);
 	}
-	exec_b(&args, &fds, ppfd, shell);
+	exec(&args, &fds, ppfd, shell);
 }
 
 static void lists(ip, tokens, shell)

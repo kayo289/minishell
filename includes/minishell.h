@@ -114,8 +114,8 @@ void 	next_token(t_ip **ip, t_queue *tokens);
 void	assign_variable(t_ip **ip, t_queue *tokens, t_shell *shell);
 
 // interpreter
-void exec_a(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
-void exec_b(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
+void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
+void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void redirect(t_queue *fds);
 void command_execute(t_args args, t_shell *shell);
 int	 builtin_execute(t_args args);
@@ -130,5 +130,9 @@ t_shell new_shell_var(void);
 void set_shell_var(t_shell this, char *param);
 char *get_shell_var(t_shell this, char *name);
 int hash(char *name);
+
+// queue
+void	push(char *str, t_queue *queue);
+char	*pop(t_queue *queue);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/01 10:24:32 by user42           ###   ########.fr       */
+/*   Updated: 2021/04/11 05:23:36 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,5 @@ void				ft_dlstadd_front(t_dlist **lst, t_dlist *new);
 void				ft_dlstdelone(t_dlist *lst, void (*del)(void *));
 void				ft_dlstclear(t_dlist **lst, void (*del)(void *));
 void				ft_dlstinsert(t_dlist **lst, t_dlist *new);
-void				push(char *str, t_queue *queue);
-char				*pop(t_queue *queue);
 
 #endif
