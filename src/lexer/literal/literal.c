@@ -41,11 +41,11 @@ static void numeric(t_dlist **line, t_ip *ip, t_queue *tokens)
 		ft_charjoin(&ip->id_string, ip->ch);
 		next_ch(line, ip);
 	}
-	if (ft_strchr("><", ip->ch) != NULL)
+	if (ip->ch == '>' || ip->ch == '<')
 		metacharacter(line, ip, tokens);
 }
 
-static void string(t_dlist **line, t_ip *ip, t_queue *tokens)
+static void string(t_dlist **line, t_ip *ip)
 {
 	ft_charjoin(&ip->id_string, ip->ch);
 	next_ch(line, ip);
@@ -63,7 +63,7 @@ void literal(t_dlist **line, t_ip *ip, t_queue *tokens)
 		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
 			quoting(line, ip, tokens);
 		else
-			string(line, ip, tokens);
+			string(line, ip);
 	}
 	save_token(ip, tokens);
 	get_token(line, ip, tokens);
