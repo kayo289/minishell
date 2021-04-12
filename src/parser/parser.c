@@ -50,7 +50,7 @@ static void pipelines(ip, tokens, shell)
 		else
 			err_syntax(ip);
 	}
-	exec_in_shell(&args, &fds, ppfd, shell);
+	exec(&args, &fds, ppfd, shell);
 }
 
 static void lists(ip, tokens, shell)

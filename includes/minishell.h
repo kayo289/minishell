@@ -115,7 +115,7 @@ void	assign_variable(t_ip **ip, t_queue *tokens, t_shell *shell);
 
 // interpreter
 void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
-void exec_in_shell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
+void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void redirect(t_queue *fds);
 void command_execute(t_args args, t_shell *shell);
 int	 builtin_execute(t_args args);
