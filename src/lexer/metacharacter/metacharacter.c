@@ -48,5 +48,6 @@ void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens)
 		meta_redirect(line, ip, tokens);
 	else if (ip->ch == ';')
 		meta_semicolon(line, ip, tokens);
+	get_token(line, ip, tokens);
 }
 

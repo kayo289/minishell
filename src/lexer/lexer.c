@@ -41,7 +41,6 @@ void get_token(line, ip, tokens)
 		literal(line, ip, tokens);
 	else
 		metacharacter(line, ip, tokens);
-	get_token(line, ip, tokens);
 }
 
 void lexer(t_dlist **line, t_queue *tokens)

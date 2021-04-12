@@ -55,12 +55,14 @@ void redirect(t_queue *fds)
 		rdt = pop(fds);
 		n = 0;
 		while (ft_isalnum(*rdt))
+		{
 			n = n * 10 + (*rdt++ - '0');
+			if (n > 256)
+				err_badfd(n);
+		}
 		file = pop(fds);
 		if (*rdt == '>')
 		{
-			if (n > 256)
-				err_badfd(n);
 			if (*++rdt == '>')
 				dgt(file, n);
 			else
