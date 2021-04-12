@@ -10,10 +10,7 @@ static void gt(char *file, int n)
 		ft_putendl_fd(strerror(errno), 2);
 		exit(1);
 	}
-	if (n == 2)
-		dup2(fd, 2);
-	else
-		dup2(fd, 1);
+	dup2(fd, n);
 }
 
 static void dgt(char *file, int n)
@@ -26,13 +23,10 @@ static void dgt(char *file, int n)
 		ft_putendl_fd(strerror(errno), 2);
 		exit(1);
 	}
-	if (n == 2)
-		dup2(fd, 2);
-	else
-		dup2(fd, 1);
+	dup2(fd, n);
 }
 
-static void lt(char *file)
+static void lt(char *file, int n)
 {
 	int fd;
 
@@ -41,7 +35,7 @@ static void lt(char *file)
 		ft_putendl_fd(strerror(errno), 2);
 		exit(1);
 	}
-	dup2(fd, 0);
+	dup2(fd, n);
 }
 
 void redirect(t_queue *fds)
@@ -55,18 +49,20 @@ void redirect(t_queue *fds)
 		rdt = pop(fds);
 		n = 0;
 		while (ft_isalnum(*rdt))
+		{
 			n = n * 10 + (*rdt++ - '0');
+			if (n > 256)
+				err_badfd(n);
+		}
 		file = pop(fds);
 		if (*rdt == '>')
 		{
-			if (n > 256)
-				err_badfd(n);
 			if (*++rdt == '>')
 				dgt(file, n);
 			else
 				gt(file, n);
 		}
 		else if (*rdt == '<')
-			lt(file);
+			lt(file, n);
 	}
 }
