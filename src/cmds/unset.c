@@ -1,15 +1,20 @@
 #include "../../includes/minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv)
 {
 	int i;
 
-	i = 0;
-	printf("call unset\n");
-	while (i < argc)
+	i = 1;
+	printf("getenv:%s\n",getenv(argv[i]));
+	if (argc <= 1)
+		return (0);
+	while (argv[i] != NULL)
 	{
-		printf("argv[%d]: %s\n", i, argv[i]);
+		printf("argv:%s\n",argv[i]);
+		ft_unsetenv(argv[i]);
 		i++;
 	}
-	exit(EXIT_SUCCESS);
+	return (0);
 }
