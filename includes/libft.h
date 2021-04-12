@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/06 16:21:52 by kkikuchi         ###   ########.fr       */
+/*   Updated: 2021/04/11 05:23:36 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct		s_list
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
+typedef t_list *			t_queue;
 
 void				*ft_memset(void *buf, int c, size_t n);
 void				*ft_memcpy(void *buf1, const void *buf2, size_t n);

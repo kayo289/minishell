@@ -30,18 +30,19 @@ struct s_ip;
 struct s_pos;
 struct s_shell;
 struct s_param;
-typedef struct s_shell * t_shell;
-typedef struct s_param t_param;
-typedef enum u_token	t_token;
-typedef struct s_ip		t_ip;
-typedef struct s_pos	t_pos;
-typedef t_list *		t_queue;
-typedef char ***		t_args;
+typedef struct s_shell *	t_shell;
+typedef struct s_param		t_param;
+typedef enum u_token		t_token;
+typedef struct s_ip			t_ip;
+typedef struct s_pos		t_pos;
+typedef char ***			t_args;
 
 enum u_token
 {
 	PIPE,		// |
 	REDIRECT,	// >>, >, <
+	LEFT_BRACE,	// {
+	RIGHT_BRACE,// }
 	SEMICOLON,	// ;
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
@@ -56,13 +57,13 @@ struct	s_ip
 	char		*id_string;
 	/* To degug 
 	char *command_name[TOKEN_NUM] = {
-		"PIPE",		// |
-		"GT",		// >
-		"LT",		// < 
-		"DGT",		// >>
-		"SEMICOLON",// ;
-		"IDENTIFY", // String
-		"INPUT_END"	// End Of Input
+		"PIPE",			// |
+		"REDIRECT",		// >, >>, <
+		"LEFT_BRACE",	// {
+		"RIGHT_BRACE",	// }
+		"SEMICOLON",	// ;
+		"IDENTIFY",		// String
+		"INPUT_END"		// End Of Input
 	};
 	*/
 };
@@ -98,25 +99,26 @@ void	init_pos(t_pos *pos, char *ps);
 void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
 // lexer
-void lexer(t_dlist **line, t_queue *tokens, t_shell *shell);
+void lexer(t_dlist **line, t_queue *tokens);
+void get_token(t_dlist **line, t_ip *ip, t_queue *tokens);
+void save_token(t_ip *ip, t_queue *tokens);
 char next_ch(t_dlist **line, t_ip *ip);
-char *expand_parameter(t_dlist **line);
-void quoting(t_dlist **line, t_ip *ip);
-void metacharacter(t_dlist **line, t_ip *ip);
-void fd_redirect(t_dlist **line, t_ip *ip);
+void literal(t_dlist **line, t_ip *ip, t_queue *tokens);
+char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens);
+void quoting(t_dlist **line, t_ip *ip, t_queue *tokens);
+void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens);
 
 // parser
-void parser(t_queue *tokens, t_shell *shell);
+void 	parser(t_queue *tokens, t_shell *shell);
+void 	next_token(t_ip **ip, t_queue *tokens);
+void	assign_variable(t_ip **ip, t_queue *tokens, t_shell *shell);
 
-// exec
-void exec_a(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
-void exec_b(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
+// interpreter
+void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
+void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void redirect(t_queue *fds);
-char *fetch_path(t_args args, t_shell *shell);
-
-// queue
-void push(char *str, t_queue *queue);
-char *pop(t_queue *queue);
+void command_execute(t_args args, t_shell *shell);
+int	 builtin_execute(t_args args);
 
 // error
 void err_syntax(t_ip **ip);
@@ -128,5 +130,9 @@ t_shell new_shell_var(void);
 void set_shell_var(t_shell this, char *param);
 char *get_shell_var(t_shell this, char *name);
 int hash(char *name);
+
+// queue
+void	push(char *str, t_queue *queue);
+char	*pop(t_queue *queue);
 
 #endif

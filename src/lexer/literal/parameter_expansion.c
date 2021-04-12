@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 static void brace(t_dlist **line, char **key) {
 	char ch;
@@ -23,7 +23,7 @@ static void brace(t_dlist **line, char **key) {
 	*line = (*line)->next;
 }
 
-char *expand_parameter(t_dlist **line)
+char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens)
 {
 	char *key;
 	char *val;
@@ -31,6 +31,12 @@ char *expand_parameter(t_dlist **line)
 
 	key = ft_calloc(sizeof(char), 1);
 	ch = ((char*)(*line)->content)[0];
+	if (ch == '\0')
+	{
+		ft_charjoin(&ip->id_string, '$');
+		save_token(ip, tokens);
+		return (NULL);
+	}
 	if (ch == '{')
 		brace(line, &key);
 	else

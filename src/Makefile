@@ -17,24 +17,28 @@ LIBCMDS	= libcmds.so
 LIBFT 	= libft.a
 NAME_SRC = \
 	lexer/lexer.c \
-	lexer/parameter_expansion.c \
-	lexer/quoting.c \
-	lexer/metacharacter.c \
-	lexer/fd_redirect.c \
+	lexer/literal/literal.c \
+	lexer/literal/parameter_expansion.c \
+	lexer/literal/quoting.c \
+	lexer/metacharacter/metacharacter.c \
 	parser/parser.c \
-	parser/push.c \
+	parser/next_token.c \
 	interpreter/interpreter.c \
 	interpreter/redirect.c \
-	interpreter/fetch_path.c \
-	interpreter/pop.c \
+	interpreter/command_execute.c \
+	interpreter/builtin_execute.c \
+	interpreter/assign_variable.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \
 	shell_variable/hash.c \
 	prompt/prompt.c \
 	prompt/prompt_utils.c \
+	queue/pop.c\
+	queue/push.c\
 	error/error.c \
 	minishell.c
+
 NAME_OBJ=$(NAME_SRC:.c=.o)
 
 

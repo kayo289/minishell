@@ -25,11 +25,9 @@ static void find_command(char *cmd, char **cmd_path, char **dir_names)
 		}
 		closedir(dir);
 	}
-	err_notfound(cmd);
-	exit(1);
 }
 
-char *fetch_path(t_args args, t_shell *shell)
+static char *search_path(char *cmd_name, t_shell *shell)
 {
 	char	*env_value;
 	char	**dir_names;
@@ -38,6 +36,22 @@ char *fetch_path(t_args args, t_shell *shell)
 	cmd_path = NULL;
 	env_value = get_shell_var(*shell, "PATH");
 	dir_names = ft_split(env_value, ':');
-	find_command((*args)[0], &cmd_path, dir_names);
+	find_command(cmd_name, &cmd_path, dir_names);
 	return (cmd_path);
 }
+
+void	command_execute(t_args args, t_shell *shell)
+{
+	extern char	**environ;
+	char		*cmd;
+	char		*cmd_path;
+
+	cmd = (*args)[0];
+	if (ft_strchr(cmd, '/') != NULL)
+		cmd_path = cmd;
+	else 
+		cmd_path = search_path(cmd, shell);
+	execve(cmd_path, *args, environ);
+	err_notfound(cmd);
+}
+

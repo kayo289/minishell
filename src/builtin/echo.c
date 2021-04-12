@@ -30,11 +30,11 @@ static void output(char **argv)
 	output(argv + 1);
 }
 
-void echo(int argc, char **argv)
+void echo(char **argv)
 {
 	bool opt_n;
 
-	if (argc <= 1)
+	if (argv[1] == NULL)
 	{
 		ft_putendl_fd("", 1);
 		return;
