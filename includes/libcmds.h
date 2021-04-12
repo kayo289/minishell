@@ -12,6 +12,6 @@
 void cd(int argc, char **argv);
 void pwd(int argc, char **argv);
 void echo(int argc, char **argv);
-
+void unset(int argc, char **argv);
 
 #endif
