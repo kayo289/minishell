@@ -31,6 +31,7 @@ NAME_SRC = \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \
+	shell_variable/get_next_line.c \
 	shell_variable/hash.c \
 	prompt/prompt.c \
 	prompt/prompt_utils.c \
