@@ -16,15 +16,15 @@ void set_shell_var(t_shell this, char *param)
 	while (str[i] != NULL)
 		p->value = ft_strjoin(p->value, str[i++]);
 	h = hash(p->key);
-	if ((lst = this->var[h]) == NULL)
-		this->var[h] = ft_lstnew(p);
-	else
+	lst = this->var[h];
+	while (lst != NULL)
 	{
-		while (lst != NULL)
+		if (ft_strcmp(((t_param*)lst->content)->key, p->key) == EQUAL)
 		{
-			if (ft_strcmp(((t_param*)lst->content)->key, p->key) == 0)
-				((t_param*)lst->content)->value = p->value;
-			lst = lst->next;
+			((t_param*)lst->content)->value = p->value;
+			return;
 		}
+		lst = lst->next;
 	}
+	ft_lstadd_back(&this->var[h], ft_lstnew(p));
 }

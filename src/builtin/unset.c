@@ -3,28 +3,38 @@
 static void del_shell_var(t_shell this, char *name)
 {
 	t_list *top;
-	t_list *tmp;
+	t_list *prev;
 	int h;
 
 	h = hash(name);
 	top = this->var[h];
-	while (top->next != NULL) 
+	prev = NULL; 
+	while (top != NULL) 
 	{
-		if (ft_strcmp(((t_param*)top->next->content)->key, name) != 0)
+		if (ft_strcmp(((t_param*)top->content)->key, name) != 0)
 		{
-			tmp = top->next;
-			top->next = tmp->next;
-			free(tmp);
+			if (prev == NULL)
+				this->var[h] = top->next;
+			else
+				prev->next = top->next;
+			ft_lstdelone(top, free);
 			return;
 		}
+		prev = top;
 		top = top->next;
 	}
 }
 
 void unset(char **argv, t_shell *shell)
 {
-	if (argv[1] == NULL)
-		return;
-	ft_unsetenv(argv[1]);
-	del_shell_var(*shell, argv[1]);
+	while (*argv != NULL)
+	{
+		if (ft_unsetenv(*argv) < 0)
+		{
+			ft_putendl_fd(strerror(errno), 2);
+			return;
+		}
+		del_shell_var(*shell, *argv);
+		argv++;
+	}
 }

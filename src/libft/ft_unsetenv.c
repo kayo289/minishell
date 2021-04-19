@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 04:59:17 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/20 02:01:34 by kkikuchi         ###   ########.fr       */
+/*   Updated: 2021/04/19 21:19:23 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,24 @@ static char **get_env_adress(char *name)
 	while(environ[i] != NULL)
 	{
 		str = ft_split(environ[i], '=');
-		if (ft_strcmp(str[0], name) == 0)
+		if (ft_strcmp(str[0], name) == EQUAL)
 			return (&environ[i]);
 		i++;
 	}
 	return (NULL);
 }
 
-static int judge_err(char *name)
-{
-	if ((name == NULL) | (ft_strlen(name) == 0) | (ft_strchr(name, '=') != NULL))
-		return (-1);
-	else
-		return (0);
-}
-
 int		ft_unsetenv(char *name)
 {
 	extern char **environ;
 	char **adress;
-	int status;
 
-	status = 0;
+	if (name == NULL || *name == '\0' || ft_strchr(name, '=') != NULL)
+	{
+		errno = EINVAL;
+		return (FAIL);
+	}
 	adress = get_env_adress(name);
-	status = judge_err(name);
 	if (adress != NULL)
 	{
 		while (*adress)
@@ -53,7 +47,7 @@ int		ft_unsetenv(char *name)
 			*adress = *(adress + 1);
 			adress++;
 		}
-		adress ++;
+		adress++;
 	}
-	return (status);
+	return (0);
 }
