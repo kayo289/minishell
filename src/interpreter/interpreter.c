@@ -50,7 +50,7 @@ void exec_in_subshell(args, fds, ppfd, shell)
 		close(pfd[0]);
 		close(pfd[1]);
 
-		if (builtin_execute(args))
+		if (builtin_execute(args, shell))
 			exit(0);
 		redirect(fds);
 		command_execute(args, shell);
@@ -75,7 +75,7 @@ void exec(args, fds, ppfd, shell)
 	if (**args == NULL)
 		return;
 	set_signal();
-	if (builtin_execute(args))
+	if (builtin_execute(args, shell))
 		return;
 	if ((pid = fork()) == 0)
 	{
@@ -95,4 +95,3 @@ void exec(args, fds, ppfd, shell)
 		free(*args);
 	}
 }
-

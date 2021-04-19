@@ -1,20 +1,16 @@
 #include "../../includes/minishell.h"
 
-int builtin_execute(t_args args)
+int builtin_execute(t_args args, t_shell *shell)
 {
-	int			i;
-	const char	*builtin_str[] = {"cd", "echo", "pwd", NULL};
-	void (*builtin_func[])(char **) = {cd, echo, pwd};
-
-	i = 0;
-	while (builtin_str[i] != NULL)
-	{
-		if (ft_strcmp((*args)[0], builtin_str[i]) == 0)
-		{
-			(*builtin_func[i])(*args);
-			return(1);
-		}
-		i++;
-	}
-	return(0);
+	if (ft_strcmp((*args)[0], "cd") == 0)
+		cd(*args);
+	else if (ft_strcmp((*args)[0], "echo") == 0)
+		echo(*args);
+	else if (ft_strcmp((*args)[0], "pwd") == 0)
+		pwd(*args);
+	else if (ft_strcmp((*args)[0], "unset") == 0)
+		unset(*args, shell);
+	else
+		return (0);
+	return (1);
 }

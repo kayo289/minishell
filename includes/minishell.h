@@ -28,10 +28,6 @@
 enum u_token;
 struct s_ip;
 struct s_pos;
-struct s_shell;
-struct s_param;
-typedef struct s_shell *	t_shell;
-typedef struct s_param		t_param;
 typedef enum u_token		t_token;
 typedef struct s_ip			t_ip;
 typedef struct s_pos		t_pos;
@@ -55,7 +51,7 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
-	/* To degug 
+	/* To degug
 	char *command_name[TOKEN_NUM] = {
 		"PIPE",			// |
 		"REDIRECT",		// >, >>, <
@@ -73,18 +69,6 @@ struct  s_pos
 	int cursor;
 	int max_rg;
 	int max_lf;
-};
-
-struct s_shell
-{
-	t_list	*var[SIZE];
-	int		exit_status;
-};
-
-struct s_param
-{
-	char *key;
-	char *value;
 };
 
 // prompt
@@ -118,7 +102,7 @@ void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void redirect(t_queue *fds);
 void command_execute(t_args args, t_shell *shell);
-int	 builtin_execute(t_args args);
+int	 builtin_execute(t_args args, t_shell *shell);
 
 // error
 void err_syntax(t_ip **ip);
