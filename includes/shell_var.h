@@ -11,6 +11,7 @@ typedef struct s_shell *	t_shell;
 struct s_shell
 {
 	t_list	*var[SIZE];
+	t_dlist	*hist_lst;
 	int		exit_status;
 };
 
