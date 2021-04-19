@@ -24,10 +24,6 @@
 #define LF		10
 #define ESC		27
 #define DEL		127
-#define SIZE	29999
-#define SUCESS	1
-#define END		0
-#define ERROR	-1
 
 enum u_token;
 struct s_ip;
