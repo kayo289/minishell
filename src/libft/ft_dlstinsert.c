@@ -1,15 +1,16 @@
 #include "../../includes/libft.h"
 
-#include <stdio.h>
 void	ft_dlstinsert(t_dlist **lst, t_dlist *new)
 {
-	t_dlist		*elem;
-
 	if (*lst == NULL)
 		return;
-	elem = *lst;
-	new->next = elem->next;
-	new->prev = elem;
-	elem->next->prev = new;
-	elem->next = new;
+	if ((*lst)->next == NULL)
+		ft_dlstadd_back(lst, new);
+	else
+	{
+		new->next = (*lst)->next;
+		new->prev = (*lst);
+		(*lst)->next->prev = new;
+		(*lst)->next = new;
+	}
 }

@@ -7,7 +7,7 @@ static void minishell_loop(t_shell *shell)
 
 	while (1)
 	{
-		prompt("minishell$ ", &line);
+		prompt("minishell$ ", &line, shell);
 		lexer(&line, &tokens);
 		parser(&tokens, shell);
 		while (wait(NULL) > 0);
