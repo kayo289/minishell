@@ -2,15 +2,15 @@
 
 int builtin_execute(t_args args, t_shell *shell)
 {
-	if (ft_strcmp((*args)[0], "cd") == 0)
+	if (ft_strcmp((*args)[0], "cd") == EQUAL)
 		cd(*args);
-	else if (ft_strcmp((*args)[0], "echo") == 0)
+	else if (ft_strcmp((*args)[0], "echo") == EQUAL)
 		echo(*args);
-	else if (ft_strcmp((*args)[0], "pwd") == 0)
+	else if (ft_strcmp((*args)[0], "pwd") == EQUAL)
 		pwd(*args);
-	else if (ft_strcmp((*args)[0], "unset") == 0)
+	else if (ft_strcmp((*args)[0], "unset") == EQUAL)
 		unset(*args, shell);
 	else
-		return (0);
-	return (1);
+		return (UNEXEC);
+	return (EXEC);
 }

@@ -24,6 +24,8 @@
 #define LF		10
 #define ESC		27
 #define DEL		127
+#define EXEC	1
+#define UNEXEC	0
 
 enum u_token;
 struct s_ip;
