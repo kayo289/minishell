@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include "libcmds.h"
+#include "shell_var.h"
 
 #define CTRLC	3
 #define CTRLD	4
@@ -108,12 +109,6 @@ int	 builtin_execute(t_args args, t_shell *shell);
 void err_syntax(t_ip **ip);
 void err_notfound(char *cmd);
 void err_badfd(int n);
-
-// shell_var
-t_shell new_shell_var(void);
-void set_shell_var(t_shell this, char *param);
-char *get_shell_var(t_shell this, char *name);
-int hash(char *name);
 
 // queue
 void	push(char *str, t_queue *queue);
