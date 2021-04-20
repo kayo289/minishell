@@ -2,22 +2,28 @@
 
 void minishell_exit(char **argv, t_shell *shell)
 {
-	int argc;
-	int n;
+	int i;
 
 	ft_putendl_fd("exit", 2);
-	argc = 0;
-	while (argv[argc] != NULL)
-		argc++;
-	if (argc >= 3)
-	{
-		ft_putendl_fd("too many arguments", 2);
-		n = 1;
-	}
-	else if (argc == 2)
-		n = ft_atoi(argv[2]);
+	if (argv[1] == NULL)
+		exit(0);
 	else
-		n = 0;
-	(*shell)->exit_status = n;
-	exit(n);
+	{
+		i = -1;
+		while (argv[1][++i] != '\0')
+		{
+			if (!ft_isdigit(argv[1][i]))
+			{
+				ft_putendl_fd("exit: numeric arguments required", 2);
+				exit(255);
+			}
+		}
+		if (argv[2] == NULL)
+			exit(ft_atoi(argv[1]));
+		else
+		{
+			ft_putendl_fd("exit: too many arguments", 2);
+			(*shell)->exit_status = 1;
+		}
+	}
 }

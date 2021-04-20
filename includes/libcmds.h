@@ -11,9 +11,10 @@
 #include "shell_var.h"
 
 
-void cd(char **argv);
-void pwd(char **argv);
-void echo(char **argv);
-void unset(char **argv, t_shell *shell);
+void minishell_cd(char **argv);
+void minishell_pwd(char **argv);
+void minishell_echo(char **argv);
+void minishell_unset(char **argv, t_shell *shell);
+void minishell_exit(char **argv, t_shell *shell);
 
 #endif
