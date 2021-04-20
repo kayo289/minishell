@@ -3,13 +3,15 @@
 int builtin_execute(t_args args, t_shell *shell)
 {
 	if (ft_strcmp((*args)[0], "cd") == EQUAL)
-		cd(*args);
+		minishell_cd(*args);
 	else if (ft_strcmp((*args)[0], "echo") == EQUAL)
-		echo(*args);
+		minishell_echo(*args);
 	else if (ft_strcmp((*args)[0], "pwd") == EQUAL)
-		pwd(*args);
+		minishell_pwd(*args);
 	else if (ft_strcmp((*args)[0], "unset") == EQUAL)
-		unset(*args, shell);
+		minishell_unset(*args, shell);
+	else if (ft_strcmp((*args)[0], "exit") == EQUAL)
+		minishell_exit(*args, shell);
 	else
 		return (UNEXEC);
 	return (EXEC);
