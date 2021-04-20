@@ -15,8 +15,7 @@ static void show_env()
 
 int main(int argc, char **argv)
 {
-	if (argc == 1)
+	if (argv[1] == NULL && argc == 1)
 		show_env();
 	return (0);
-	(void)argv;
 }
