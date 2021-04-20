@@ -1,10 +1,12 @@
 CC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
 NAME		= libcmds.so
-NAME_SRC	= echo.c \
+NAME_SRC	=\
+			echo.c \
 			cd.c \
 			pwd.c \
-			unset.c
+			unset.c\
+			exit.c
 NAME_OBJ	= $(NAME_SRC:.c=.o)
 
 
@@ -23,6 +25,5 @@ re:	fclean all
 
 $(NAME): $(NAME_OBJ)
 	$(CC) $(CFLAGS) -shared -fPIC -o $@ $^
-	export LD_LIBRARY_PATH=${PWD}
 
 .PHONY: clear fclean re all

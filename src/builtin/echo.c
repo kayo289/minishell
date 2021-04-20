@@ -30,7 +30,7 @@ static void output(char **argv)
 	output(argv + 1);
 }
 
-void echo(char **argv)
+void minishell_echo(char **argv)
 {
 	bool opt_n;
 

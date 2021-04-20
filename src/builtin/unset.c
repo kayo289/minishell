@@ -25,7 +25,7 @@ static void del_shell_var(t_shell this, char *name)
 	}
 }
 
-void unset(char **argv, t_shell *shell)
+void minishell_unset(char **argv, t_shell *shell)
 {
 	while (*argv != NULL)
 	{

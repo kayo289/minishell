@@ -1,6 +1,6 @@
 #include "../../includes/libcmds.h"
 
-void pwd(char **argv)
+void minishell_pwd(char **argv)
 {
 	char *path;
 

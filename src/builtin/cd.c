@@ -1,6 +1,6 @@
 #include "../../includes/libcmds.h"
 
-void cd(char **argv)
+void minishell_cd(char **argv)
 {
 	char *path;
 	char *old_path;
