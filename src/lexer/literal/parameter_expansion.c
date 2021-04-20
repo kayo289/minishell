@@ -1,21 +1,24 @@
 #include "../../../includes/minishell.h"
 
-static void brace(t_dlist **line, char **key) {
+static void brace(t_dlist **line, char **key)
+{
 	char ch;
-	t_dlist **line2;
+	//t_dlist **line2;
 	
-	line2 = NULL;
+	//line2 = NULL;
 	*line = (*line)->next;
 	ch = ((char*)(*line)->content)[0];
 	while (ch != '}')
 	{
+		/*
 		if (ch == '\0')
 		{
-			prompt("> ", line2);
+			prompt("> ", line2, shell);
 			ft_dlstadd_back(line, ft_dlstnew("\n"));
 			ft_dlstadd_back(line, *line2);
 		}
 		else
+			*/
 			ft_charjoin(key, ch);
 		*line = (*line)->next;
 		ch = ((char*)(*line)->content)[0];

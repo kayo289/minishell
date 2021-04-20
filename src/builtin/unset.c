@@ -1,14 +1,40 @@
-#include "../../includes/minishell.h"
+#include "../../includes/libcmds.h"
 
-void unset(int argc, char **argv)
+static void del_shell_var(t_shell this, char *name)
 {
-	int i;
+	t_list *top;
+	t_list *prev;
+	int h;
 
-	if (argc <= 1)
-		return ;
-	while (argv[i])
+	h = hash(name);
+	top = this->var[h];
+	prev = NULL; 
+	while (top != NULL) 
 	{
-		ft_unsetenv(argv[i]);
-		i++;
+		if (ft_strcmp(((t_param*)top->content)->key, name) == EQUAL)
+		{
+			if (prev == NULL)
+				this->var[h] = top->next;
+			else
+				prev->next = top->next;
+			ft_lstdelone(top, free);
+			return;
+		}
+		prev = top;
+		top = top->next;
+	}
+}
+
+void unset(char **argv, t_shell *shell)
+{
+	while (*argv != NULL)
+	{
+		if (ft_unsetenv(*argv) < 0)
+		{
+			ft_putendl_fd(strerror(errno), 2);
+			return;
+		}
+		del_shell_var(*shell, *argv);
+		argv++;
 	}
 }

@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../../includes/shell_var.h"
 
 char *get_shell_var(t_shell this, char *name)
 {

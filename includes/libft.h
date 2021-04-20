@@ -6,7 +6,7 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/11 05:23:36 by user42           ###   ########.fr       */
+/*   Updated: 2021/04/19 21:11:31 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,13 @@
 
 # include <stdlib.h>
 # include <string.h>
+# include <errno.h>
 
 #define __GNU_SOURCE
 # include <unistd.h>
+
+#define EQUAL 0
+#define FAIL	-1
 
 typedef struct		s_dlist
 {

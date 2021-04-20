@@ -2,3 +2,4 @@ a.out
 *.o
 *.a
 *.h.gch
+.minishell_history

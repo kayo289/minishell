@@ -6,13 +6,13 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 04:59:17 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/06 20:32:22 by kkikuchi         ###   ########.fr       */
+/*   Updated: 2021/04/19 21:19:23 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
-#include <stdio.h>
-static int get_env_index(char *name)
+
+static char **get_env_adress(char *name)
 {
 	extern char **environ;
 	int i;
@@ -22,28 +22,32 @@ static int get_env_index(char *name)
 	while(environ[i] != NULL)
 	{
 		str = ft_split(environ[i], '=');
-		if (ft_strcmp(str[0], name) == 0)
-			return (i);
+		if (ft_strcmp(str[0], name) == EQUAL)
+			return (&environ[i]);
 		i++;
 	}
-	return (-1);
+	return (NULL);
 }
 
 int		ft_unsetenv(char *name)
 {
 	extern char **environ;
-	int i;
-	int status;
+	char **adress;
 
-	status = 0;
-	if ((i = get_env_index(name)) != -1)
+	if (name == NULL || *name == '\0' || ft_strchr(name, '=') != NULL)
 	{
-		printf("unsetenv,i:%d\n",i);
-		while (environ[i])
-		{
-			environ[i] = environ[i + 1];
-			i++;
-		}
+		errno = EINVAL;
+		return (FAIL);
 	}
-	return (status);
+	adress = get_env_adress(name);
+	if (adress != NULL)
+	{
+		while (*adress)
+		{
+			*adress = *(adress + 1);
+			adress++;
+		}
+		adress++;
+	}
+	return (0);
 }

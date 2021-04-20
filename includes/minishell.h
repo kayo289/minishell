@@ -17,24 +17,19 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include "libcmds.h"
+#include "shell_var.h"
 
 #define CTRLC	3
 #define CTRLD	4
 #define LF		10
 #define ESC		27
 #define DEL		127
-#define SIZE	29999
-#define SUCESS	1
-#define END		0
-#define ERROR	-1
+#define EXEC	1
+#define UNEXEC	0
 
 enum u_token;
 struct s_ip;
 struct s_pos;
-struct s_shell;
-struct s_param;
-typedef struct s_shell *	t_shell;
-typedef struct s_param		t_param;
 typedef enum u_token		t_token;
 typedef struct s_ip			t_ip;
 typedef struct s_pos		t_pos;
@@ -58,7 +53,7 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
-	/* To degug 
+	/* To degug
 	char *command_name[TOKEN_NUM] = {
 		"PIPE",			// |
 		"REDIRECT",		// >, >>, <
@@ -76,19 +71,6 @@ struct  s_pos
 	int cursor;
 	int max_rg;
 	int max_lf;
-};
-
-struct s_shell
-{
-	t_list	*var[SIZE];
-	t_dlist	*hist_lst;
-	int		exit_status;
-};
-
-struct s_param
-{
-	char *key;
-	char *value;
 };
 
 // prompt
@@ -122,19 +104,12 @@ void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void redirect(t_queue *fds);
 void command_execute(t_args args, t_shell *shell);
-int	 builtin_execute(t_args args);
+int	 builtin_execute(t_args args, t_shell *shell);
 
 // error
 void err_syntax(t_ip **ip);
 void err_notfound(char *cmd);
 void err_badfd(int n);
-
-// shell_var
-t_shell new_shell_var(void);
-void set_shell_var(t_shell this, char *param);
-char *get_shell_var(t_shell this, char *name);
-int	get_next_line(int fd, char **line);
-int hash(char *name);
 
 // queue
 void	push(char *str, t_queue *queue);
