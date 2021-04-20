@@ -1,12 +1,12 @@
 #include "../../../includes/minishell.h"
 
-static void dollar(line, ip, tokens)
-	t_dlist **line; t_ip *ip; t_queue *tokens;
+static void dollar(line, ip, tokens, shell)
+	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell *shell;
 {
 	char *val;
 	char *str;
 
-	if ((val = expand_parameter(line, ip, tokens)) == NULL)
+	if ((val = expand_parameter(line, ip, tokens, shell)) == NULL)
 	{
 		if (((char *)(*line)->content)[0]== '\0')
 			save_token(ip, tokens);
@@ -51,7 +51,7 @@ static void string(t_dlist **line, t_ip *ip)
 	next_ch(line, ip);
 }
 
-void literal(t_dlist **line, t_ip *ip, t_queue *tokens)
+void literal(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell)
 {
 	ip->sy = IDENTIFY;
 	while (ft_strchr("|><; \0", ip->ch) == NULL)
@@ -59,12 +59,12 @@ void literal(t_dlist **line, t_ip *ip, t_queue *tokens)
 		if (ft_isdigit(ip->ch))
 			numeric(line, ip, tokens);
 		else if (ip->ch == '$')
-			dollar(line, ip, tokens);
+			dollar(line, ip, tokens, shell);
 		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
 			quoting(line, ip, tokens);
 		else
 			string(line, ip);
 	}
 	save_token(ip, tokens);
-	get_token(line, ip, tokens);
+	get_token(line, ip, tokens, shell);
 }

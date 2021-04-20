@@ -38,7 +38,7 @@ static void lt(char *file, int n)
 	dup2(fd, n);
 }
 
-void redirect(t_queue *fds)
+void redirect(t_queue *fds, t_shell *shell)
 {
 	int		n;
 	char	*rdt;
@@ -52,7 +52,7 @@ void redirect(t_queue *fds)
 		{
 			n = n * 10 + (*rdt++ - '0');
 			if (n > 256)
-				err_badfd(n);
+				err_badfd(n, shell);
 		}
 		file = pop(fds);
 		if (*rdt == '>')
