@@ -11,7 +11,7 @@ static void del_shell_var(t_shell this, char *name)
 	prev = NULL; 
 	while (top != NULL) 
 	{
-		if (ft_strcmp(((t_param*)top->content)->key, name) != 0)
+		if (ft_strcmp(((t_param*)top->content)->key, name) == EQUAL)
 		{
 			if (prev == NULL)
 				this->var[h] = top->next;
