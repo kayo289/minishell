@@ -30,7 +30,7 @@ cd: cd.o
 pwd: pwd.o
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LIBS)
 env: env.o
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LIBS)
 echo: echo.o
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LIBS)
 exit: exit.o

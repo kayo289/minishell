@@ -1,13 +1,22 @@
 #include "../../includes/minishell.h"
 
-int main(int argc, char **argv)
+static void show_env()
 {
-	int i = 0;
+	extern char **environ;
+	int i;
 
-	printf("call env\n");
-	while (i < argc){
-		printf("argv[%d]: %s\n", i , argv[i]);
+	i = 0;
+	while (environ[i] != NULL)
+	{
+		ft_putendl_fd(environ[i], 1);
 		i++;
 	}
-	exit(EXIT_SUCCESS);
+}
+
+int main(int argc, char **argv)
+{
+	if (argc == 1)
+		show_env();
+	return (0);
+	(void)argv;
 }
