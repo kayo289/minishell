@@ -50,9 +50,9 @@ void exec_in_subshell(args, fds, ppfd, shell)
 		close(pfd[0]);
 		close(pfd[1]);
 
-		if (builtin_execute(args, shell))
+		if (builtin_execute(args, shell) == EXEC)
 			exit(0);
-		redirect(fds);
+		redirect(fds, shell);
 		command_execute(args, shell);
 	}
 	else
@@ -70,12 +70,12 @@ void exec(args, fds, ppfd, shell)
 	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
 {
 	pid_t pid;
-	//int status;
+	int status;
 
 	if (**args == NULL)
 		return;
 	set_signal();
-	if (builtin_execute(args, shell))
+	if (builtin_execute(args, shell) == EXEC)
 		return;
 	if ((pid = fork()) == 0)
 	{
@@ -84,12 +84,16 @@ void exec(args, fds, ppfd, shell)
 		dup2((*ppfd)[0], 0);
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
-		redirect(fds);
+		redirect(fds, shell);
 		command_execute(args, shell);
 	}
 	else
 	{
-		wait(NULL);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			(*shell)->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			(*shell)->exit_status = WTERMSIG(status) + 128;
 		close((*ppfd)[0]);
 		close((*ppfd)[1]);
 		free(*args);

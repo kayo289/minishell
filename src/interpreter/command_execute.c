@@ -52,6 +52,6 @@ void	command_execute(t_args args, t_shell *shell)
 	else 
 		cmd_path = search_path(cmd, shell);
 	execve(cmd_path, *args, environ);
-	err_notfound(cmd);
+	err_notfound(cmd, shell);
 }
 

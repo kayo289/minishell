@@ -85,12 +85,12 @@ void	init_pos(t_pos *pos, char *ps);
 void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
 // lexer
-void lexer(t_dlist **line, t_queue *tokens);
-void get_token(t_dlist **line, t_ip *ip, t_queue *tokens);
+void lexer(t_dlist **line, t_queue *tokens, t_shell *shell);
+void get_token(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
 void save_token(t_ip *ip, t_queue *tokens);
 char next_ch(t_dlist **line, t_ip *ip);
-void literal(t_dlist **line, t_ip *ip, t_queue *tokens);
-char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens);
+void literal(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
+char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
 void quoting(t_dlist **line, t_ip *ip, t_queue *tokens);
 void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens);
 
@@ -102,14 +102,14 @@ void	assign_variable(t_ip **ip, t_queue *tokens, t_shell *shell);
 // interpreter
 void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
 void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
-void redirect(t_queue *fds);
+void redirect(t_queue *fds, t_shell *shell);
 void command_execute(t_args args, t_shell *shell);
 int	 builtin_execute(t_args args, t_shell *shell);
 
 // error
 void err_syntax(t_ip **ip);
-void err_notfound(char *cmd);
-void err_badfd(int n);
+void err_notfound(char *cmd, t_shell *shell);
+void err_badfd(int n, t_shell *shell);
 
 // queue
 void	push(char *str, t_queue *queue);

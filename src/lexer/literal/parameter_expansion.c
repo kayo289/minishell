@@ -1,16 +1,15 @@
 #include "../../../includes/minishell.h"
 
-static void brace(t_dlist **line, char **key)
+static void brace(t_dlist **line, char **key, t_shell *shell)
 {
 	char ch;
-	//t_dlist **line2;
+	t_dlist **line2;
 	
-	//line2 = NULL;
+	line2 = NULL;
 	*line = (*line)->next;
 	ch = ((char*)(*line)->content)[0];
 	while (ch != '}')
 	{
-		/*
 		if (ch == '\0')
 		{
 			prompt("> ", line2, shell);
@@ -18,7 +17,6 @@ static void brace(t_dlist **line, char **key)
 			ft_dlstadd_back(line, *line2);
 		}
 		else
-			*/
 			ft_charjoin(key, ch);
 		*line = (*line)->next;
 		ch = ((char*)(*line)->content)[0];
@@ -26,7 +24,7 @@ static void brace(t_dlist **line, char **key)
 	*line = (*line)->next;
 }
 
-char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens)
+char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell)
 {
 	char *key;
 	char *val;
@@ -41,7 +39,12 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens)
 		return (NULL);
 	}
 	if (ch == '{')
-		brace(line, &key);
+		brace(line, &key, shell);
+	else if (ch == '?')
+	{
+		next_ch(line, ip);
+		return (ft_itoa((*shell)->exit_status));
+	}
 	else
 	{
 		while (ft_issnack_case(ch))

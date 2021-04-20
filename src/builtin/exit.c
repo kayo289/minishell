@@ -6,7 +6,7 @@ void minishell_exit(char **argv, t_shell *shell)
 
 	ft_putendl_fd("exit", 2);
 	if (argv[1] == NULL)
-		exit(0);
+		exit((*shell)->exit_status);
 	else
 	{
 		i = -1;
