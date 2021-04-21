@@ -3,7 +3,7 @@
 int builtin_execute(t_args args, t_shell *shell)
 {
 	if (ft_strcmp((*args)[0], "cd") == EQUAL)
-		minishell_cd(*args);
+		minishell_cd(*args, shell);
 	else if (ft_strcmp((*args)[0], "echo") == EQUAL)
 		minishell_echo(*args);
 	else if (ft_strcmp((*args)[0], "pwd") == EQUAL)
