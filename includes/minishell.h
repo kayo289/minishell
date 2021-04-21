@@ -91,8 +91,8 @@ void save_token(t_ip *ip, t_queue *tokens);
 char next_ch(t_dlist **line, t_ip *ip);
 void literal(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
 char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
-void quoting(t_dlist **line, t_ip *ip, t_queue *tokens);
-void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens);
+void quoting(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
+void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
 
 // parser
 void 	parser(t_queue *tokens, t_shell *shell);
