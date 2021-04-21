@@ -1,88 +1,103 @@
 #include "../../includes/minishell.h"
 
-static void simple_commands(ip, tokens, args, fds)
-		t_ip **ip; t_queue *tokens, *fds; t_args args;
+static void	next_token(t_ip **ip, t_list **tokens)
 {
-	*args = (char **)ft_calloc2(sizeof(char*), 1);
-	*fds = NULL;
+	*ip = (t_ip*)(*tokens)->content;
+	*tokens = (*tokens)->next;
+}
+
+static void simple_commands(t_ip **ip, t_list **tokens)
+{
 	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
 		if ((*ip)->sy == IDENTIFY)
-		{
-			*args = ft_realloc2(*args, (*ip)->id_string);
 			next_token(ip, tokens);
-		}
 		if ((*ip)->sy == REDIRECT)
 		{
-			push(((*ip)->id_string), fds);
 			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY) 
-			{
-				push(((*ip)->id_string), fds);
 				next_token(ip, tokens);
-			}
 			else
-				err_syntax(ip);
+				(*ip)->sy = ERR;
 		}
 	}
 }
 
-static void pipelines(ip, tokens, shell)
-	t_ip **ip; t_queue *tokens; t_shell *shell;
+static void pipelines(t_ip **ip, t_list **tokens)
 {
-	char	**args;
-	t_queue	fds;
-	int		**ppfd;
-	int		pfd[2];
-
-	pipe(pfd);
-	ppfd = malloc(sizeof(int*));
-	*ppfd = pfd;
-	simple_commands(ip, tokens, &args, &fds);
+	simple_commands(ip, tokens);
 	while ((*ip)->sy == PIPE)
 	{
 		next_token(ip, tokens);
 		if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
-		{
-			exec_in_subshell(&args, &fds, ppfd, shell);
-			simple_commands(ip, tokens, &args, &fds);
-		}
+			simple_commands(ip, tokens);
 		else
-			err_syntax(ip);
+			(*ip)->sy = ERR;
 	}
-	exec(&args, &fds, ppfd, shell);
 }
 
-static void lists(ip, tokens, shell)
-	t_ip **ip; t_queue *tokens; t_shell *shell;
+static void lists(t_ip **ip, t_list **tokens)
 {
-	assign_variable(ip, tokens, shell);
+	/*
+	while ((*ip)->sy == IDENTIFY)
+	{
+		if (ft_strchr((*ip)->id_string, '=') != NULL)
+			next_token(ip, tokens);
+		else
+			break;
+	}
+	*/
 	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
-		pipelines(ip, tokens, shell);
+		pipelines(ip, tokens);
 		if ((*ip)->sy == SEMICOLON)
 			next_token(ip, tokens);
 	}
 }
 
-static void compound_commands(ip, tokens, shell)
-	t_ip **ip; t_queue *tokens; t_shell *shell;
+/*
+static void compound_commands(t_ip **ip, t_list **tokens, t_shell *shell)
 {
+	//t_dlist *line2;
+	//t_list	*tokens2;
+
 	next_token(ip, tokens);
 	lists(ip, tokens, shell);
 	if ((*ip)->sy == RIGHT_BRACE)
 		next_token(ip, tokens);
-}
+	else
+	{
+		while ((*ip)->sy != RIGHT_BRACE)
+		{
+			prompt("> ", &line2, shell);
+			lexer(&line2, &tokens2, shell);
+			ft_lstadd_back(tokens, tokens2);
 
-void parser(t_queue *tokens, t_shell *shell)
+			compound_commands(ip, tokens, shell);
+		}
+		next_token(ip, tokens);
+	}
+}
+*/
+
+void parser(t_list *tokens, t_shell *shell)
 {
 	t_ip	*ip;
 	
-	next_token(&ip, tokens);
+	next_token(&ip, &tokens);
 	if (ip->sy == LEFT_BRACE)
-		compound_commands(&ip, tokens, shell);
+	{
+		next_token(&ip, &tokens);
+		lists(&ip, &tokens);
+		if (ip->sy == RIGHT_BRACE)
+			next_token(&ip, &tokens);
+	//	compound_commands(&ip, &tokens, shell);
+	}
 	else
-		lists(&ip, tokens, shell);
-	if (ip->sy != INPUT_END)
-		err_syntax(&ip);
+		lists(&ip, &tokens);
+
+	if (ip->sy == INPUT_END)
+		interpreter(tokens, shell);
+	else if (ip->sy == ERR)
+		err_syntax(&ip, shell);
 }

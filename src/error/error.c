@@ -3,11 +3,14 @@
 #define MESSAGE1 "minishell: unexpected EOF while looking for matching "
 #define MESSAGE2 "minishell: syntax error: unexpected end of file"
 
-void err_syntax(t_ip **ip)
+void err_syntax(t_ip **ip, t_shell *shell)
 {
 	ft_putstr_fd("syntax error near unexpected token ", 2); 
-	ft_putendl_fd((*ip)->id_string, 2);
-	(*ip)->sy = INPUT_END;
+	if (*(*ip)->id_string == '\0')
+		ft_putendl_fd("`newline'", 2);
+	else
+		ft_putendl_fd((*ip)->id_string, 2);
+	(*shell)->exit_status = 258;
 }
 
 void err_notfound(char *cmd, t_shell *shell)

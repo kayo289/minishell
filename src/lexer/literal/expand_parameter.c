@@ -24,7 +24,7 @@ static void brace(t_dlist **line, char **key, t_shell *shell)
 	*line = (*line)->next;
 }
 
-char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell)
+char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell)
 {
 	char *key;
 	char *val;
@@ -35,7 +35,6 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell
 	if (ch == '\0')
 	{
 		ft_charjoin(&ip->id_string, '$');
-		save_token(ip, tokens);
 		return (NULL);
 	}
 	if (ch == '{')

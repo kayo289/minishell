@@ -18,6 +18,7 @@
 #include <fcntl.h>
 #include "libcmds.h"
 #include "shell_var.h"
+#include "queue.h"
 
 #define CTRLC	3
 #define CTRLD	4
@@ -44,6 +45,7 @@ enum u_token
 	SEMICOLON,	// ;
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
+	ERR,	// End Of Input
 
 	TOKEN_NUM	// don't care
 };
@@ -53,17 +55,6 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
-	/* To degug
-	char *command_name[TOKEN_NUM] = {
-		"PIPE",			// |
-		"REDIRECT",		// >, >>, <
-		"LEFT_BRACE",	// {
-		"RIGHT_BRACE",	// }
-		"SEMICOLON",	// ;
-		"IDENTIFY",		// String
-		"INPUT_END"		// End Of Input
-	};
-	*/
 };
 
 struct  s_pos
@@ -85,34 +76,30 @@ void	init_pos(t_pos *pos, char *ps);
 void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
 // lexer
-void lexer(t_dlist **line, t_queue *tokens, t_shell *shell);
-void get_token(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
-void save_token(t_ip *ip, t_queue *tokens);
+void lexer(t_dlist **line, t_list **tokens, t_shell *shell);
+void get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
+void save_token(t_ip *ip, t_list **tokens);
 char next_ch(t_dlist **line, t_ip *ip);
-void literal(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
-char *expand_parameter(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell);
-void quoting(t_dlist **line, t_ip *ip, t_queue *tokens);
-void metacharacter(t_dlist **line, t_ip *ip, t_queue *tokens);
+void literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
+char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell);
+void quoting(t_dlist **line, t_ip *ip, t_shell *shell);
+void metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 
 // parser
-void 	parser(t_queue *tokens, t_shell *shell);
-void 	next_token(t_ip **ip, t_queue *tokens);
-void	assign_variable(t_ip **ip, t_queue *tokens, t_shell *shell);
+void parser(t_list *tokens, t_shell *shell);
 
 // interpreter
-void exec_in_subshell(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
-void exec(t_args args, t_queue *fds, int *ppfd[], t_shell *shell);
-void redirect(t_queue *fds, t_shell *shell);
+void interpreter(t_list * tokens, t_shell *shell);
+void exec_in_subshell(t_args args, t_list **fds, int *ppfd[], t_shell *shell);
+void exec(t_args args, t_list **fds, int *ppfd[], t_shell *shell);
+void redirect(t_list **fds, t_shell *shell);
 void command_execute(t_args args, t_shell *shell);
 int	 builtin_execute(t_args args, t_shell *shell);
+void	assign_variable(t_ip **ip, t_list **tokens, t_shell *shell);
 
 // error
-void err_syntax(t_ip **ip);
+void err_syntax(t_ip **ip, t_shell *shell);
 void err_notfound(char *cmd, t_shell *shell);
 void err_badfd(int n, t_shell *shell);
-
-// queue
-void	push(char *str, t_queue *queue);
-char	*pop(t_queue *queue);
 
 #endif
