@@ -8,6 +8,8 @@ void minishell_cd(char **argv)
 	old_path = getcwd(NULL, 0);
 	if (argv[1] == NULL)
 		path = ft_getenv("HOME");
+	else if (ft_strcmp(argv[1],"-") == EQUAL)
+		path  = ft_getenv("OLDPWD");
 	else
 		path = argv[1];
 	if (chdir(path) != 0)
@@ -23,6 +25,6 @@ void minishell_cd(char **argv)
 		free(path);
 	}
 	free(old_path);
-	printf("現在地:%s\n", getcwd(NULL, 0));
+	// printf("現在地:%s\n", getcwd(NULL, 0));
 	return;
 }
