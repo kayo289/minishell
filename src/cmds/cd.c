@@ -8,12 +8,14 @@ int main(int argc, char **argv)
 	old_path = getcwd(NULL, 0);
 	if (argc == 1)
 		path = ft_getenv("HOME");
+	else if (ft_strcmp(argv[1],"-") == EQUAL)
+		path  = ft_getenv("OLDPWD");
 	else
 		path = argv[1];
 	if (chdir(path) != 0)
 	{
 		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
+		return (1);
 	}
 	else
 	{
