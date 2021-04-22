@@ -30,19 +30,19 @@ static void output(char **argv)
 	output(argv + 1);
 }
 
-void minishell_echo(char **argv)
+int minishell_echo(char **argv)
 {
 	bool opt_n;
 
 	if (argv[1] == NULL)
 	{
 		ft_putendl_fd("", 1);
-		return;
+		return (1);
 	}
 	argv++;
 	opt_n = check_opt_n(&argv);
 	output(argv);
 	if (opt_n == false)
 		ft_putstr_fd("\n", 1);
-	return;
+	return (0);
 }

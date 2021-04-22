@@ -1,6 +1,6 @@
 #include "../../includes/libcmds.h"
 
-void minishell_exit(char **argv, t_shell *shell)
+int minishell_exit(char **argv, t_shell *shell)
 {
 	int i;
 
@@ -24,6 +24,8 @@ void minishell_exit(char **argv, t_shell *shell)
 		{
 			ft_putendl_fd("exit: too many arguments", 2);
 			(*shell)->exit_status = 1;
+			return (1);
 		}
 	}
+	return (0);
 }
