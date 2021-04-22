@@ -15,7 +15,7 @@ int minishell_exit(char **argv, t_shell *shell)
 			if (!ft_isdigit(argv[1][i]))
 			{
 				ft_putendl_fd("exit: numeric arguments required", 2);
-				return (1);
+				exit(255
 			}
 		}
 		if (argv[2] == NULL)
