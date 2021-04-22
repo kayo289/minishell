@@ -14,7 +14,7 @@ char next_ch(t_dlist **line, t_ip *ip)
 	return (ip->ch);
 }
 
-void save_token(t_ip *ip, t_queue *tokens)
+void save_token(t_ip *ip, t_list **tokens)
 {
 	t_list	*lst;
 	t_ip	*tmp;
@@ -26,37 +26,55 @@ void save_token(t_ip *ip, t_queue *tokens)
 	ip->id_string = ft_calloc(sizeof(char), 1);
 }
 
-void get_token(line, ip, tokens, shell)
-	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell *shell;
+void get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 {
 	while (ip->ch == ' ' || ip->ch == '\t')
 		next_ch(line, ip);
 	if (ip->ch == '\0')
 	{
 		ip->sy = INPUT_END;
-		save_token(ip, tokens);
 		return;
 	}
-	if (ft_strchr("|><;", ip->ch) == NULL)
+	else if (ft_strchr("|><;", ip->ch) == NULL)
 		literal(line, ip, tokens, shell);
 	else
 		metacharacter(line, ip, tokens);
 }
 
-void lexer(t_dlist **line, t_queue *tokens, t_shell *shell)
+static void brace(t_dlist **line, t_ip *ip, t_list **tokens)
 {
-	t_ip	ip;
+	if (ip->ch == '{')
+	{
+		ft_charjoin(&ip->id_string, '{');
+		if (next_ch(line, ip) == ' ')
+		{
+			ip->sy = LEFT_BRACE; 
+			save_token(ip, tokens);
+		}
+	}
+	else if (ip->ch == '}')
+	{
+		ft_charjoin(&ip->id_string, '}');
+		ip->sy = RIGHT_BRACE; 
+		save_token(ip, tokens);
+		next_ch(line, ip);
+	}
+}
+
+void lexer(t_dlist **line, t_list **tokens, t_shell *shell)
+{
+	t_ip ip;
 
 	*tokens = NULL;
 	ip.id_string = ft_calloc(sizeof(char), 1);
-	if (next_ch(line, &ip) == '{')
+	next_ch(line, &ip);
+
+	brace(line, &ip, tokens);
+	while (ip.ch != '\0')
 	{
-		ft_charjoin(&ip.id_string, ip.ch);
-		if (next_ch(line, &ip) == ' ')
-		{
-			ip.sy = LEFT_BRACE; 
-			save_token(&ip, tokens);
-		}
+		get_token(line, &ip, tokens, shell);
+		save_token(&ip, tokens);
 	}
 	get_token(line, &ip, tokens, shell);
+	save_token(&ip, tokens);
 }

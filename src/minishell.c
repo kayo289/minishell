@@ -3,15 +3,14 @@
 static void minishell_loop(t_shell *shell)
 {
 	t_dlist *line;
-	t_queue tokens;
+	t_list	*tokens;
 
 	while (1)
 	{
 		prompt("minishell$ ", &line, shell);
 		lexer(&line, &tokens, shell);
-		parser(&tokens, shell);
-		while (wait(NULL) > 0);
-		//ft_dlstclear(line);
+		parser(tokens, shell);
+		ft_lstclear(&tokens, free);
 	}
 } 
 
@@ -21,5 +20,5 @@ int main(void)
 
 	shell = new_shell_var();
 	minishell_loop(&shell);
-	return (0);
+	return (shell->exit_status);
 }

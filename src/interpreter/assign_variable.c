@@ -1,27 +1,12 @@
 #include "../../includes/minishell.h"
 
-static void assign_shell_var(t_queue *vars, t_shell *shell)
+void assign_variable(t_list *datas, t_shell *shell)
 {
-	while (*vars != NULL)
-		set_shell_var(*shell, pop(vars));
-}
+	char *var;
 
-void assign_variable(ip, tokens, shell)
-		t_ip **ip; t_queue *tokens; t_shell *shell;
-{
-	t_queue vars;
-
-	vars = NULL;
-	while ((*ip)->sy == IDENTIFY)
+	while (!q_empty(&((t_data*)datas->content)->vars))
 	{
-		if (ft_strchr((*ip)->id_string, '=') != NULL)
-		{
-			push((*ip)->id_string, &vars);
-			next_token(ip, tokens);
-			if ((*ip)->sy == INPUT_END)
-				assign_shell_var(&vars, shell);
-		}
-		else
-			return;
+		var = deq(&((t_data*)datas->content)->vars);
+		set_shell_var(*shell, var);
 	}
 }

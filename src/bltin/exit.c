@@ -4,7 +4,7 @@ int minishell_exit(char **argv, t_shell *shell)
 {
 	int i;
 
-	ft_putendl_fd("exit", 2);
+	ft_putendl_fd("exit", 1);
 	if (argv[1] == NULL)
 		exit((*shell)->exit_status);
 	else

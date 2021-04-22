@@ -38,15 +38,17 @@ static void lt(char *file, int n)
 	dup2(fd, n);
 }
 
-void redirect(t_queue *fds, t_shell *shell)
+void redirect(t_list *datas, t_shell *shell)
 {
 	int		n;
 	char	*rdt;
 	char	*file;
+	t_queue	fds;
 
-	while (*fds != NULL)
+	fds = ((t_data *)datas->content)->fds;
+	while (!q_empty(&fds))
 	{
-		rdt = pop(fds);
+		rdt = deq(&fds);
 		n = 0;
 		while (ft_isalnum(*rdt))
 		{
@@ -54,9 +56,11 @@ void redirect(t_queue *fds, t_shell *shell)
 			if (n > 256)
 				err_badfd(n, shell);
 		}
-		file = pop(fds);
+		file = deq(&fds);
 		if (*rdt == '>')
 		{
+			if (n == 0)
+				n = 1;
 			if (*++rdt == '>')
 				dgt(file, n);
 			else

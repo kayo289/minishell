@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/07 23:56:51 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/19 21:11:31 by user42           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef LIBFT_H
 # define LIBFT_H
 
@@ -20,7 +8,7 @@
 #define __GNU_SOURCE
 # include <unistd.h>
 
-#define EQUAL 0
+#define EQUAL	0
 #define FAIL	-1
 
 typedef struct		s_dlist
@@ -35,8 +23,6 @@ typedef struct		s_list
 	void			*content;
 	struct s_list	*next;
 }					t_list;
-
-typedef t_list *			t_queue;
 
 void				*ft_memset(void *buf, int c, size_t n);
 void				*ft_memcpy(void *buf1, const void *buf2, size_t n);

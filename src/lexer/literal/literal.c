@@ -1,22 +1,21 @@
 #include "../../../includes/minishell.h"
 
-static void dollar(line, ip, tokens, shell)
-	t_dlist **line; t_ip *ip; t_queue *tokens; t_shell *shell;
+static void dollar(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 {
 	char *val;
 	char *str;
 
-	if ((val = expand_parameter(line, ip, tokens, shell)) == NULL)
+	val = expand_parameter(line, ip, shell);
+	if (val == NULL)
 	{
-		if (((char *)(*line)->content)[0]== '\0')
-			save_token(ip, tokens);
 		next_ch(line, ip);
+		get_token(line, ip, tokens, shell);
 		return;
 	}
 	str = ft_strtrim(val, " \t\n");
 	if (ft_strchr(" \t\n", val[0]) != NULL)
 	{
-		if (ft_strcmp(ip->id_string, "") != 0)
+		if (*ip->id_string != '\0')
 		{
 			ip->sy = IDENTIFY;
 			save_token(ip, tokens);
@@ -25,7 +24,7 @@ static void dollar(line, ip, tokens, shell)
 	ip->id_string = ft_strjoin(ip->id_string, str);
 	if (ft_strchr(" \t\n", val[ft_strlen(val) - 1]) != NULL)
 	{
-		if (ft_strcmp(ip->id_string, "") != 0)
+		if (*ip->id_string != '\0')
 		{
 			ip->sy = IDENTIFY;
 			save_token(ip, tokens);
@@ -34,7 +33,7 @@ static void dollar(line, ip, tokens, shell)
 	next_ch(line, ip);
 }
 
-static void numeric(t_dlist **line, t_ip *ip, t_queue *tokens)
+static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	while (ft_isdigit(ip->ch))
 	{
@@ -51,7 +50,7 @@ static void string(t_dlist **line, t_ip *ip)
 	next_ch(line, ip);
 }
 
-void literal(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell)
+void literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 {
 	ip->sy = IDENTIFY;
 	while (ft_strchr("|><; \0", ip->ch) == NULL)
@@ -61,10 +60,8 @@ void literal(t_dlist **line, t_ip *ip, t_queue *tokens, t_shell *shell)
 		else if (ip->ch == '$')
 			dollar(line, ip, tokens, shell);
 		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
-			quoting(line, ip, tokens);
+			quoting(line, ip, shell);
 		else
 			string(line, ip);
 	}
-	save_token(ip, tokens);
-	get_token(line, ip, tokens, shell);
 }
