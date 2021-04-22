@@ -2,15 +2,14 @@ CC 		= gcc
 CFLAGS 	= -Wall -Wextra -Werror
 LDFLAGS = -L../libft
 LIBS	= -lft
-NAME	= cd echo pwd export env exit
+NAME	= cd echo pwd export env
 LIBFT 	= libft.a
 NAME_SRC = \
 	cd.c \
 	echo.c \
 	pwd.c \
 	export.c \
-	env.c \
-	exit.c
+	env.c
 NAME_OBJ=$(CMDS_SRC:.c=.o)
 
 all: $(LIBFT) $(NAME)
@@ -33,8 +32,6 @@ env: env.o
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LIBS)
 echo: echo.o
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $< $(LIBS)
-exit: exit.o
-	$(CC) $(CFLAGS) -o $@ $<
 export: export.o
 	$(CC) $(CFLAGS) -o $@ $<
 
