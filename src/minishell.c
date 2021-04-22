@@ -10,7 +10,6 @@ static void minishell_loop(t_shell *shell)
 		prompt("minishell$ ", &line, shell);
 		lexer(&line, &tokens, shell);
 		parser(tokens, shell);
-		while (wait(NULL) > 0);
 		ft_lstclear(&tokens, free);
 	}
 } 

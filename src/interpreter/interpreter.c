@@ -1,42 +1,55 @@
 #include "../../includes/minishell.h"
 
-/*
-static void exec_in_subshell(t_list *datas, int **ppfd, t_shell *shell)
+static void exec_in_subshell(int i, t_list *datas, int ppfd[], t_shell *shell)
 {
-	pid_t pid;
 	int pfd[2];
+	pid_t pid;
+	int status;
+	char **args;
 
-	if (**args == NULL)
+	args = (char **)((t_data *)datas->content)->args->content;
+	if (((t_data *)datas->content)->args->next == NULL)
+	{
+		if ((pid = fork()) == 0)
+		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
+			dup2(ppfd[0], 0);
+			close(ppfd[0]);
+			close(ppfd[1]);
+			if (bltin_execute(args, shell) == EXEC)
+				exit(0);
+			redirect(datas, shell);
+			cmd_execute(args, shell);
+		}
 		return;
-	set_signal();
+	}
+
 	pipe(pfd);
 	if ((pid = fork()) == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		dup2((*ppfd)[0], 0);
-		close((*ppfd)[0]);
-		close((*ppfd)[1]);
+		dup2(ppfd[0], 0);
+		close(ppfd[0]);
+		close(ppfd[1]);
 
 		dup2(pfd[1], 1);
 		close(pfd[0]);
 		close(pfd[1]);
 
+		redirect(datas, shell);
 		if (bltin_execute(args, shell) == EXEC)
 			exit(0);
-		redirect(((t_data*)datas->content)->fds, shell);
 		cmd_execute(args, shell);
 	}
-	else
-	{
-		close((*ppfd)[0]);
-		close((*ppfd)[1]);
-		(*ppfd)[0] = pfd[0];
-		(*ppfd)[1] = pfd[1];
-		free(*args);
-	}
+	((t_data *)datas->content)->args = ((t_data *)datas->content)->args->next;
+	exec_in_subshell(i + 1, datas, pfd, shell);
+	close(ppfd[0]);
+	close(ppfd[1]);
+	waitpid(pid, &status, 0);
 }
-*/
+
 static void exec(t_list *datas, t_shell *shell)
 {
 	pid_t pid;
@@ -51,7 +64,6 @@ static void exec(t_list *datas, t_shell *shell)
 	}
 	if (bltin_execute(args, shell) == EXEC)
 		return;
-	set_signal();
 	if ((pid = fork()) == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -72,13 +84,18 @@ static void exec(t_list *datas, t_shell *shell)
 
 void interpreter(t_list *datas, t_shell *shell)
 {
+	int pfd[2];
+
+	set_signal();
 	while (datas != NULL)
 	{
 		if (((t_data *)datas->content)->grammer == SIMPLECMD)
 			exec(datas, shell);
 		else if (((t_data *)datas->content)->grammer == PIPELINE)
-			return;
-			//exec_in_subshell(datas, ppfd, shell);
+		{
+			pipe(pfd);
+			exec_in_subshell(0, datas, pfd, shell);
+		}
 		datas = datas->next;
 	}
 }
