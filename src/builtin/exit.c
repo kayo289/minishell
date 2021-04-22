@@ -1,6 +1,6 @@
 #include "../../includes/libcmds.h"
 
-void minishell_exit(char **argv, t_shell *shell)
+int minishell_exit(char **argv, t_shell *shell)
 {
 	int i;
 
@@ -15,7 +15,7 @@ void minishell_exit(char **argv, t_shell *shell)
 			if (!ft_isdigit(argv[1][i]))
 			{
 				ft_putendl_fd("exit: numeric arguments required", 2);
-				exit(255);
+				return (1);
 			}
 		}
 		if (argv[2] == NULL)
@@ -24,6 +24,8 @@ void minishell_exit(char **argv, t_shell *shell)
 		{
 			ft_putendl_fd("exit: too many arguments", 2);
 			(*shell)->exit_status = 1;
+			return (1);
 		}
 	}
+	return (0);
 }

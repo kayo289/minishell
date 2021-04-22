@@ -1,6 +1,6 @@
 #include "../../includes/libcmds.h"
 
-void minishell_cd(char **argv)
+int minishell_cd(char **argv)
 {
 	char *path;
 	char *old_path;
@@ -13,7 +13,7 @@ void minishell_cd(char **argv)
 	if (chdir(path) != 0)
 	{
 		ft_putstr_fd(strerror(errno), 2);
-		return;
+		return (1);
 	}
 	else
 	{
@@ -24,5 +24,5 @@ void minishell_cd(char **argv)
 	}
 	free(old_path);
 	printf("現在地:%s\n", getcwd(NULL, 0));
-	return;
+	return (0);
 }
