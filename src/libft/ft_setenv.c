@@ -1,11 +1,11 @@
 #include "../../includes/libft.h"
 
-int ft_setenv(char *name, char *value)
+int	ft_setenv(char *name, char *value)
 {
-	extern char **environ;
-	char **str;
-	char *parameter;
-	int i;
+	extern char	**environ;
+	char		**str;
+	char		*parameter;
+	int			i;
 
 	i = 0;
 	if (name == NULL || ft_strchr(name, '=') != NULL)

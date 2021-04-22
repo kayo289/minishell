@@ -6,20 +6,20 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/01 04:59:17 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/19 21:19:23 by user42           ###   ########.fr       */
+/*   Updated: 2021/04/22 23:28:08 by kkikuchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
-static char **get_env_adress(char *name)
+static char	**get_env_adress(char *name)
 {
-	extern char **environ;
-	int i;
-	char **str;
+	extern char	**environ;
+	int			i;
+	char		**str;
 
 	i = 0;
-	while(environ[i] != NULL)
+	while (environ[i] != NULL)
 	{
 		str = ft_split(environ[i], '=');
 		if (ft_strcmp(str[0], name) == EQUAL)
@@ -29,10 +29,10 @@ static char **get_env_adress(char *name)
 	return (NULL);
 }
 
-int		ft_unsetenv(char *name)
+int	ft_unsetenv(char *name)
 {
-	extern char **environ;
-	char **adress;
+	extern char	**environ;
+	char		**adress;
 
 	if (name == NULL || *name == '\0' || ft_strchr(name, '=') != NULL)
 	{

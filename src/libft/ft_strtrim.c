@@ -6,13 +6,13 @@
 /*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 15:52:30 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/02/13 21:29:55 by kkikuchi         ###   ########.fr       */
+/*   Updated: 2021/04/22 23:29:34 by kkikuchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
-char				*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
 	char	*str;
 	size_t	start;

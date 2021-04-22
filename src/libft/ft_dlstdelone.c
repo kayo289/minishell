@@ -3,7 +3,7 @@
 void	ft_dlstdelone(t_dlist *lst, void (*del)(void *))
 {
 	if (lst == NULL)
-		return;
+		return ;
 	if (lst->prev != NULL)
 		lst->prev->next = lst->next;
 	if (lst->next != NULL)
