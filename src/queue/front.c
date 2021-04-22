@@ -2,5 +2,7 @@
 
 void *front(t_queue *this)
 {
-	return (this->tail->next->content);
+	if (*this == NULL)
+		return (this);
+	return ((*this)->tail->next->content);
 }

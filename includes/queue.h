@@ -6,7 +6,7 @@
 #include "libft.h"
 
 struct s_queue;
-typedef struct s_queue t_queue;
+typedef struct s_queue * t_queue;
 
 struct s_queue
 {

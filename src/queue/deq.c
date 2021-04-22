@@ -5,9 +5,9 @@ void *deq(t_queue *this)
 	//t_list *tmp;
 	t_list *top;
 
-	if (this->head->content == NULL)
-		return(NULL);
-	top = this->tail->next;
-	this->tail = this->tail->next;
+	if (*this == NULL)
+		return (NULL);
+	top = (*this)->tail->next;
+	(*this)->tail = (*this)->tail->next;
 	return (top->content);
 }
