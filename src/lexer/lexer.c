@@ -41,6 +41,26 @@ void get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 		metacharacter(line, ip, tokens);
 }
 
+static void brace(t_dlist **line, t_ip *ip, t_list **tokens)
+{
+	if (ip->ch == '{')
+	{
+		ft_charjoin(&ip->id_string, '{');
+		if (next_ch(line, ip) == ' ')
+		{
+			ip->sy = LEFT_BRACE; 
+			save_token(ip, tokens);
+		}
+	}
+	else if (ip->ch == '}')
+	{
+		ft_charjoin(&ip->id_string, '}');
+		ip->sy = RIGHT_BRACE; 
+		save_token(ip, tokens);
+		next_ch(line, ip);
+	}
+}
+
 void lexer(t_dlist **line, t_list **tokens, t_shell *shell)
 {
 	t_ip ip;
@@ -48,22 +68,8 @@ void lexer(t_dlist **line, t_list **tokens, t_shell *shell)
 	*tokens = NULL;
 	ip.id_string = ft_calloc(sizeof(char), 1);
 	next_ch(line, &ip);
-	if (ip.ch == '{')
-	{
-		ft_charjoin(&ip.id_string, ip.ch);
-		if (next_ch(line, &ip) == ' ')
-		{
-			ip.sy = LEFT_BRACE; 
-			save_token(&ip, tokens);
-		}
-	}
-	else if (ip.ch == '}')
-	{
-		next_ch(line, &ip);
-		ip.sy = RIGHT_BRACE; 
-		save_token(&ip, tokens);
-	}
 
+	brace(line, &ip, tokens);
 	while (ip.ch != '\0')
 	{
 		get_token(line, &ip, tokens, shell);

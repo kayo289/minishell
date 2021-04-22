@@ -21,5 +21,5 @@ int main(void)
 
 	shell = new_shell_var();
 	minishell_loop(&shell);
-	return (0);
+	return (shell->exit_status);
 }

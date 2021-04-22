@@ -1,35 +1,7 @@
 #include "../../includes/minishell.h"
 
-static void sigint(int p_signame)
-{
-	ft_putendl_fd("\b\b  ", 1);
-	(void)p_signame;
-}
-
-static void sigquit(int p_signame)
-{
-	ft_putendl_fd("Quit (core dumped)", 1);
-	(void)p_signame;
-}
-
-static void set_signal(void)
-{
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	if (signal(SIGINT, sigint) == SIG_ERR)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-	if (signal(SIGQUIT, sigquit) == SIG_ERR)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		exit(1);
-	}
-}
-
-void exec_in_subshell(args, fds, ppfd, shell)
-	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
+/*
+static void exec_in_subshell(t_list *datas, int **ppfd, t_shell *shell)
 {
 	pid_t pid;
 	int pfd[2];
@@ -50,10 +22,10 @@ void exec_in_subshell(args, fds, ppfd, shell)
 		close(pfd[0]);
 		close(pfd[1]);
 
-		if (builtin_execute(args, shell) == EXEC)
+		if (bltin_execute(args, shell) == EXEC)
 			exit(0);
-		redirect(fds, shell);
-		command_execute(args, shell);
+		redirect(((t_data*)datas->content)->fds, shell);
+		cmd_execute(args, shell);
 	}
 	else
 	{
@@ -64,28 +36,28 @@ void exec_in_subshell(args, fds, ppfd, shell)
 		free(*args);
 	}
 }
-
-
-void exec(args, fds, ppfd, shell)
-	t_args args; t_queue *fds; int **ppfd; t_shell *shell;
+*/
+static void exec(t_list *datas, t_shell *shell)
 {
 	pid_t pid;
 	int status;
+	char **args;
 
-	if (**args == NULL)
+	args = (char **)((t_data *)datas->content)->args->content;
+	if (*args == NULL)
+	{
+		assign_variable(datas, shell);
+		return;
+	}
+	if (bltin_execute(args, shell) == EXEC)
 		return;
 	set_signal();
-	if (builtin_execute(args, shell) == EXEC)
-		return;
 	if ((pid = fork()) == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		dup2((*ppfd)[0], 0);
-		close((*ppfd)[0]);
-		close((*ppfd)[1]);
-		redirect(fds, shell);
-		command_execute(args, shell);
+		redirect(datas, shell);
+		cmd_execute(args, shell);
 	}
 	else
 	{
@@ -94,8 +66,29 @@ void exec(args, fds, ppfd, shell)
 			(*shell)->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 			(*shell)->exit_status = WTERMSIG(status) + 128;
-		close((*ppfd)[0]);
-		close((*ppfd)[1]);
 		free(*args);
 	}
 }
+
+void interpreter(t_list *datas, t_shell *shell)
+{
+	while (datas != NULL)
+	{
+		if (((t_data *)datas->content)->grammer == SIMPLECMD)
+			exec(datas, shell);
+		else if (((t_data *)datas->content)->grammer == PIPELINE)
+			return;
+			//exec_in_subshell(datas, ppfd, shell);
+		datas = datas->next;
+	}
+}
+/*
+while (((t_data *)datas->content)->args != NULL)
+{
+for (int i = 0; ((char **)((t_data *)datas->content)->args->content)[i] != NULL; i++)
+{
+printf("args[%d]:%s\n", i, ((char **)((t_data *)datas->content)->args->content)[i]);
+}
+((t_data *)datas->content)->args = ((t_data *)datas->content)->args->next;
+}
+*/

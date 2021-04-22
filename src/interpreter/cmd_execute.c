@@ -40,18 +40,18 @@ static char *search_path(char *cmd_name, t_shell *shell)
 	return (cmd_path);
 }
 
-void	command_execute(t_args args, t_shell *shell)
+void	cmd_execute(char **args, t_shell *shell)
 {
 	extern char	**environ;
 	char		*cmd;
 	char		*cmd_path;
 
-	cmd = (*args)[0];
+	cmd = args[0];
 	if (ft_strchr(cmd, '/') != NULL)
 		cmd_path = cmd;
 	else 
 		cmd_path = search_path(cmd, shell);
-	execve(cmd_path, *args, environ);
+	execve(cmd_path, args, environ);
 	err_notfound(cmd, shell);
 }
 
