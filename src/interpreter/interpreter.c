@@ -6,24 +6,13 @@ static void exec_in_subshell(int i, t_list *datas, int ppfd[], t_shell *shell)
 	pid_t pid;
 	int status;
 	char **args;
+	t_data *data;
 
-	args = (char **)((t_data *)datas->content)->args->content;
-	if (((t_data *)datas->content)->args->next == NULL)
-	{
-		if ((pid = fork()) == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			dup2(ppfd[0], 0);
-			close(ppfd[0]);
-			close(ppfd[1]);
-			if (bltin_execute(args, shell) == EXEC)
-				exit(0);
-			redirect(datas, shell);
-			cmd_execute(args, shell);
-		}
+	data = (t_data *)datas->content;
+	if (data->args == NULL)
 		return;
-	}
+	args = (char **)data->args->content;
+	data->args = data->args->next;
 
 	pipe(pfd);
 	if ((pid = fork()) == 0)
@@ -34,7 +23,8 @@ static void exec_in_subshell(int i, t_list *datas, int ppfd[], t_shell *shell)
 		close(ppfd[0]);
 		close(ppfd[1]);
 
-		dup2(pfd[1], 1);
+		if (data->args != NULL)
+			dup2(pfd[1], 1);
 		close(pfd[0]);
 		close(pfd[1]);
 
@@ -43,7 +33,6 @@ static void exec_in_subshell(int i, t_list *datas, int ppfd[], t_shell *shell)
 			exit(0);
 		cmd_execute(args, shell);
 	}
-	((t_data *)datas->content)->args = ((t_data *)datas->content)->args->next;
 	exec_in_subshell(i + 1, datas, pfd, shell);
 	close(ppfd[0]);
 	close(ppfd[1]);
