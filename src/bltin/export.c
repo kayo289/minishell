@@ -32,14 +32,30 @@ static void bubble_sort(void)
 static void show_env(void)
 {
 	extern char **environ;
+	char **str;
 	int i;
+	int j;
 
 	bubble_sort();
 	i = 0;
 	while (environ[i] != NULL)
 	{
 		ft_putstr_fd("declare -x ", 1);
-		ft_putendl_fd(environ[i], 1);
+		str = ft_split(environ[i], '=');
+		ft_putstr_fd(str[0], 1);
+		if (str[1] != NULL)
+		{
+			j = 1;
+			ft_putstr_fd("=\"", 1);
+			ft_putstr_fd(str[j++], 1);
+			while (str[j] != NULL)
+			{
+				ft_putstr_fd("=", 1);
+				ft_putstr_fd(str[j++], 1);
+			}
+			ft_putstr_fd("\"", 1);
+		}
+		ft_putendl_fd("", 1);
 		i++;
 	}
 }
@@ -58,8 +74,7 @@ int minishell_export(char **argv, t_shell *shell)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		if (ft_strchr(argv[i], '=') != NULL)
-			set_shell_var(*shell, argv[i]);
+		set_shell_var(*shell, argv[i]);
 		str = ft_split(argv[i], '=');
 		value = get_shell_var(*shell, str[0]);
 		ft_setenv(str[0], value);
