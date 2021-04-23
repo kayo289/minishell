@@ -95,6 +95,11 @@ void	esc(t_pos *pos, t_dlist **cursor, t_shell *shell);
 void	init_pos(t_pos *pos, char *ps);
 void	ctrl_d(t_pos *pos, t_dlist **cursor);
 
+// history
+void	history_next(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	save_history(t_dlist *line, t_shell *shell);
+
 // lexer
 void	lexer(t_dlist **line, t_list **tokens, t_shell *shell);
 void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
