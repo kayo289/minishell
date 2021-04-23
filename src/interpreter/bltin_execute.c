@@ -12,6 +12,8 @@ int bltin_execute(char **args, t_shell *shell)
 		minishell_unset(args, shell);
 	else if (ft_strcmp(args[0], "exit") == EQUAL)
 		minishell_exit(args, shell);
+	else if (ft_strcmp(args[0], "export") == EQUAL)
+		minishell_export(args, shell);
 	else
 		return (UNEXEC);
 	return (EXEC);

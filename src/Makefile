@@ -8,7 +8,6 @@ CMDS	= \
 		cmds/cd \
 		cmds/echo \
 		cmds/pwd \
-		cmds/export \
 		cmds/env \
 		cmds/exit
 LIBCMDS	= libcmds.so
