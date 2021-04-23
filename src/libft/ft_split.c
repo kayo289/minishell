@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/15 13:02:08 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/04/22 23:55:55 by kkikuchi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/libft.h"
 
 static char	**ft_clear(char ***ans)
@@ -56,7 +44,12 @@ static void	ft_scpy(char *str1, char *str2, char *until)
 	*str1 = '\0';
 }
 
-void ste
+static void	serch_c(char **s, char c)
+{
+	while (**s && !(c == **s))
+		(*s)++;
+}
+
 char	**ft_split(const char *s, char c)
 {
 	char			**ans;
@@ -74,7 +67,7 @@ char	**ft_split(const char *s, char c)
 		if (!(c == *s))
 		{
 			temp = (char *)s;
-			s = ft_strchr(s, c);
+			serch_c((char **)&s, c);
 			ans[i] = ft_calloc(s - temp + 1, sizeof(char));
 			if (!ans[i])
 				return (ft_clear(&ans));
