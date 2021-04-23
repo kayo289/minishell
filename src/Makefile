@@ -34,6 +34,7 @@ NAME_SRC = \
 	shell_variable/hash.c \
 	prompt/prompt.c \
 	prompt/prompt_utils.c \
+	prompt/history.c \
 	error/error.c \
 	minishell.c
 

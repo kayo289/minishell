@@ -55,28 +55,26 @@ static int prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 	}
 }
 
-void save_line(t_dlist *line, t_shell *shell)
+static int prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 {
-	int fd;
-	char *buf;
+	int	ret;
 
-	if ((fd = open(".minishell_history", O_WRONLY | O_APPEND)) < 0)
-		return;
-	buf = ft_calloc(sizeof(char), 1);
-	while (line != NULL)
+	ret = 0;
+	while (ret != LF)
 	{
-		buf = ft_strjoin(buf, (char*)line->content);
-		line = line->next;
+		*line = ft_dlstnew(NULL);
+		ft_putstr_fd(ps, 1);
+		term_mode("im");
+		ret = prompt_input(line, ps, shell);
+		term_mode("ei");
+		if (ret == CTRLC || ret == CTRLD)
+		{
+			ft_dlstclear(line, free);
+			if (ret == CTRLD)
+				return (CTRLD);
+		}
 	}
-	if (*buf != '\0')
-	{
-		while ((*shell)->hist_lst->content != NULL)
-			(*shell)->hist_lst = (*shell)->hist_lst->prev;
-		ft_dlstinsert(&(*shell)->hist_lst, ft_dlstnew(buf));
-		ft_putstr_fd(buf, fd);
-		ft_putstr_fd("\n", fd);
-	}
-	close(fd);
+	return (LF);
 }
 
 void prompt(char *ps, t_dlist **line, t_shell *shell)
@@ -88,32 +86,22 @@ void prompt(char *ps, t_dlist **line, t_shell *shell)
 	ioctl(0, TCGETA, &tty);
 	tty_save = tty;
 	tty.c_lflag ^= ((ICANON | ISIG | ECHO) & ~ECHONL);
-	ret = 0;
-	while (ret != LF)
+	ioctl(0, TCSETA, &tty);
+	ret = prompt_loop(ps, line, shell);
+	ioctl(0, TCSETA, &tty_save);
+	if (ret == CTRLD)
 	{
-		*line = ft_dlstnew(NULL);
-		ft_putstr_fd(ps, 1);
-
-		ioctl(0, TCSETA, &tty);
-		term_mode("im");
-		ret = prompt_input(line, ps, shell);
-		term_mode("ei");
-		ioctl(0, TCSETA, &tty_save);
-
-		if (ret == CTRLC || ret == CTRLD)
-		{
-			ft_dlstclear(line, free);
-			if (ret == CTRLC)
-				continue;
-			ft_putendl_fd("exit", 1);
-			exit(0);
-		}
+		ft_putendl_fd("exit", 1);
+		exit(0);
 	}
-	ft_dlstadd_back(line, ft_dlstnew("\0"));
-	while ((*line)->prev != NULL)
-		*line = (*line)->prev;
-	*line = (*line)->next;
-	save_line(*line, shell);
+	else if (ret == LF)
+	{
+		ft_dlstadd_back(line, ft_dlstnew("\0"));
+		while ((*line)->prev != NULL)
+			*line = (*line)->prev;
+		*line = (*line)->next;
+		save_history(*line, shell);
+	}
 }
 // To debug
 /*
