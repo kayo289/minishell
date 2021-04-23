@@ -1,16 +1,16 @@
 #include "../../includes/libft.h"
 
-char *ft_getenv(char *name)
+char	*ft_getenv(char *name)
 {
-	extern char **environ;
-	char **str;
-	char  *value;
-	int	i;
-	int j;
+	extern char	**environ;
+	char		**str;
+	char		*value;
+	int			i;
+	int			j;
 
 	value = (char *)ft_calloc(sizeof(char), 1);
 	i = 0;
-	while (environ[i] != NULL) 
+	while (environ[i] != NULL)
 	{
 		str = ft_split(environ[i], '=');
 		if (ft_strcmp(str[0], name) == 0)

@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kkikuchi <kkikuchi@student.42tokyo.jp>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/07/05 01:27:09 by kkikuchi          #+#    #+#             */
-/*   Updated: 2021/02/13 21:29:55 by kkikuchi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/libft.h"
 
-void		*ft_memmove(void *buf1, const void *buf2, size_t n)
+void	*ft_memmove(void *buf1, const void *buf2, size_t n)
 {
 	size_t	i;
 

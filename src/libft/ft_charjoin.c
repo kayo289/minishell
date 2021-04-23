@@ -1,10 +1,10 @@
 #include "../../includes/libft.h"
 
-void ft_charjoin(char **old, char c)
+void	ft_charjoin(char **old, char c)
 {
-	char *new;
-	int len;
-	int i;
+	char	*new;
+	int		len;
+	int		i;
 
 	len = ft_strlen(*old);
 	new = (char *)malloc(sizeof(char) * (len + 2));
@@ -16,4 +16,3 @@ void ft_charjoin(char **old, char c)
 	free(*old);
 	*old = new;
 }
-
