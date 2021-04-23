@@ -2,13 +2,12 @@ CC 		= gcc
 CFLAGS 	= -Wall -Wextra -Werror
 LDFLAGS = -L../libft
 LIBS	= -lft
-NAME	= cd echo pwd export env
+NAME	= cd echo pwd env
 LIBFT 	= libft.a
 NAME_SRC = \
 	cd.c \
 	echo.c \
 	pwd.c \
-	export.c \
 	env.c
 NAME_OBJ=$(CMDS_SRC:.c=.o)
 
