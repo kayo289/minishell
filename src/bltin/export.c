@@ -1,27 +1,22 @@
 #include "../../includes/libcmds.h"
 
-static void bubble_sort(void)
+static void bubble_sort(char **tab, int n)
 {
-	extern char **environ;
 	char *temp;
 	int i;
 	int j;
-	int n;
 
-	n = 0;
-	while (environ[n] != NULL)
-		n++;
 	i = 0;
 	while (i < n - 1)
 	{
 		j = n - 1;
 		while (j > i) 
 		{
-			if (ft_strcmp(environ[j], environ[j - 1]) < 0)
+			if (ft_strcmp(tab[j], tab[j - 1]) < 0)
 			{
-				temp = environ[j - 1];
-				environ[j - 1] = environ[j];
-				environ[j] = temp;
+				temp = tab[j - 1];
+				tab[j - 1] = tab[j];
+				tab[j] = temp;
 			}
 			j--;
 		}
@@ -32,16 +27,24 @@ static void bubble_sort(void)
 static void show_env(void)
 {
 	extern char **environ;
+	char **tab;
 	char **str;
 	int i;
 	int j;
 
-	bubble_sort();
+	tab = ft_calloc2(sizeof(char **), 1);
 	i = 0;
 	while (environ[i] != NULL)
 	{
+		tab = ft_realloc2(tab, environ[i]);
+		i++;
+	}
+	bubble_sort(tab, i);
+	i = 0;
+	while (tab[i] != NULL)
+	{
 		ft_putstr_fd("declare -x ", 1);
-		str = ft_split(environ[i], '=');
+		str = ft_split(tab[i], '=');
 		ft_putstr_fd(str[0], 1);
 		if (str[1] != NULL)
 		{
