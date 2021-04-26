@@ -2,19 +2,22 @@
 
 int bltin_execute(char **args, t_shell *shell)
 {
+	int n;
+
 	if (ft_strcmp(args[0], "cd") == EQUAL)
-		minishell_cd(args);
+		n = minishell_cd(args);
 	else if (ft_strcmp(args[0], "echo") == EQUAL)
-		minishell_echo(args);
+		n = minishell_echo(args);
 	else if (ft_strcmp(args[0], "pwd") == EQUAL)
-		minishell_pwd(args);
+		n = minishell_pwd(args);
 	else if (ft_strcmp(args[0], "unset") == EQUAL)
-		minishell_unset(args, shell);
+		n = minishell_unset(args, shell);
 	else if (ft_strcmp(args[0], "exit") == EQUAL)
-		minishell_exit(args, shell);
+		n = minishell_exit(args, shell);
 	else if (ft_strcmp(args[0], "export") == EQUAL)
-		minishell_export(args, shell);
+		n = minishell_export(args, shell);
 	else
 		return (UNEXEC);
+	(*shell)->exit_status = n;
 	return (EXEC);
 }

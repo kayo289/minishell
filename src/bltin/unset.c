@@ -1,4 +1,4 @@
-#include "../../includes/libcmds.h"
+#include "../../includes/minishell.h"
 
 static void del_shell_var(t_shell this, char *name)
 {
@@ -27,6 +27,7 @@ static void del_shell_var(t_shell this, char *name)
 
 int minishell_unset(char **argv, t_shell *shell)
 {
+	argv++;
 	while (*argv != NULL)
 	{
 		if (ft_unsetenv(*argv) < 0)

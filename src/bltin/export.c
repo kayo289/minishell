@@ -1,4 +1,4 @@
-#include "../../includes/libcmds.h"
+#include "../../includes/minishell.h"
 
 static void bubble_sort(char **tab, int n)
 {
@@ -70,19 +70,19 @@ int minishell_export(char **argv, t_shell *shell)
 	int i;
  
  	if (argv[1] == NULL)
-	{
 		show_env();
-		return (0);
-	}
-	i = 1;
-	while (argv[i] != NULL)
+	else
 	{
-		set_shell_var(*shell, argv[i]);
-		str = ft_split(argv[i], '=');
-		value = get_shell_var(*shell, str[0]);
-		ft_setenv(str[0], value);
-		free(str);
-		i++;
+		i = 1;
+		while (argv[i] != NULL)
+		{
+			set_shell_var(*shell, argv[i]);
+			str = ft_split(argv[i], '=');
+			value = get_shell_var(*shell, str[0]);
+			ft_setenv(str[0], value);
+			free(str);
+			i++;
+		}
 	}
 	return (0);
 }

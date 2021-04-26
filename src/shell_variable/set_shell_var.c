@@ -1,4 +1,4 @@
-#include "../../includes/shell_var.h"
+#include "../../includes/minishell.h"
 
 void set_shell_var(t_shell this, char *param)
 {

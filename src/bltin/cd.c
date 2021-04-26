@@ -1,4 +1,4 @@
-#include "../../includes/libcmds.h"
+#include "../../includes/minishell.h"
 
 int minishell_cd(char **argv)
 {
@@ -23,6 +23,5 @@ int minishell_cd(char **argv)
 		free(path);
 	}
 	free(old_path);
-	printf("現在地:%s\n", getcwd(NULL, 0));
 	return (0);
 }

@@ -1,4 +1,4 @@
-#include "../../includes/libcmds.h"
+#include "../../includes/minishell.h"
 
 static char check_opt_n(char ***argv)
 {
@@ -34,11 +34,6 @@ int minishell_echo(char **argv)
 {
 	bool opt_n;
 
-	if (argv[1] == NULL)
-	{
-		ft_putendl_fd("", 1);
-		return (1);
-	}
 	argv++;
 	opt_n = check_opt_n(&argv);
 	output(argv);
