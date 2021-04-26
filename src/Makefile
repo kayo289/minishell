@@ -22,7 +22,7 @@ NAME_SRC = \
 	interpreter/interpreter.c \
 	interpreter/signal.c \
 	interpreter/redirect.c \
-	interpreter/cmd_execute.c \
+	interpreter/cmds_execute.c \
 	interpreter/bltin_execute.c \
 	interpreter/assign_variable.c \
 	shell_variable/get_shell_var.c \

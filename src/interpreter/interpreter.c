@@ -28,10 +28,10 @@ static void exec_in_subshell(int i, t_list *datas, int ppfd[], t_shell *shell)
 		close(pfd[0]);
 		close(pfd[1]);
 
-		redirect(datas, shell);
 		if (bltin_execute(args, shell) == EXEC)
 			exit(0);
-		cmd_execute(args, shell);
+		redirect(datas, shell);
+		cmds_execute(args, shell);
 	}
 	exec_in_subshell(i + 1, datas, pfd, shell);
 	close(ppfd[0]);
@@ -51,6 +51,8 @@ static void exec(t_list *datas, t_shell *shell)
 		assign_variable(datas, shell);
 		return;
 	}
+
+	redirect(datas, shell);
 	if (bltin_execute(args, shell) == EXEC)
 		return;
 	if ((pid = fork()) == 0)
@@ -58,7 +60,7 @@ static void exec(t_list *datas, t_shell *shell)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		redirect(datas, shell);
-		cmd_execute(args, shell);
+		cmds_execute(args, shell);
 	}
 	else
 	{
@@ -74,6 +76,13 @@ static void exec(t_list *datas, t_shell *shell)
 void interpreter(t_list *datas, t_shell *shell)
 {
 	int pfd[2];
+	int stdin_fd;
+	int stdout_fd;
+	int stderr_fd;
+
+	stdin_fd = dup(0);
+	stdout_fd = dup(1);
+	stderr_fd = dup(2);
 
 	set_signal();
 	while (datas != NULL)
@@ -87,6 +96,10 @@ void interpreter(t_list *datas, t_shell *shell)
 		}
 		datas = datas->next;
 	}
+
+	dup2(stdin_fd, 0);
+	dup2(stdout_fd, 1);
+	dup2(stderr_fd, 2);
 }
 /*
 while (((t_data *)datas->content)->args != NULL)

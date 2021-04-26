@@ -40,7 +40,7 @@ static char *search_path(char *cmd_name, t_shell *shell)
 	return (cmd_path);
 }
 
-void	cmd_execute(char **args, t_shell *shell)
+void	cmds_execute(char **args, t_shell *shell)
 {
 	extern char	**environ;
 	char		*cmd;
