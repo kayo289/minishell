@@ -24,7 +24,6 @@ NAME_SRC = \
 	interpreter/redirect.c \
 	interpreter/cmds_execute.c \
 	interpreter/bltin_execute.c \
-	interpreter/assign_variable.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \

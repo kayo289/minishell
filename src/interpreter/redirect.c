@@ -38,14 +38,12 @@ static void lt(char *file, int n)
 	dup2(fd, n);
 }
 
-void redirect(t_list *datas, t_shell *shell)
+void redirect(t_queue fds, t_shell *shell)
 {
 	int		n;
 	char	*rdt;
 	char	*file;
-	t_queue	fds;
 
-	fds = ((t_data *)datas->content)->fds;
 	while (!q_empty(&fds))
 	{
 		rdt = deq(&fds);
