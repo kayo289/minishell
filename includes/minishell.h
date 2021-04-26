@@ -139,7 +139,7 @@ void	interpreter(t_list *datas, t_shell *shell);
 void	assign_variable(t_list *datas, t_shell *shell);
 void	redirect(t_list *datas, t_shell *shell);
 void	set_signal(void);
-void	cmd_execute(char **args, t_shell *shell);
+void	cmds_execute(char **args, t_shell *shell);
 int		bltin_execute(char **args, t_shell *shell);
 
 // bltin
