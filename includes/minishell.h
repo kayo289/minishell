@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/ioctl.h>
@@ -15,10 +17,8 @@
 #include <termios.h>
 #include <termcap.h>
 #include <ctype.h>
-#include <fcntl.h>
-#include "libcmds.h"
-#include "shell_var.h"
 #include "queue.h"
+#include "libft.h"
 
 #define CTRLC	3
 #define CTRLD	4
@@ -27,17 +27,25 @@
 #define DEL		127
 #define EXEC	1
 #define UNEXEC	0
+#define SUCESS	1
+#define END		0
+#define ERROR	-1
+#define SIZE	29999
 
 enum u_token;
 enum u_grammer;
 struct s_pos;
 struct s_ip;
 struct s_data;
+struct s_shell;
+struct s_param;
 typedef enum u_token		t_token;
 typedef enum u_grammer		t_grammer;
 typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
+typedef struct s_param		t_param;
+typedef struct s_shell *	t_shell;
 
 enum u_token
 {
@@ -59,6 +67,19 @@ enum u_grammer
 	PIPELINE,
 	
 	GRAMMER_NUM	// don't care
+};
+
+struct s_shell
+{
+	t_list	*var[SIZE];
+	t_dlist	*hist_lst;
+	int		exit_status;
+};
+
+struct s_param
+{
+	char *key;
+	char *value;
 };
 
 struct  s_pos
@@ -121,9 +142,25 @@ void	set_signal(void);
 void	cmd_execute(char **args, t_shell *shell);
 int		bltin_execute(char **args, t_shell *shell);
 
+// bltin
+int minishell_cd(char **argv);
+int minishell_pwd(char **argv);
+int minishell_echo(char **argv);
+int minishell_unset(char **argv, t_shell *shell);
+int minishell_exit(char **argv, t_shell *shell);
+int minishell_export(char **argv, t_shell *shell);
+
 // error
 void	err_syntax(t_ip **ip, t_shell *shell);
 void	err_notfound(char *cmd, t_shell *shell);
 void	err_badfd(int n, t_shell *shell);
+
+// shell_var
+t_shell	new_shell_var(void);
+void	set_shell_var(t_shell this, char *param);
+char	*get_shell_var(t_shell this, char *name);
+int		get_next_line(int fd, char **line);
+int		hash(char *name);
+
 
 #endif

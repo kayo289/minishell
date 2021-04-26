@@ -1,4 +1,4 @@
-#include "../../includes/shell_var.h"
+#include "../../includes/minishell.h"
 
 static void				ft_strmove(char *s, char *t)
 {

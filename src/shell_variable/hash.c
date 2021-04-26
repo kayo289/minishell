@@ -1,4 +1,4 @@
-#include "../../includes/shell_var.h"
+#include "../../includes/minishell.h"
 
 int hash(char *name)
 {

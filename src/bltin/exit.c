@@ -1,13 +1,11 @@
-#include "../../includes/libcmds.h"
+#include "../../includes/minishell.h"
 
 int minishell_exit(char **argv, t_shell *shell)
 {
 	int i;
 
 	ft_putendl_fd("exit", 1);
-	if (argv[1] == NULL)
-		exit((*shell)->exit_status);
-	else
+	if (argv[1] != NULL)
 	{
 		i = -1;
 		while (argv[1][++i] != '\0')
@@ -23,9 +21,9 @@ int minishell_exit(char **argv, t_shell *shell)
 		else
 		{
 			ft_putendl_fd("exit: too many arguments", 2);
-			(*shell)->exit_status = 1;
 			return (1);
 		}
 	}
+	exit((*shell)->exit_status);
 	return (0);
 }
