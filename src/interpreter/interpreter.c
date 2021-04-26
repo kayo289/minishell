@@ -80,13 +80,12 @@ void interpreter(t_list *datas, t_shell *shell)
 	int stdout_fd;
 	int stderr_fd;
 
-	stdin_fd = dup(0);
-	stdout_fd = dup(1);
-	stderr_fd = dup(2);
-
 	set_signal();
 	while (datas != NULL)
 	{
+		stdin_fd = dup(0);
+		stdout_fd = dup(1);
+		stderr_fd = dup(2);
 		if (((t_data *)datas->content)->grammer == SIMPLECMD)
 			exec(datas, shell);
 		else if (((t_data *)datas->content)->grammer == PIPELINE)
@@ -95,19 +94,8 @@ void interpreter(t_list *datas, t_shell *shell)
 			exec_in_subshell(0, datas, pfd, shell);
 		}
 		datas = datas->next;
+		dup2(stdin_fd, 0);
+		dup2(stdout_fd, 1);
+		dup2(stderr_fd, 2);
 	}
-
-	dup2(stdin_fd, 0);
-	dup2(stdout_fd, 1);
-	dup2(stderr_fd, 2);
 }
-/*
-while (((t_data *)datas->content)->args != NULL)
-{
-for (int i = 0; ((char **)((t_data *)datas->content)->args->content)[i] != NULL; i++)
-{
-printf("args[%d]:%s\n", i, ((char **)((t_data *)datas->content)->args->content)[i]);
-}
-((t_data *)datas->content)->args = ((t_data *)datas->content)->args->next;
-}
-*/
