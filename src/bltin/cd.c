@@ -12,7 +12,7 @@ int minishell_cd(char **argv)
 		path = argv[1];
 	if (chdir(path) != 0)
 	{
-		ft_putstr_fd(strerror(errno), 2);
+		ft_putendl_fd(strerror(errno), 2);
 		return (1);
 	}
 	else
