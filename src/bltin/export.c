@@ -10,7 +10,7 @@ static void bubble_sort(char **tab, int n)
 	while (i < n - 1)
 	{
 		j = n - 1;
-		while (j > i) 
+		while (j > i)
 		{
 			if (ft_strcmp(tab[j], tab[j - 1]) < 0)
 			{
@@ -68,7 +68,7 @@ int minishell_export(char **argv, t_shell *shell)
 	char **str;
 	char *value;
 	int i;
- 
+
  	if (argv[1] == NULL)
 		show_env();
 	else
@@ -76,8 +76,9 @@ int minishell_export(char **argv, t_shell *shell)
 		i = 1;
 		while (argv[i] != NULL)
 		{
-			set_shell_var(*shell, argv[i]);
 			str = ft_split(argv[i], '=');
+			if (str[1] != NULL)
+				set_shell_var(*shell, argv[i]);
 			value = get_shell_var(*shell, str[0]);
 			ft_setenv(str[0], value);
 			free(str);
