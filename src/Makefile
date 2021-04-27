@@ -2,7 +2,9 @@ CC 		= gcc
 CFLAGS 	= -Wall -Wextra -Werror
 INCLUDE = -I../includes
 LDFLAGS = -L./queue -L./libft
-LIBS	= -lqueue -lft -ltermcap
+LIBS	= -lq -lft -ltermcap
+LIBQ	= libqueue.a
+LIBFT 	= libft.a
 NAME 	= minishell
 CMDS	= \
 		cmds/cd \
@@ -10,8 +12,6 @@ CMDS	= \
 		cmds/pwd \
 		cmds/env \
 		cmds/exit
-LIBQUEUE = libqueue.a
-LIBFT 	= libft.a
 NAME_SRC = \
 	lexer/lexer.c \
 	lexer/literal/literal.c \
@@ -50,8 +50,7 @@ clean:
 	$(MAKE) clean -C ./libft
 	$(MAKE) clean -C ./queue
 	$(MAKE) clean -C ./cmds
-	rm -rf *.o
-	rm -rf */*.o
+	rm -rf $(NAME_OBJ)
 
 fclean: clean
 	$(MAKE) fclean -C ./libft
@@ -63,7 +62,7 @@ fclean: clean
 re:	fclean all
 
 
-$(NAME): $(NAME_OBJ) $(LIBFT) $(LIBQUEUE)
+$(NAME): $(NAME_OBJ) $(LIBFT) $(LIBQ)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(NAME_OBJ) $(LIBS)
 
 $(CMDS):
@@ -72,7 +71,7 @@ $(CMDS):
 $(LIBFT):
 	$(MAKE) -C ./libft
 
-$(LIBQUEUE):
+$(LIBQ):
 	$(MAKE) -C ./queue
 
 .PHONY: clear fclean re all
