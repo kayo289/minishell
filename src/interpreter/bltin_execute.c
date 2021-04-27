@@ -17,7 +17,7 @@ bool lookup_bltin(char **args)
 	return (false);
 }
 
-void bltin_execute(char **args, t_shell *shell)
+int bltin_execute(char **args, t_shell *shell)
 {
 	int n;
 	
@@ -34,5 +34,5 @@ void bltin_execute(char **args, t_shell *shell)
 	else if (ft_strcmp(args[0], "export") == EQUAL)
 		n = minishell_export(args, shell);
 	(*shell)->exit_status = n;
-	return;
+	return (n);
 }

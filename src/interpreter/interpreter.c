@@ -16,13 +16,20 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 	int pfd[2];
 	pid_t pid;
 	int status;
+	int n;
 	t_data *data;
 
 	if (datas == NULL)
 		return;
 	data = (t_data *)datas->content;
 	pipe(pfd);
-	if ((pid = fork()) == 0)
+	pid = fork();
+	if (pid < 0)	
+	{
+		ft_putendl_fd(strerror(errno), 2);
+		exit(1);
+	}
+	else if (pid == 0)
 	{
 		if (data->args[0] == NULL)
 			assign_variable(data->vars, shell);
@@ -41,16 +48,23 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 
 			redirect(data->fds, shell);
 			if (lookup_bltin(data->args))
-				bltin_execute(data->args, shell);
+				n = bltin_execute(data->args, shell);
 			else
 				cmds_execute(data->args, shell);
 		}
-		exit(0);
+		exit(n);
 	}
 	exec_pipeline(datas->next, pfd, shell);
 	close(ppfd[0]);
 	close(ppfd[1]);
 	waitpid(pid, &status, 0);
+	if (datas->next == NULL)
+	{
+		if (WIFEXITED(status))
+			(*shell)->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			(*shell)->exit_status = WTERMSIG(status) + 128;
+	}
 }
 
 static void exec_simplecmd(t_list *datas, t_shell *shell)
@@ -70,13 +84,19 @@ static void exec_simplecmd(t_list *datas, t_shell *shell)
 		bltin_execute(data->args, shell);
 	else
 	{
-		if ((pid = fork()) == 0)
+		pid = fork();
+		if (pid < 0)	
+		{
+			ft_putendl_fd(strerror(errno), 2);
+			exit(1);
+		}
+		else if (pid == 0)
 		{
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 			cmds_execute(data->args, shell);
 		}
-		else
+		else if (pid > 0)
 		{
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))

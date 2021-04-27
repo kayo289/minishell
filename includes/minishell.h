@@ -143,7 +143,7 @@ void	interpreter(t_list *gmrs, t_shell *shell);
 void	redirect(t_queue fds, t_shell *shell);
 void	set_signal(void);
 bool	lookup_bltin(char **args);
-void	bltin_execute(char **args, t_shell *shell);
+int		bltin_execute(char **args, t_shell *shell);
 void	cmds_execute(char **args, t_shell *shell);
 
 // bltin
