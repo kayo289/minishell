@@ -8,92 +8,97 @@ static void	next_token(t_ip **ip, t_list **tokens)
 	*tokens = (*tokens)->next;
 }
 
-static void simple_command(t_ip **ip, t_list **tokens, t_data *data)
+static void simple_command(t_ip **ip, t_list **tokens, t_data **data)
 {
-	char	**args;
+	*data = malloc(sizeof(t_data));
+	(*data)->fds = NULL;
+	(*data)->vars = NULL;
+	(*data)->args = ft_calloc2(sizeof(char *), 1);
 
 	while ((*ip)->sy == IDENTIFY)
 	{
 		if (ft_strchr((*ip)->id_string, '=') != NULL)
-			enq(&data->vars, (*ip)->id_string);
+			enq(&(*data)->vars, (*ip)->id_string);
 		else
 			break;
 		next_token(ip, tokens);
 	}
 
-	args = (char **)ft_calloc2(sizeof(char*), 1);
 	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
 		if ((*ip)->sy == IDENTIFY)
-			args = ft_realloc2(args, (*ip)->id_string);
+			(*data)->args = ft_realloc2((*data)->args, (*ip)->id_string);
 		else if ((*ip)->sy == REDIRECT)
 		{
-			enq(&data->fds, (*ip)->id_string);
+			enq(&(*data)->fds, (*ip)->id_string);
 			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY)
-				enq(&data->fds, (*ip)->id_string);
+				enq(&(*data)->fds, (*ip)->id_string);
 			else
 				(*ip)->sy = ERR;
 		}
 		next_token(ip, tokens);
 	}
-	ft_lstadd_back(&data->args, ft_lstnew(args));
 }
 
-static void pipeline(t_ip **ip, t_list **tokens, t_list **datas)
+static void pipeline(t_ip **ip, t_list **tokens, t_grammer **gmr)
 {
 	t_data *data;
 
-	data = malloc(sizeof(t_data));
-	data->fds = NULL;
-	data->vars = NULL;
-	simple_command(ip, tokens, data);
+	data = NULL;
+	simple_command(ip, tokens, &data);
+	ft_lstadd_back(&(*gmr)->datas, ft_lstnew(data));
 	if ((*ip)->sy == PIPE)
 	{
-		data->grammer = PIPELINE;
+		(*gmr)->name = PIPELINE;
 		while ((*ip)->sy == PIPE)
 		{
 			next_token(ip, tokens);
 			if ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
-				simple_command(ip, tokens, data);
+				simple_command(ip, tokens, &data);
 			else
 				(*ip)->sy = ERR;
+			ft_lstadd_back(&(*gmr)->datas, ft_lstnew(data));
 		}
 	}
 	else
-		data->grammer = SIMPLECMD;
-	ft_lstadd_back(datas, ft_lstnew(data));
+		(*gmr)->name = SIMPLECMD;
 }
 
-static void lists(t_ip **ip, t_list **tokens, t_list **datas)
+static void lists(t_ip **ip, t_list **tokens, t_list **gmrs)
 {
+	t_grammer *gmr;
+
+	gmr = malloc(sizeof(t_grammer));
+	gmr->datas = NULL;
 	while ((*ip)->sy == IDENTIFY || (*ip)->sy == REDIRECT)
 	{
-		pipeline(ip, tokens, datas);
+		pipeline(ip, tokens, &gmr);
 		if ((*ip)->sy == SEMICOLON)
 			next_token(ip, tokens);
+		ft_lstadd_back(gmrs, ft_lstnew(gmr));
 	}
 }
 
 void parser(t_list *tokens, t_shell *shell)
 {
 	t_ip	*ip;
-	t_list *datas;
+	t_list *gmrs;
 	
-	datas = NULL;
+	gmrs = NULL;
 	next_token(&ip, &tokens);
 	if (ip->sy == LEFT_BRACE)
 	{
 		next_token(&ip, &tokens);
-		lists(&ip, &tokens, &datas);
+		lists(&ip, &tokens, &gmrs);
 		if (ip->sy == RIGHT_BRACE)
 			next_token(&ip, &tokens);
 	}
 	else
-		lists(&ip, &tokens, &datas);
+		lists(&ip, &tokens, &gmrs);
 
 	if (ip->sy == INPUT_END)
-		interpreter(datas, shell);
+		interpreter(gmrs, shell);
 	else
 		err_syntax(&ip, shell);
 }

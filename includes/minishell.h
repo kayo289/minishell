@@ -33,17 +33,18 @@
 #define SIZE	29999
 
 enum u_token;
-enum u_grammer;
+enum u_name;
 struct s_pos;
 struct s_ip;
 struct s_data;
 struct s_shell;
 struct s_param;
 typedef enum u_token		t_token;
-typedef enum u_grammer		t_grammer;
+typedef enum u_name			t_name;
 typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
+typedef struct s_grammer	t_grammer;
 typedef struct s_param		t_param;
 typedef struct s_shell *	t_shell;
 
@@ -61,12 +62,10 @@ enum u_token
 	TOKEN_NUM	// don't care
 };
 
-enum u_grammer
+enum u_name
 {
 	SIMPLECMD,
-	PIPELINE,
-	
-	GRAMMER_NUM	// don't care
+	PIPELINE
 };
 
 struct s_shell
@@ -96,12 +95,17 @@ struct	s_ip
 	char		*id_string;
 };
 
-struct	s_data
+struct s_data
 {
-	t_grammer	grammer;
 	t_queue		vars;
 	t_queue		fds;
-	t_list		*args;
+	char		**args;
+};
+
+struct	s_grammer
+{
+	t_name		name;
+	t_list		*datas;
 };
 
 
@@ -135,20 +139,20 @@ void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 void	parser(t_list *tokens, t_shell *shell);
 
 // interpreter
-void	interpreter(t_list *datas, t_shell *shell);
-void	assign_variable(t_list *datas, t_shell *shell);
-void	redirect(t_list *datas, t_shell *shell);
+void	interpreter(t_list *gmrs, t_shell *shell);
+void	redirect(t_queue fds, t_shell *shell);
 void	set_signal(void);
-void	cmds_execute(char **args, t_shell *shell);
+bool	lookup_bltin(char **args);
 int		bltin_execute(char **args, t_shell *shell);
+void	cmds_execute(char **args, t_shell *shell);
 
 // bltin
-int minishell_cd(char **argv);
-int minishell_pwd(char **argv);
-int minishell_echo(char **argv);
-int minishell_unset(char **argv, t_shell *shell);
-int minishell_exit(char **argv, t_shell *shell);
-int minishell_export(char **argv, t_shell *shell);
+int		minishell_cd(char **argv);
+int		minishell_pwd(char **argv);
+int		minishell_echo(char **argv);
+int		minishell_unset(char **argv, t_shell *shell);
+int		minishell_exit(char **argv, t_shell *shell);
+int		minishell_export(char **argv, t_shell *shell);
 
 // error
 void	err_syntax(t_ip **ip, t_shell *shell);
