@@ -14,12 +14,12 @@ void			term_mode(char *p)
 	if ((term = getenv("TERM")) == NULL)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return (FAIL);
+		exit(1);
 	}
 	if (tgetent(buf, term) != 1)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return (FAIL);
+		exit(1);
 	}
 	cptr = buf;
 	if (tgetstr(p, &cptr) != NULL)
