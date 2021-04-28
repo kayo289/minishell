@@ -1,11 +1,12 @@
 #include "../../includes/minishell.h"
 
-void save_history(t_dlist *line, t_shell *shell)
+void		save_history(t_dlist *line, t_shell *shell)
 {
-	int fd;
-	char *buf;
+	int		fd;
+	char	*buf;
 
-	if ((fd = open(".minishell_history", O_WRONLY | O_APPEND)) < 0)
+	fd = open(".minishell_history", O_WRONLY | O_APPEND);
+	if (fd < 0)
 		return;
 	buf = ft_calloc(sizeof(char), 1);
 	while (line != NULL)
@@ -21,7 +22,7 @@ void save_history(t_dlist *line, t_shell *shell)
 	close(fd);
 }
 
-static void clear_prompt(t_pos *pos)
+static void	clear_input(t_pos *pos)
 {
 	int i;
 	
@@ -32,7 +33,7 @@ static void clear_prompt(t_pos *pos)
 		i++;
 	}
 	write(1, "\033[0K", 4);
-	init_pos(pos, "minishell$ "); // * Causion "Use PS1"
+	init_pos(pos, "minishell$ ");
 }
 
 static void generate_prompt(t_pos *pos, t_dlist **cursor, t_shell *shell)
@@ -58,22 +59,22 @@ static void generate_prompt(t_pos *pos, t_dlist **cursor, t_shell *shell)
 	*cursor = ft_dlstlast(*cursor);
 }
 
-void history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell)
+void		history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	if ((*shell)->hist_lst->next == NULL)
 		return;
 	if (pos->cursor > pos->max_lf)
-		clear_prompt(pos);
+		clear_input(pos);
 	(*shell)->hist_lst = (*shell)->hist_lst->next;
 	generate_prompt(pos, cursor, shell);
 }
 
-void history_next(t_pos *pos, t_dlist **cursor, t_shell *shell)
+void		history_next(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	if ((*shell)->hist_lst->prev == NULL)
 		return;
 	if (pos->cursor > pos->max_lf)
-		clear_prompt(pos);
+		clear_input(pos);
 	(*shell)->hist_lst = (*shell)->hist_lst->prev;
 	generate_prompt(pos, cursor, shell);
 }

@@ -31,6 +31,7 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 	}
 	else if (pid == 0)
 	{
+		n = 0;
 		if (data->args[0] == NULL)
 			assign_variable(data->vars, shell);
 		else

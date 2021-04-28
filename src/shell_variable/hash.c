@@ -10,7 +10,7 @@ int hash(char *name)
 	while (name[i] != '\0')
 	{
 		h = h * 10 + name[i];
-		h %= SIZE;
+		h %= HASH_SIZE;
 		i++;
 	}
 	return (h);

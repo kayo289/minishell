@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-NAME = libqueue.a
+NAME = libq.a
 SRCS = \
 	enq.c \
 	deq.c\

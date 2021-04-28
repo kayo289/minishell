@@ -1,13 +1,13 @@
 #include "../../includes/minishell.h"
 
-void init_pos(t_pos *pos, char *ps)
+void		init_pos(t_pos *pos, char *ps)
 {
 	pos->max_lf = ft_strlen(ps);
 	pos->cursor = ft_strlen(ps);
 	pos->max_rg = ft_strlen(ps);
 }
 
-void del(t_pos *pos, t_dlist **cursor)
+void		del(t_pos *pos, t_dlist **cursor)
 {
 	t_dlist *save;
 
@@ -23,7 +23,7 @@ void del(t_pos *pos, t_dlist **cursor)
 	}
 }
 
-void esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
+void		esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	char	key;
 
@@ -52,7 +52,7 @@ void esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
 	}
 }
 
-void	insert(t_dlist **cursor, char c, t_pos *pos)
+void		insert(t_dlist **cursor, char c, t_pos *pos)
 {
 	char	*s;
 	t_dlist *new;
@@ -70,7 +70,7 @@ void	insert(t_dlist **cursor, char c, t_pos *pos)
 	pos->cursor++;
 }
 
-void ctrl_d(t_pos *pos, t_dlist **cursor)
+void		ctrl_d(t_pos *pos, t_dlist **cursor)
 {
 	if (pos->cursor < pos->max_rg)
 	{

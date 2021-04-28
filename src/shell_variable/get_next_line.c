@@ -65,7 +65,7 @@ static int			get_line(int fd, char *buf, char **line)
 		ft_strmove(buf, p + 1);
 		return (SUCESS);
 	}
-	if ((len = read(fd, buf, 1000)) < 0)
+	if ((len = read(fd, buf, BUFFER_SIZE)) < 0)
 		return (ERROR);
 	buf[len] = '\0';
 	return (len == 0 ? END : get_line(fd, buf, line));
@@ -73,7 +73,7 @@ static int			get_line(int fd, char *buf, char **line)
 
 int					get_next_line(int fd, char **line)
 {
-	static char		buf[1024];
+	static char		buf[BUFFER_SIZE];
 
 	if ((*line = malloc(1)) == NULL || fd < 0 || fd == 1 || fd == 2)
 		return (ERROR);

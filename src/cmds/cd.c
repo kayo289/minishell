@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	if (chdir(path) != 0)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{

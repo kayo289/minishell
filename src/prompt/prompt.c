@@ -1,35 +1,35 @@
 #include "../../includes/minishell.h"
 
-static int outc(int c)
+static int		outc(int c)
 {
 	return write(1, &c, 1);
 }
 
-void term_mode(char *p)
+void			term_mode(char *p)
 {
-	char buf[1024];
+	char buf[BUFFER_SIZE];
 	char *term;
 	char *cptr;
 
 	if ((term = getenv("TERM")) == NULL)
 	{
-		ft_putstr_fd(strerror(errno), 2);
-		return;
+		ft_putendl_fd(strerror(errno), 2);
+		exit(1);
 	}
 	if (tgetent(buf, term) != 1)
 	{
-		ft_putstr_fd(strerror(errno), 2);
-		return;
+		ft_putendl_fd(strerror(errno), 2);
+		exit(1);
 	}
 	cptr = buf;
-	if (tgetstr(p, &cptr))
+	if (tgetstr(p, &cptr) != NULL)
 		tputs(buf, 1, outc);
 }
 
-static int prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
+static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 {
-	char key;
-	t_pos pos;
+	char	key;
+	t_pos	pos;
 
 	init_pos(&pos, ps);
 	while(1)
@@ -55,7 +55,7 @@ static int prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 	}
 }
 
-static int prompt_loop(char *ps, t_dlist **line, t_shell *shell)
+static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 {
 	int	ret;
 
@@ -77,22 +77,22 @@ static int prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 	return (LF);
 }
 
-void prompt(char *ps, t_dlist **line, t_shell *shell)
+void			prompt(char *ps, t_dlist **line, t_shell *shell)
 {
-	struct termio	tty;
-	struct termio	tty_save;
+	struct termios	tty;
+	struct termios	tty_save;
 	int				ret;
 
-	ioctl(0, TCGETA, &tty);
+	tcgetattr(STDIN_FILENO, &tty);
 	tty_save = tty;
 	tty.c_lflag ^= ((ICANON | ISIG | ECHO) & ~ECHONL);
-	ioctl(0, TCSETA, &tty);
+	tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 	ret = prompt_loop(ps, line, shell);
-	ioctl(0, TCSETA, &tty_save);
+	tcsetattr(STDIN_FILENO, TCSANOW, &tty_save);
 	if (ret == CTRLD)
 	{
 		ft_putendl_fd("exit", 1);
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	else if (ret == LF)
 	{
@@ -103,13 +103,3 @@ void prompt(char *ps, t_dlist **line, t_shell *shell)
 		save_history(*line, shell);
 	}
 }
-// To debug
-/*
-   ft_putstr_fd("start output\n[", 1);
-   while(*line != NULL)
-   {
-   write(1, (char *)((*line)->content), 1);
- *line = (*line)->next;
- }
- ft_putstr_fd("]\nend output\n", 1);
- */

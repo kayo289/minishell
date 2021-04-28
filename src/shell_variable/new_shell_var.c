@@ -7,7 +7,7 @@ void init(t_shell *this)
 
 	*this = malloc(sizeof(t_shell));
 	i = 0;
-	while (i < SIZE)
+	while (i < HASH_SIZE)
 	{
 		(*this)->var[i] = malloc(sizeof(t_list)); 
 		(*this)->var[i] = NULL;
