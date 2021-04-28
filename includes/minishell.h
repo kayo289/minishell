@@ -25,12 +25,12 @@
 #define LF		10
 #define ESC		27
 #define DEL		127
-#define EXEC	1
-#define UNEXEC	0
 #define SUCESS	1
 #define END		0
 #define ERROR	-1
-#define SIZE	29999
+#define FAIL	-1
+#define BUFFER_SIZE 1024
+#define HASH_SIZE	29999
 
 enum u_token;
 enum u_name;
@@ -70,7 +70,7 @@ enum u_name
 
 struct s_shell
 {
-	t_list	*var[SIZE];
+	t_list	*var[HASH_SIZE];
 	t_dlist	*hist_lst;
 	int		exit_status;
 };

@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void show_env()
+static void show_env(void)
 {
 	extern char **environ;
 	int i;

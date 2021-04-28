@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void find_command(char *cmd, char **cmd_path, char **dir_names)
+static void		find_command(char *cmd, char **cmd_path, char **dir_names)
 {
 	int				i;
 	DIR				*dir;
@@ -14,20 +14,21 @@ static void find_command(char *cmd, char **cmd_path, char **dir_names)
 			continue;
 		while ((dp = readdir(dir)) != NULL)
 		{
-			if (lstat(dp->d_name, &sb) > 0)
-				continue;
-			if (ft_strcmp(cmd, dp->d_name) == 0)
+			if (stat(dp->d_name, &sb) < 0)
 			{
-				*cmd_path = ft_strjoin("/", dp->d_name);
-				*cmd_path = ft_strjoin(dir_names[i], *cmd_path);
-				return;
+				if (ft_strcmp(cmd, dp->d_name) == EQUAL)
+				{
+					*cmd_path = ft_strjoin("/", dp->d_name);
+					*cmd_path = ft_strjoin(dir_names[i], *cmd_path);
+					return;
+				}
 			}
 		}
 		closedir(dir);
 	}
 }
 
-static char *search_path(char *cmd_name, t_shell *shell)
+static char	*search_path(char *cmd_name, t_shell *shell)
 {
 	char	*env_value;
 	char	**dir_names;
