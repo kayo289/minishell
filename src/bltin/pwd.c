@@ -8,7 +8,8 @@ int minishell_pwd(char **argv)
 	if (path == NULL)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		exit(EXIT_FAILURE);
+		return (1);
+
 	}
 	ft_putendl_fd(path, 1);
 	free(path);
