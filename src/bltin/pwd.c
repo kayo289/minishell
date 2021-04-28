@@ -7,7 +7,7 @@ int minishell_pwd(char **argv)
 	path = getcwd(NULL, 0);
 	if (argv[1] != NULL)
 	{
-		ft_putendl_fd("pwd: too many arguments", 1);
+		ft_putendl_fd("pwd: too many arguments", 2);
 		return (1);
 	}
 	if (path == NULL)

@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 	path = getcwd(NULL, 0);
 	if (argc != 1)
 	{
-		ft_putendl_fd("pwd: too many arguments", 1);
+		ft_putendl_fd("pwd: too many arguments", 2);
 		exit(EXIT_FAILURE);
 	}
 	if (path == NULL)
