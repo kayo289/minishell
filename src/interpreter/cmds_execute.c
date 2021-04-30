@@ -56,9 +56,15 @@ void	cmds_execute(char **args, t_shell *shell)
 	if (ft_strchr(cmd, '/') != NULL)
 		cmd_path = ft_strdup(cmd);
 	else 
+	{
 		cmd_path = search_path(cmd, shell);
+		if (cmd_path == NULL)
+		{
+			free(cmd_path);
+			err_notfound(cmd, shell);
+		}
+	}
 	execve(cmd_path, args, environ);
-	free(cmd_path);
-	err_notfound(cmd, shell);
+	ft_putendl_fd(strerror(errno), 2);
 }
 

@@ -72,7 +72,9 @@ static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 		{
 			*line = ft_dlsttop(*line);
 			ft_dlstclear(line, free);
-			if (ret == CTRLD)
+			if (ret == CTRLC)
+				shell->exit_status = 1;
+			else if (ret == CTRLD)
 				return (CTRLD);
 		}
 	}
