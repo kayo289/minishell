@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void del_shell_var(t_shell this, char *name)
+static void del_shell_var(t_shell *this, char *name)
 {
 	t_list *top;
 	t_list *prev;
@@ -35,7 +35,7 @@ int minishell_unset(char **argv, t_shell *shell)
 			ft_putendl_fd(strerror(errno), 2);
 			return (1);
 		}
-		del_shell_var(*shell, *argv);
+		del_shell_var(shell, *argv);
 		argv++;
 	}
 	return (0);

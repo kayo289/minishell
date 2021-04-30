@@ -1,5 +1,5 @@
 CC 		= gcc
-CFLAGS 	= -Wall -Wextra -Werror
+CFLAGS 	= -g -Wall -Wextra -Werror
 INCLUDE = -I../includes
 LDFLAGS = -L./queue -L./libft
 LIBS	= -lq -lft -ltermcap
@@ -39,6 +39,7 @@ NAME_SRC = \
 	bltin/export.c \
 	bltin/exit.c \
 	error/error.c \
+	free/free.c \
 	minishell.c
 
 NAME_OBJ=$(NAME_SRC:.c=.o)

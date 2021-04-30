@@ -26,8 +26,8 @@ int minishell_exit(char **argv, t_shell *shell)
 				break;
 			}
 		}
-		(*shell)->exit_status = n;
+		shell->exit_status = n;
 	}
-	exit((*shell)->exit_status);
+	exit(shell->exit_status);
 	return (0);
 }

@@ -42,7 +42,7 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell)
 	else if (ch == '?')
 	{
 		next_ch(line, ip);
-		return (ft_itoa((*shell)->exit_status));
+		return (ft_itoa(shell->exit_status));
 	}
 	else
 	{

@@ -18,8 +18,8 @@ static void		find_command(char *cmd, char **cmd_path, char **dir_names)
 			{
 				if (ft_strcmp(cmd, dp->d_name) == EQUAL)
 				{
-					*cmd_path = ft_strjoin("/", dp->d_name);
-					*cmd_path = ft_strjoin(dir_names[i], *cmd_path);
+					*cmd_path = ft_strjoin(dir_names[i], "/");
+					*cmd_path = ft_strjoin(*cmd_path, dp->d_name);
 					return;
 				}
 			}
@@ -33,11 +33,16 @@ static char	*search_path(char *cmd_name, t_shell *shell)
 	char	*env_value;
 	char	**dir_names;
 	char	*cmd_path;
+	int		i;
 
 	cmd_path = NULL;
-	env_value = get_shell_var(*shell, "PATH");
+	env_value = get_shell_var(shell, "PATH");
 	dir_names = ft_split(env_value, ':');
 	find_command(cmd_name, &cmd_path, dir_names);
+	i = 0;
+	while (dir_names[i] != NULL)
+		free(dir_names[i++]);
+	free(dir_names);
 	return (cmd_path);
 }
 
@@ -49,10 +54,11 @@ void	cmds_execute(char **args, t_shell *shell)
 
 	cmd = args[0];
 	if (ft_strchr(cmd, '/') != NULL)
-		cmd_path = cmd;
+		cmd_path = ft_strdup(cmd);
 	else 
 		cmd_path = search_path(cmd, shell);
 	execve(cmd_path, args, environ);
+	free(cmd_path);
 	err_notfound(cmd, shell);
 }
 

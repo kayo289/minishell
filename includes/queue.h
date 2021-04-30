@@ -5,16 +5,10 @@
 #include <stdbool.h>
 #include "libft.h"
 
-struct s_queue;
-typedef struct s_queue * t_queue;
-
-struct s_queue
-{
-	t_list *	tail;
-	t_list *	head;
-};
+typedef t_list * t_queue;
 
 void	enq(t_queue *this, void *value);
+//void	*deq(t_queue *this, void (*del)(void *));
 void	*deq(t_queue *this);
 void	*front(t_queue *this);
 int		q_size(t_queue *this);

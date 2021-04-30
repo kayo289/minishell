@@ -18,5 +18,6 @@ char	**ft_realloc2(char **old, char *add)
 	}
 	new[i++] = add;
 	new[i] = NULL;
+	free(old);
 	return (new);
 }

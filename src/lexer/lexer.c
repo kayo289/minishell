@@ -2,27 +2,19 @@
 
 char next_ch(t_dlist **line, t_ip *ip)
 {
-	t_dlist *tmp;
-
 	ip->ch = ((char*)(*line)->content)[0];
 	if ((*line)->next != NULL)
-	{
-		tmp = *line;
 		*line = (*line)->next;
-		ft_dlstdelone(tmp, free);
-	}
 	return (ip->ch);
 }
 
 void save_token(t_ip *ip, t_list **tokens)
 {
-	t_list	*lst;
 	t_ip	*tmp;
 
 	tmp = malloc(sizeof(t_ip));
 	*tmp = *ip;
-	lst = ft_lstnew(tmp);
-	ft_lstadd_back(tokens, lst);
+	ft_lstadd_back(tokens, ft_lstnew(tmp));
 	ip->id_string = ft_calloc(sizeof(char), 1);
 }
 
@@ -46,10 +38,12 @@ static void brace(t_dlist **line, t_ip *ip, t_list **tokens)
 	if (ip->ch == '{')
 	{
 		ft_charjoin(&ip->id_string, '{');
-		if (next_ch(line, ip) == ' ')
+		next_ch(line, ip);
+		if (ip->ch == ' ')
 		{
 			ip->sy = LEFT_BRACE; 
 			save_token(ip, tokens);
+			next_ch(line, ip);
 		}
 	}
 	else if (ip->ch == '}')
@@ -61,20 +55,21 @@ static void brace(t_dlist **line, t_ip *ip, t_list **tokens)
 	}
 }
 
-void lexer(t_dlist **line, t_list **tokens, t_shell *shell)
+void lexer(t_dlist *line, t_list **tokens, t_shell *shell)
 {
 	t_ip ip;
 
 	*tokens = NULL;
 	ip.id_string = ft_calloc(sizeof(char), 1);
-	next_ch(line, &ip);
+	next_ch(&line, &ip);
 
-	brace(line, &ip, tokens);
+	brace(&line, &ip, tokens);
 	while (ip.ch != '\0')
 	{
-		get_token(line, &ip, tokens, shell);
+		get_token(&line, &ip, tokens, shell);
 		save_token(&ip, tokens);
 	}
-	get_token(line, &ip, tokens, shell);
+	get_token(&line, &ip, tokens, shell);
 	save_token(&ip, tokens);
+	free(ip.id_string);
 }

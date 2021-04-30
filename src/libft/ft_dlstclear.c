@@ -1,5 +1,5 @@
 #include "../../includes/libft.h"
-
+#include <stdio.h>
 void	ft_dlstclear(t_dlist **lst, void (*del)(void *))
 {
 	t_dlist	*temp;

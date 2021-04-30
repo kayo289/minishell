@@ -1,22 +1,22 @@
 #include "../../includes/minishell.h"
 
-static void assign_variable(t_queue vars, t_shell *shell)
+static void assign_variable(t_queue *vars, t_shell *shell)
 {
 	char *var;
 
-	while (!q_empty(&vars))
+	while (!q_empty(vars))
 	{
-		var = deq(&vars);
-		set_shell_var(*shell, var);
+		var = deq(vars);
+		set_shell_var(shell, var);
 	}
 }
 
 static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 {
-	int pfd[2];
-	pid_t pid;
-	int status;
-	int n;
+	int		pfd[2];
+	pid_t	pid;
+	int		status;
+	int		n;
 	t_data *data;
 
 	if (datas == NULL)
@@ -33,7 +33,7 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 	{
 		n = 0;
 		if (data->args[0] == NULL)
-			assign_variable(data->vars, shell);
+			assign_variable(&data->vars, shell);
 		else
 		{
 			signal(SIGINT, SIG_DFL);
@@ -47,7 +47,7 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 			close(pfd[0]);
 			close(pfd[1]);
 
-			redirect(data->fds, shell);
+			redirect(&data->fds, shell);
 			if (lookup_bltin(data->args))
 				n = bltin_execute(data->args, shell);
 			else
@@ -62,9 +62,9 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 	if (datas->next == NULL)
 	{
 		if (WIFEXITED(status))
-			(*shell)->exit_status = WEXITSTATUS(status);
+			shell->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			(*shell)->exit_status = WTERMSIG(status) + 128;
+			shell->exit_status = WTERMSIG(status) + 128;
 	}
 }
 
@@ -77,10 +77,10 @@ static void exec_simplecmd(t_list *datas, t_shell *shell)
 	data = datas->content;
 	if (data->args[0] == NULL)
 	{
-		assign_variable(data->vars, shell);
+		assign_variable(&data->vars, shell);
 		return;
 	}
-	redirect(data->fds, shell);
+	redirect(&data->fds, shell);
 	if (lookup_bltin(data->args))
 		bltin_execute(data->args, shell);
 	else
@@ -101,10 +101,9 @@ static void exec_simplecmd(t_list *datas, t_shell *shell)
 		{
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
-				(*shell)->exit_status = WEXITSTATUS(status);
+				shell->exit_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
-				(*shell)->exit_status = WTERMSIG(status) + 128;
-			free(data->args);
+				shell->exit_status = WTERMSIG(status) + 128;
 		}
 	}
 }
@@ -115,7 +114,7 @@ void interpreter(t_list *gmrs, t_shell *shell)
 	int stdin_fd;
 	int stdout_fd;
 	int stderr_fd;
-	t_grammer *gmr;
+	t_gmr *gmr;
 
 	set_signal();
 	while (gmrs != NULL)
@@ -124,7 +123,7 @@ void interpreter(t_list *gmrs, t_shell *shell)
 		stdout_fd = dup(1);
 		stderr_fd = dup(2);
 		pipe(pfd);
-		gmr = (t_grammer *)gmrs->content;
+		gmr = (t_gmr *)gmrs->content;
 		if (gmr->name == SIMPLECMD)
 			exec_simplecmd(gmr->datas, shell);
 		else if (gmr->name == PIPELINE)
