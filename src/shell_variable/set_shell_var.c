@@ -18,19 +18,16 @@ static t_param *create_param(char *param)
 		p->value = ft_strjoin(p->value, str[i++]);
 		free(tmp);
 	}
-	
-	i = 0; 
-	while (str[i] != NULL)
-		free(str[i++]);
-	free(str);
+	dp_free(str);
 	return (p);
 }
 
 void set_shell_var(t_shell *this, char *param)
 {
-	t_param *p;
-	t_list *lst;
-	int h;
+	t_param	*p;
+	//t_param *tmp;
+	t_list	*lst;
+	int		h;
 
 	p = create_param(param);
 	h = hash(p->key);
@@ -39,7 +36,8 @@ void set_shell_var(t_shell *this, char *param)
 	{
 		if (ft_strcmp(((t_param *)lst->content)->key, p->key) == EQUAL)
 		{
-			((t_param*)lst->content)->value = p->value;
+			param_free((t_param *)lst->content);
+			lst->content = p;
 			return;
 		}
 		lst = lst->next;

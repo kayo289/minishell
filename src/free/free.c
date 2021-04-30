@@ -1,5 +1,18 @@
 #include "../../includes/minishell.h"
 
+void dp_free(char **str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != NULL)
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
+}
+
 void ip_free(void *content)
 {
 	free(((t_ip *)content)->id_string);

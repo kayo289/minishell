@@ -17,7 +17,7 @@ static void del_shell_var(t_shell *this, char *name)
 				this->var[h] = top->next;
 			else
 				prev->next = top->next;
-			ft_lstdelone(top, free);
+			ft_lstdelone(top, param_free);
 			return;
 		}
 		prev = top;

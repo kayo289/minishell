@@ -163,6 +163,7 @@ void	err_notfound(char *cmd, t_shell *shell);
 void	err_badfd(int n, t_shell *shell);
 
 // free
+void	dp_free(char **str);
 void	ip_free(void *content);
 void	param_free(void *content);
 void	data_free(void *content);
