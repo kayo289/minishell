@@ -112,7 +112,7 @@ void	term_mode(char *p);
 // prompt_utils
 void	insert(t_dlist **lst, char c, t_pos *pos);
 void 	del(t_pos *pos, t_dlist **cursor);
-void	esc(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	move(t_pos *pos, t_dlist **cursor, t_shell *shell);
 void	init_pos(t_pos *pos, char *ps);
 void	ctrl_d(t_pos *pos, t_dlist **cursor);
 

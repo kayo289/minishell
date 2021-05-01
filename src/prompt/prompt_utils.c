@@ -23,35 +23,6 @@ void		del(t_pos *pos, t_dlist **cursor)
 	}
 }
 
-void		esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
-{
-	char	key;
-
-	read(0, &key, 1);
-	if (key == '[')
-	{
-		read(0, &key, 1);
-		if(key == 'A')
-			history_prev(pos, cursor, shell);
-		if(key == 'B')
-			history_next(pos, cursor, shell);
-		if(key == 'C')
-			if(pos->cursor < pos->max_rg)
-			{
-				*cursor = (*cursor)->next;
-				pos->cursor++;
-				term_mode("nd");
-			}
-		if(key == 'D')
-			if(pos->max_lf < pos->cursor)
-			{
-				*cursor = (*cursor)->prev;
-				pos->cursor--;
-				term_mode("le");
-			}
-	}
-}
-
 void		insert(t_dlist **cursor, char c, t_pos *pos)
 {
 	char	*s;
