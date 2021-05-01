@@ -34,6 +34,6 @@ int bltin_execute(char **args, t_shell *shell)
 		n = minishell_exit(args, shell);
 	else if (ft_strcmp(args[0], "export") == EQUAL)
 		n = minishell_export(args, shell);
-	(*shell)->exit_status = n;
+	shell->exit_status = n;
 	return (n);
 }

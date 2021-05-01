@@ -77,14 +77,16 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 				void (*del)(void *));
 int					ft_setenv(char *name, char *value);
+int					ft_unsetenv(char *name);
 char				*ft_getenv(char *name);
 t_dlist				*ft_dlstnew(void *content);
+t_dlist				*ft_dlsttop(t_dlist *lst);
 t_dlist				*ft_dlstlast(t_dlist *lst);
 void				ft_dlstadd_back(t_dlist **lst, t_dlist *new);
 void				ft_dlstadd_front(t_dlist **lst, t_dlist *new);
 void				ft_dlstdelone(t_dlist *lst, void (*del)(void *));
 void				ft_dlstclear(t_dlist **lst, void (*del)(void *));
 void				ft_dlstinsert(t_dlist **lst, t_dlist *new);
-int					ft_unsetenv(char *name);
+void				ft_dlstiter(t_dlist *lst, void (*f)(void *));
 
 #endif

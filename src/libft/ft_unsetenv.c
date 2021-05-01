@@ -1,17 +1,31 @@
 #include "../../includes/libft.h"
 
+static void dp_free(char **str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != NULL)
+		free(str[i++]);
+	free(str);
+}
+
 static char	**get_env_adress(char *name)
 {
 	extern char	**environ;
-	int			i;
 	char		**str;
+	int			i;
 
 	i = 0;
 	while (environ[i] != NULL)
 	{
 		str = ft_split(environ[i], '=');
 		if (ft_strcmp(str[0], name) == EQUAL)
+		{
+			dp_free(str);
 			return (&environ[i]);
+		}
+		dp_free(str);
 		i++;
 	}
 	return (NULL);

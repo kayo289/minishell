@@ -32,21 +32,14 @@
 #define BUFFER_SIZE 1024
 #define HASH_SIZE	29999
 
-enum u_token;
-enum u_name;
-struct s_pos;
-struct s_ip;
-struct s_data;
-struct s_shell;
-struct s_param;
 typedef enum u_token		t_token;
-typedef enum u_name			t_name;
+typedef enum u_gmr_name		t_gmr_name;
 typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
-typedef struct s_grammer	t_grammer;
+typedef struct s_gmr		t_gmr;
 typedef struct s_param		t_param;
-typedef struct s_shell *	t_shell;
+typedef struct s_shell		t_shell;
 
 enum u_token
 {
@@ -57,12 +50,12 @@ enum u_token
 	SEMICOLON,	// ;
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
-	ERR,	// End Of Input
+	ERR,		// End Of Input
 
 	TOKEN_NUM	// don't care
 };
 
-enum u_name
+enum u_gmr_name
 {
 	SIMPLECMD,
 	PIPELINE
@@ -72,6 +65,7 @@ struct s_shell
 {
 	t_list	*var[HASH_SIZE];
 	t_dlist	*hist_lst;
+	char	*histfile_path;
 	int		exit_status;
 };
 
@@ -102,12 +96,14 @@ struct s_data
 	char		**args;
 };
 
-struct	s_grammer
+struct	s_gmr
 {
-	t_name		name;
+	t_gmr_name	name;
 	t_list		*datas;
 };
 
+// minishell
+void	minishell_end(t_shell *shell);
 
 // prompt
 void	prompt(char *ps, t_dlist **line, t_shell *shell);
@@ -126,7 +122,7 @@ void	history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell);
 void	save_history(t_dlist *line, t_shell *shell);
 
 // lexer
-void	lexer(t_dlist **line, t_list **tokens, t_shell *shell);
+void	lexer(t_dlist *line, t_list **tokens, t_shell *shell);
 void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
 void	save_token(t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
@@ -140,7 +136,7 @@ void	parser(t_list *tokens, t_shell *shell);
 
 // interpreter
 void	interpreter(t_list *gmrs, t_shell *shell);
-void	redirect(t_queue fds, t_shell *shell);
+void	redirect(t_queue *fds, t_shell *shell);
 void	set_signal(void);
 bool	lookup_bltin(char **args);
 int		bltin_execute(char **args, t_shell *shell);
@@ -154,17 +150,23 @@ int		minishell_unset(char **argv, t_shell *shell);
 int		minishell_exit(char **argv, t_shell *shell);
 int		minishell_export(char **argv, t_shell *shell);
 
-// error
-void	err_syntax(t_ip **ip, t_shell *shell);
-void	err_notfound(char *cmd, t_shell *shell);
-void	err_badfd(int n, t_shell *shell);
-
 // shell_var
-t_shell	new_shell_var(void);
-void	set_shell_var(t_shell this, char *param);
-char	*get_shell_var(t_shell this, char *name);
+void	new_shell_var(t_shell *this);
+void	set_shell_var(t_shell *this, char *param);
+char	*get_shell_var(t_shell *this, char *name);
 int		get_next_line(int fd, char **line);
 int		hash(char *name);
 
+// error
+void	err_syntax(t_ip *ip, t_shell *shell);
+void	err_notfound(char *cmd, t_shell *shell);
+void	err_badfd(int n, t_shell *shell);
+
+// free
+void	dp_free(char **str);
+void	ip_free(void *content);
+void	param_free(void *content);
+void	data_free(void *content);
+void	gmr_free(void *content);
 
 #endif

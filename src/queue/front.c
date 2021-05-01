@@ -3,6 +3,6 @@
 void *front(t_queue *this)
 {
 	if (*this == NULL)
-		return (this);
-	return ((*this)->tail->next->content);
+		return (NULL);
+	return ((*this)->content);
 }

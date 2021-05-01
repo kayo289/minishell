@@ -41,6 +41,7 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 			del(&pos, cursor);
 		else if (key == LF || key == CTRLC)
 		{
+			insert(cursor, '\0', &pos);
 			ft_putchar_fd('\n', 1);
 			return (key);
 		}
@@ -59,7 +60,7 @@ static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 {
 	int	ret;
 
-	ret = 0;
+	ret = -1;
 	while (ret != LF)
 	{
 		*line = ft_dlstnew(NULL);
@@ -69,8 +70,11 @@ static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 		term_mode("ei");
 		if (ret == CTRLC || ret == CTRLD)
 		{
+			*line = ft_dlsttop(*line);
 			ft_dlstclear(line, free);
-			if (ret == CTRLD)
+			if (ret == CTRLC)
+				shell->exit_status = 1;
+			else if (ret == CTRLD)
 				return (CTRLD);
 		}
 	}
@@ -82,6 +86,7 @@ void			prompt(char *ps, t_dlist **line, t_shell *shell)
 	struct termios	tty;
 	struct termios	tty_save;
 	int				ret;
+	t_dlist			*tmp;
 
 	tcgetattr(STDIN_FILENO, &tty);
 	tty_save = tty;
@@ -92,14 +97,14 @@ void			prompt(char *ps, t_dlist **line, t_shell *shell)
 	if (ret == CTRLD)
 	{
 		ft_putendl_fd("exit", 1);
-		exit(EXIT_SUCCESS);
+		ft_dlstclear(line, free);
+		minishell_end(shell);
 	}
 	else if (ret == LF)
 	{
-		ft_dlstadd_back(line, ft_dlstnew("\0"));
-		while ((*line)->prev != NULL)
-			*line = (*line)->prev;
-		*line = (*line)->next;
+		tmp = ft_dlsttop(*line);
+		*line = tmp->next;
+		ft_dlstdelone(tmp, free);
 		save_history(*line, shell);
 	}
 }
