@@ -60,7 +60,6 @@ static void show_env(void)
 		}
 		ft_putendl_fd("", 1);
 		dp_free(str);
-		free(tab[i]);
 		i++;
 	}
 	free(tab);
@@ -79,10 +78,12 @@ int minishell_export(char **argv, t_shell *shell)
 		i = 1;
 		while (argv[i] != NULL)
 		{
-			str = ft_split(argv[i], '=');
-			if (str[1] != NULL)
+			if (ft_strchr(argv[i], '=') != NULL)
 				set_shell_var(shell, argv[i]);
+			str = ft_split(argv[i], '=');
 			value = get_shell_var(shell, str[0]);
+			if (value == NULL)
+				value = "";
 			//ft_setenv(str[0], value);
 			setenv(str[0], value, 1);
 			dp_free(str);
@@ -90,4 +91,5 @@ int minishell_export(char **argv, t_shell *shell)
 		}
 	}
 	return (0);
+	setenv(str[0], value, 1);
 }

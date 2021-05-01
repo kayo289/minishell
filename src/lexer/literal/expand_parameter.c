@@ -53,7 +53,8 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell)
 			ch = ((char*)(*line)->content)[0];
 		}
 	}
-	val = ft_getenv(key);
+	val = getenv(key);
+	free(key);
 	return (val);
 }
 
