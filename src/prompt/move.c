@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void		move_to_rg(t_pos *pos, t_dlist **cursor)
+void		move_to_rg(t_pos *pos, t_dlist **cursor)
 {
 	if(pos->cursor < pos->max_rg)
 	{
@@ -10,7 +10,7 @@ static void		move_to_rg(t_pos *pos, t_dlist **cursor)
 	}
 }
 
-static void		move_to_lf(t_pos *pos, t_dlist **cursor)
+void		move_to_lf(t_pos *pos, t_dlist **cursor)
 {
 	if(pos->max_lf < pos->cursor)
 	{
@@ -58,38 +58,34 @@ static void		move_to_prev_word(t_pos *pos, t_dlist **cursor)
 	}
 }
 
-void		move(t_pos *pos, t_dlist **cursor, t_shell *shell)
+void		move_to_word(t_pos *pos, t_dlist **cursor)
 {
-	char	key;
+	char key;
 
 	read(0, &key, 1);
-	if (key == '[')
+	if(key == ';')
 	{
 		read(0, &key, 1);
-		if(key == 'A')
-			history_prev(pos, cursor, shell);
-		else if(key == 'B')
-			history_next(pos, cursor, shell);
-		else if(key == 'C')
-			move_to_rg(pos, cursor);
-		else if(key == 'D')
-			move_to_lf(pos, cursor);
-		else if(key == '1')
+		if(key == '5')
 		{
 			read(0, &key, 1);
-			if(key == ';')
-			{
-				read(0, &key, 1);
-				if(key == '5')
-				{
-					read(0, &key, 1);
-					if(key == 'C')
-						move_to_next_word(pos, cursor);
-					else if(key == 'D')
-						move_to_prev_word(pos, cursor);
-				}
-			}
+			if(key == 'C')
+				move_to_next_word(pos, cursor);
+			else if(key == 'D')
+				move_to_prev_word(pos, cursor);
 		}
 	}
+}
+
+void		move_to_home(t_pos *pos, t_dlist **cursor)
+{
+	while (pos->max_lf < pos->cursor)
+		move_to_lf(pos, cursor);
+}
+
+void		move_to_end(t_pos *pos, t_dlist **cursor)
+{
+	while (pos->cursor < pos->max_rg)
+		move_to_rg(pos, cursor);
 }
 
