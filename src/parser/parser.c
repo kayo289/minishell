@@ -55,10 +55,12 @@ static void pipeline(t_ip *ip, t_list **tokens, t_gmr **gmr)
 		{
 			next_token(ip, tokens);
 			if (ip->sy == IDENTIFY || ip->sy == REDIRECT)
+			{
 				simple_command(ip, tokens, &data);
+				ft_lstadd_back(&(*gmr)->datas, ft_lstnew(data));
+			}
 			else
 				ip->sy = ERR;
-			ft_lstadd_back(&(*gmr)->datas, ft_lstnew(data));
 		}
 	}
 	else
