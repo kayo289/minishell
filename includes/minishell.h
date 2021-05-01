@@ -122,6 +122,8 @@ void	move_to_lf(t_pos *pos, t_dlist **cursor);
 void	move_to_word(t_pos *pos, t_dlist **cursor);
 void	move_to_home(t_pos *pos, t_dlist **cursor);
 void	move_to_end(t_pos *pos, t_dlist **cursor);
+void	move_to_up(t_pos *pos, t_dlist **cursor);
+void	move_to_down(t_pos *pos, t_dlist **cursor);
 
 // history
 void	history_next(t_pos *pos, t_dlist **cursor, t_shell *shell);

@@ -7,9 +7,10 @@ static int		outc(int c)
 
 void			term_mode(char *p)
 {
-	char buf[BUFFER_SIZE];
-	char *term;
-	char *cptr;
+	char	buf[BUFFER_SIZE];
+	char	*term;
+	char	*cptr;
+	int		n;
 
 	if ((term = getenv("TERM")) == NULL)
 	{
@@ -24,6 +25,8 @@ void			term_mode(char *p)
 	cptr = buf;
 	if (tgetstr(p, &cptr) != NULL)
 		tputs(buf, 1, outc);
+	else if ((n = tgetnum(p)) != -1)
+		(void)printf("%d\n", n);
 }
 
 static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
@@ -41,8 +44,9 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 			del(&pos, cursor);
 		else if (key == LF || key == CTRLC)
 		{
-			insert(cursor, '\0', &pos);
 			ft_putchar_fd('\n', 1);
+			*cursor = ft_dlstlast(*cursor);
+			insert(cursor, '\0', &pos);
 			return (key);
 		}
 		else if (key == CTRLD)
