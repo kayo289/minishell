@@ -36,7 +36,7 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 	{
 		read(0, &key, 1);
 		if (key == ESC)
-			move(&pos, cursor, shell);
+			esc(&pos, cursor, shell);
 		else if (key == DEL)
 			del(&pos, cursor);
 		else if (key == LF || key == CTRLC)

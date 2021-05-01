@@ -23,6 +23,31 @@ void		del(t_pos *pos, t_dlist **cursor)
 	}
 }
 
+void		esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
+{
+	char	key;
+
+	read(0, &key, 1);
+	if (key == '[')
+	{
+		read(0, &key, 1);
+		if(key == 'A')
+			history_prev(pos, cursor, shell);
+		else if(key == 'B')
+			history_next(pos, cursor, shell);
+		else if(key == 'C')
+			move_to_rg(pos, cursor);
+		else if(key == 'D')
+			move_to_lf(pos, cursor);
+		else if(key == '1')
+			move_to_word(pos, cursor);
+		else if(key == 'F')
+			move_to_end(pos, cursor);
+		else if(key == 'H')
+			move_to_home(pos, cursor);
+	}
+}
+
 void		insert(t_dlist **cursor, char c, t_pos *pos)
 {
 	char	*s;
