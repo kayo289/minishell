@@ -55,9 +55,9 @@ static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 		}
 		exit(n);
 	}
-	exec_pipeline(datas->next, pfd, shell);
 	close(ppfd[0]);
 	close(ppfd[1]);
+	exec_pipeline(datas->next, pfd, shell);
 	waitpid(pid, &status, 0);
 	if (datas->next == NULL)
 	{
