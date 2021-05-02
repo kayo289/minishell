@@ -50,7 +50,7 @@ static void pipeline(t_ip *ip, t_list **tokens, t_gmr **gmr)
 	ft_lstadd_back(&(*gmr)->datas, ft_lstnew(data));
 	if (ip->sy == PIPE)
 	{
-		(*gmr)->name = PIPELINE;
+		(*gmr)->exec_env = SUBSHELL;
 		while (ip->sy == PIPE)
 		{
 			next_token(ip, tokens);
@@ -64,7 +64,7 @@ static void pipeline(t_ip *ip, t_list **tokens, t_gmr **gmr)
 		}
 	}
 	else
-		(*gmr)->name = SIMPLECMD;
+		(*gmr)->exec_env = MAINSHELL;
 }
 
 static void lists(t_ip *ip, t_list **tokens, t_list **gmrs)
@@ -77,8 +77,16 @@ static void lists(t_ip *ip, t_list **tokens, t_list **gmrs)
 		gmr = malloc(sizeof(t_gmr));
 		gmr->datas = NULL;
 		pipeline(ip, tokens, &gmr);
-		if (ip->sy == SEMICOLON)
+		if (ip->sy == OROR || ip->sy == ANDAND || ip->sy == SEMICOLON)
+		{
+			if (ip->sy == OROR)
+				gmr->op = OROR_OP;
+			else if (ip->sy == ANDAND)
+				gmr->op = ANDAND_OP;
+			else if (ip->sy == SEMICOLON)
+				gmr->op = SEMICOLON_OP;
 			next_token(ip, tokens);
+		}
 		ft_lstadd_back(gmrs, ft_lstnew(gmr));
 	}
 }

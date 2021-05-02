@@ -33,7 +33,8 @@
 #define HASH_SIZE	29999
 
 typedef enum u_token		t_token;
-typedef enum u_gmr_name		t_gmr_name;
+typedef enum u_operator		t_operator;
+typedef enum u_exec_env		t_exec_env;
 typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
@@ -48,17 +49,27 @@ enum u_token
 	LEFT_BRACE,	// {
 	RIGHT_BRACE,// }
 	SEMICOLON,	// ;
+	ANDAND,		// &&
+	OROR,		// ||
 	IDENTIFY,	// String
 	INPUT_END,	// End Of Input
-	ERR,		// End Of Input
+	ERR,		// ERROR
 
 	TOKEN_NUM	// don't care
 };
 
-enum u_gmr_name
+enum u_operator
 {
-	SIMPLECMD,
-	PIPELINE
+	SEMICOLON_OP,
+	ANDAND_OP,
+	OROR_OP,
+	NEWLINE_OP
+};
+
+enum u_exec_env
+{
+	MAINSHELL,
+	SUBSHELL
 };
 
 struct s_shell
@@ -98,7 +109,8 @@ struct s_data
 
 struct	s_gmr
 {
-	t_gmr_name	name;
+	t_operator	op;
+	t_exec_env	exec_env;
 	t_list		*datas;
 };
 
@@ -135,9 +147,11 @@ void	lexer(t_dlist *line, t_list **tokens, t_shell *shell);
 void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
 void	save_token(t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
+//		literal
 void	literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
 char	*expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell);
 void	quoting(t_dlist **line, t_ip *ip, t_shell *shell);
+//		metachcharacter
 void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 
 // parser

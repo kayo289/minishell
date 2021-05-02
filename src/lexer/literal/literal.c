@@ -57,7 +57,7 @@ static void string(t_dlist **line, t_ip *ip)
 void literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 {
 	ip->sy = IDENTIFY;
-	while (ft_strchr("|><; \0", ip->ch) == NULL)
+	while (ft_strchr("|><;& \0", ip->ch) == NULL)
 	{
 		if (ft_isdigit(ip->ch))
 			numeric(line, ip, tokens);

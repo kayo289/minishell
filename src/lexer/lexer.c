@@ -27,7 +27,7 @@ void get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 		ip->sy = INPUT_END;
 		return;
 	}
-	else if (ft_strchr("|><;", ip->ch) == NULL)
+	else if (ft_strchr("|&><;", ip->ch) == NULL)
 		literal(line, ip, tokens, shell);
 	else
 		metacharacter(line, ip, tokens);
