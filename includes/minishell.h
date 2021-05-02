@@ -49,6 +49,7 @@ enum u_token
 	LEFT_BRACE,	// {
 	RIGHT_BRACE,// }
 	SEMICOLON,	// ;
+	AND,		// &
 	ANDAND,		// &&
 	OROR,		// ||
 	IDENTIFY,	// String

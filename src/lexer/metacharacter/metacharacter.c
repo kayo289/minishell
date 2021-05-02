@@ -22,6 +22,8 @@ static void meta_and(t_dlist **line, t_ip *ip)
 		ip->sy = ANDAND;
 		next_ch(line, ip);
 	}
+	else
+		ip->sy = AND;
 }
 
 static void meta_semicolon(t_dlist **line, t_ip *ip, t_list **tokens)
