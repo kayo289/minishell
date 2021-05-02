@@ -59,6 +59,15 @@ static void meta_redirect(t_dlist **line, t_ip *ip)
 			next_ch(line, ip);
 		}
 	}
+	else if (ip->ch == '<')
+	{
+		next_ch(line, ip);
+		if (ip->ch == '<')
+		{
+			ft_charjoin(&ip->id_string, ip->ch);
+			next_ch(line, ip);
+		}
+	}
 	else
 		next_ch(line, ip);
 }

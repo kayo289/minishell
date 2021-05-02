@@ -29,6 +29,7 @@
 #define END		0
 #define ERROR	-1
 #define FAIL	-1
+#define INIT	-1
 #define BUFFER_SIZE 1024
 #define HASH_SIZE	29999
 
@@ -148,11 +149,11 @@ void	lexer(t_dlist *line, t_list **tokens, t_shell *shell);
 void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
 void	save_token(t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
-//		literal
+//  literal
 void	literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
 char	*expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell);
 void	quoting(t_dlist **line, t_ip *ip, t_shell *shell);
-//		metachcharacter
+//	metachcharacter
 void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 
 // parser
@@ -161,6 +162,7 @@ void	parser(t_list *tokens, t_shell *shell);
 // interpreter
 void	interpreter(t_list *gmrs, t_shell *shell);
 void	redirect(t_queue *fds, t_shell *shell);
+void	here_documents(char *word, t_shell *shell);
 void	set_signal(void);
 bool	lookup_bltin(char **args);
 int		bltin_execute(char **args, t_shell *shell);
