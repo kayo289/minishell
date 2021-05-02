@@ -114,8 +114,10 @@ void interpreter(t_list *gmrs, t_shell *shell)
 	int stdin_fd;
 	int stdout_fd;
 	int stderr_fd;
+	bool run;
 	t_gmr *gmr;
 
+	run = true;
 	set_signal();
 	while (gmrs != NULL)
 	{
@@ -124,10 +126,24 @@ void interpreter(t_list *gmrs, t_shell *shell)
 		stderr_fd = dup(2);
 		pipe(pfd);
 		gmr = (t_gmr *)gmrs->content;
-		if (gmr->name == SIMPLECMD)
-			exec_simplecmd(gmr->datas, shell);
-		else if (gmr->name == PIPELINE)
-			exec_pipeline(gmr->datas, pfd, shell);
+		if (run)
+		{
+			if (gmr->exec_env == MAINSHELL)
+				exec_simplecmd(gmr->datas, shell);
+			else if (gmr->exec_env == SUBSHELL)
+				exec_pipeline(gmr->datas, pfd, shell);
+		}
+		run = true;
+		if (gmr->op == ANDAND_OP)
+		{
+			if (shell->exit_status != 0)
+				run = false;
+		}
+		else if (gmr->op == OROR_OP)
+		{
+			if (shell->exit_status == 0)
+				run = false;
+		}
 		dup2(stdin_fd, 0);
 		dup2(stdout_fd, 1);
 		dup2(stderr_fd, 2);
