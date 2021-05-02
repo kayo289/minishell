@@ -28,6 +28,7 @@ void minishell_end(t_shell *shell)
 	shell->hist_lst = ft_dlsttop(shell->hist_lst);
 	ft_dlstclear(&shell->hist_lst, free);
 	free(shell->histfile_path);
+	free(shell->clipboard_path);
 	exit(shell->exit_status);
 }
 

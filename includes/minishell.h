@@ -78,6 +78,7 @@ struct s_shell
 	t_list	*var[HASH_SIZE];
 	t_dlist	*hist_lst;
 	char	*histfile_path;
+	char	*clipboard_path;
 	int		exit_status;
 };
 
@@ -92,6 +93,9 @@ struct  s_pos
 	int cursor;
 	int max_rg;
 	int max_lf;
+	// copy_and_paste
+	t_dlist *start;
+	t_dlist *end;
 };
 
 struct	s_ip
@@ -137,6 +141,12 @@ void	move_to_home(t_pos *pos, t_dlist **cursor);
 void	move_to_end(t_pos *pos, t_dlist **cursor);
 void	move_to_up(t_pos *pos, t_dlist **cursor);
 void	move_to_down(t_pos *pos, t_dlist **cursor);
+
+// copy_and_paste
+void	select_mode(t_pos *pos, t_dlist **cursor);
+void	copy(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	paste(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	cut(t_pos *pos, t_dlist **cursor, t_shell *shell);
 
 // history
 void	history_next(t_pos *pos, t_dlist **cursor, t_shell *shell);

@@ -2,9 +2,11 @@
 
 void		init_pos(t_pos *pos, char *ps)
 {
-	pos->max_lf = ft_strlen(ps);
 	pos->cursor = ft_strlen(ps);
+	pos->max_lf = ft_strlen(ps);
 	pos->max_rg = ft_strlen(ps);
+	pos->start = 0;
+	pos->end = 0;
 }
 
 void		del(t_pos *pos, t_dlist **cursor)
@@ -39,12 +41,12 @@ void		esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
 			move_to_rg(pos, cursor);
 		else if(key == 'D')
 			move_to_lf(pos, cursor);
-		else if(key == '1')
-			move_to_word(pos, cursor);
 		else if(key == 'F')
 			move_to_end(pos, cursor);
 		else if(key == 'H')
 			move_to_home(pos, cursor);
+		else if(key == '1')
+			move_to_word(pos, cursor);
 	}
 }
 

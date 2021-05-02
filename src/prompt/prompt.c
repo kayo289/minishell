@@ -38,12 +38,22 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 	while(1)
 	{
 		read(0, &key, 1);
+		if (key == 0)
+			select_mode(&pos, cursor);
+		else if(key == 22)
+			paste(&pos, cursor, shell);
+		else if(key == 24)
+			cut(&pos, cursor, shell);
+		else if(key == 25)
+			copy(&pos, cursor, shell);
+
 		if (key == ESC)
 			esc(&pos, cursor, shell);
 		else if (key == DEL)
 			del(&pos, cursor);
 		else if (key == LF || key == CTRLC)
 		{
+			term_mode("se");
 			ft_putchar_fd('\n', 1);
 			*cursor = ft_dlstlast(*cursor);
 			insert(cursor, '\0', &pos);
