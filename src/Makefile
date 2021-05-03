@@ -15,8 +15,10 @@ CMDS	= \
 NAME_SRC = \
 	lexer/lexer.c \
 	lexer/literal/literal.c \
-	lexer/literal/expand_parameter.c \
 	lexer/literal/quoting.c \
+	lexer/literal/dollar.c \
+	lexer/literal/wildcard.c \
+	lexer/literal/expand_parameter.c \
 	lexer/metacharacter/metacharacter.c \
 	parser/parser.c \
 	interpreter/interpreter.c \
