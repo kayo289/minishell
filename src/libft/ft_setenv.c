@@ -1,20 +1,5 @@
 #include "../../includes/libft.h"
 
-// static char	**ft_clear(char ***ans)
-// {
-// 	unsigned int	i;
-
-// 	i = 0;
-// 	while ((*ans)[i])
-// 	{
-// 		free((*ans)[i]);
-// 		(*ans)[i++] = NULL;
-// 	}
-// 	free(*ans);
-// 	*ans = NULL;
-// 	return (NULL);
-// }
-
 static void add_to_environ(char *param)
 {
 	extern char	**environ;
