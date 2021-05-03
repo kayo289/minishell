@@ -20,7 +20,7 @@
 #include "queue.h"
 #include "libft.h"
 
-#define SHIFT_SPACE 0
+#define CTRL_SPACE	0
 #define CTRLV		22
 #define CTRLX		24
 #define CTRLY		25
@@ -99,8 +99,7 @@ struct  s_select
 	bool	mode;
 	int		start;
 	int		end;
-	t_dlist *startp;
-	t_dlist *endp;
+	t_dlist *p;
 };
 
 struct  s_pos

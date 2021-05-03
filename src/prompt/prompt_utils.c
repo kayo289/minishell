@@ -9,22 +9,23 @@ void		init_pos(t_pos *pos, char *ps)
 	pos->select.mode = false;
 	pos->select.start = ft_strlen(ps);
 	pos->select.end = ft_strlen(ps);
-	pos->select.startp = NULL;
-	pos->select.endp = NULL;
+	pos->select.p = NULL;
 }
 
 void		del(t_pos *pos, t_dlist **cursor)
 {
-	t_dlist *save;
 	t_dlist *tmp;
 
 	if (pos->max_lf < pos->cursor)
 	{
 		tmp = *cursor;
-		save = (*cursor)->next;
+		if ((*cursor)->prev != NULL)
+			(*cursor)->prev->next = (*cursor)->next;
+		if ((*cursor)->next != NULL)
+			(*cursor)->next->prev = (*cursor)->prev;
+		pos->max_rg--;
 		move_to_lf(pos, cursor);
 		term_mode("dc");
-		(*cursor)->next = save;
 		ft_dlstdelone(tmp, free);
 	}
 }

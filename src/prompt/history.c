@@ -31,6 +31,7 @@ static void	clear_input(t_pos *pos, t_dlist **cursor)
 	move_to_end(pos, cursor);
 	while (pos->max_lf < pos->cursor)
 		del(pos, cursor);
+	
 	init_pos(pos, "minishell$ ");
 	*cursor = ft_dlsttop(*cursor);
 	ft_dlstclear(cursor, free);
@@ -40,23 +41,18 @@ static void	clear_input(t_pos *pos, t_dlist **cursor)
 static void generate_prompt(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	char	*line;
-	char	*s;
 	int		i;
 
 	line = (char *)shell->hist_lst->content;
 	if (line == NULL)
 		return;
-	i = -1;
-	while (line[++i] != '\0')
+	i = 0;
+	while (line[i] != '\0')
 	{
-		s = ft_calloc(sizeof(char), 2);
-		s[0] = line[i];
-		ft_putstr_fd(s, 1);
-		pos->cursor++;
-		pos->max_rg++;
-		ft_dlstadd_back(cursor, ft_dlstnew(s));
+		insert(cursor, line[i], pos);
+		i++;
 	}
-	*cursor = ft_dlstlast(*cursor);
+	//*cursor = ft_dlstlast(*cursor);
 }
 
 void		history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell)
