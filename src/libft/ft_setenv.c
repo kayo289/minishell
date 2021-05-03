@@ -1,24 +1,34 @@
 #include "../../includes/libft.h"
 
+// static char	**ft_clear(char ***ans)
+// {
+// 	unsigned int	i;
+
+// 	i = 0;
+// 	while ((*ans)[i])
+// 	{
+// 		free((*ans)[i]);
+// 		(*ans)[i++] = NULL;
+// 	}
+// 	free(*ans);
+// 	*ans = NULL;
+// 	return (NULL);
+// }
+
 static void add_to_environ(char *param)
 {
 	extern char	**environ;
 	char		**new_environ;
 	int			size;
-	int			i;
 
 	size = 0;
 	while (environ[size] != NULL)
 		size++;
-	new_environ = (char **)malloc(sizeof(char *) * (size + 2));
-	i = 0;
-	while (environ[i] != NULL)
-	{
-		new_environ[i] = environ[i];
-		i++;
-	}
-	new_environ[i] = param;
-	new_environ[i + 1] = NULL;
+	new_environ = (char **)ft_calloc((size + 2), sizeof(char *));
+	ft_memcpy(new_environ, environ, sizeof(char*) * size);
+	new_environ[size] = param;
+	if ((void*)environ < (void*)&new_environ)
+		free(environ);
 	environ = new_environ;
 }
 
@@ -28,8 +38,7 @@ int	ft_setenv(char *name, char *value)
 	char		**ep;
 	char		*new_value;
 	size_t		namelen;
-	size_t		vallen;	
-	size_t		varlen;	
+	char		*tmp;
 
 	if (name == NULL || *name == '\0' || ft_strchr(name, '=') != NULL)
 	{
@@ -37,12 +46,9 @@ int	ft_setenv(char *name, char *value)
 		return (-1);
 	}
 	namelen = ft_strlen(name);
-	vallen = ft_strlen(value) + 1;
-	varlen = namelen + 1 + vallen;
-	new_value = (char *)malloc(sizeof(char) * varlen);
-	ft_memcpy(new_value, name, namelen);
-	ft_memcpy(&new_value[namelen], "=", 1);
-	ft_memcpy(&new_value[namelen + 1], value, vallen);
+	tmp = ft_strjoin(name, "=");
+	new_value = ft_strjoin(tmp, value);
+	free(tmp);
 	ep = environ;
 	while (*ep != NULL)
 	{
@@ -54,5 +60,6 @@ int	ft_setenv(char *name, char *value)
 		ep++;
 	}
 	add_to_environ(new_value);
+	// free(new_value);
 	return (0);
 }
