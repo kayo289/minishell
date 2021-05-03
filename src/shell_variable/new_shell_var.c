@@ -21,7 +21,7 @@ static void open_clipboard(t_shell *shell)
 	char 	*path;
 	int		fd;
 
-	fd = open(".minishell_clipboard", O_WRONLY | O_CREAT, S_IWRITE | S_IREAD);
+	fd = open(".minishell_clipboard", O_RDWR | O_CREAT, S_IWRITE | S_IREAD);
 	if (fd < 0)
 		return;
 	path = getcwd(NULL, 0);

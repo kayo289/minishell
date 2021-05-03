@@ -2,7 +2,9 @@
 
 void select_mode(t_pos *pos, t_dlist **cursor)
 {
-	pos->start = (*cursor)->next;
+	pos->select.mode = true;
+	pos->select.start = pos->cursor;
+	pos->select.startp = *cursor;
 }
 
 void paste(t_pos *pos, t_dlist **cursor, t_shell *shell)
@@ -11,65 +13,59 @@ void paste(t_pos *pos, t_dlist **cursor, t_shell *shell)
 	int		fd;
 	int		i;
 
-	fd = open(shell->clipboard_path, O_RDONLY | O_CREAT, S_IREAD);
+	fd = open(shell->clipboard_path, O_RDONLY);
 	if (fd < 0)
 		return ;
-	while (get_next_line(fd, &line) > 0)
+	if (get_next_line(fd, &line) > 0)
 	{
 		i = 0;
 		while (line[i] != '\0')
 			insert(cursor, line[i++], pos);
-		free(line);
 	}
 	free(line);
 	close(fd);
 }
 
+static void swap(t_pos *pos)
+{
+	int		tmp;
+	t_dlist	*ptmp;
+
+	tmp = pos->select.start;
+	pos->select.start = pos->select.end;
+	pos->select.end = tmp;
+
+	ptmp = pos->select.startp;
+	pos->select.startp = pos->select.endp;
+	pos->select.endp = ptmp;
+}
+
 void copy(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	int		fd;
-	t_dlist	*tmp;
 
-	pos->end = *cursor;
-	fd = open(shell->clipboard_path, O_WRONLY | O_CREAT, S_IWRITE);
-	if (fd < 0 || pos->start == NULL || pos->end == NULL)
+	if (!pos->select.mode)
 		return;
-	if (pos->start > pos->end)
+	pos->select.mode = false;
+	pos->select.end = pos->cursor;	
+	pos->select.endp = *cursor;	
+	fd = open(shell->clipboard_path, O_WRONLY | O_CREAT, S_IWRITE);
+	if (fd < 0)
+		return;
+	if (pos->select.start > pos->select.end)
+		swap(pos);
+	while (pos->select.start < pos->select.end)
 	{
-		tmp = pos->start;
-		pos->start = pos->end;
-		pos->end = tmp;
+		ft_putstr_fd((char *)pos->select.startp->content, fd);
+		pos->select.startp = pos->select.startp->next;
+		pos->select.start++;
 	}
-	while (pos->start < pos->end)
-	{
-		ft_putstr_fd((char *)pos->start->content, fd);
-		pos->start = pos->start->next;
-	}
-	ft_putendl_fd((char *)pos->start->content, fd);
+	ft_putendl_fd((char *)pos->select.startp->content, fd);
 	close(fd);
 }
 
 void cut(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
-	int		fd;
-	t_dlist	*tmp;
-
-	pos->end = *cursor;
-	fd = open(shell->clipboard_path, O_WRONLY | O_CREAT, S_IWRITE);
-	if (fd < 0 || pos->start == NULL || pos->end == NULL)
-		return;
-	if (pos->start > pos->end)
-	{
-		tmp = pos->start;
-		pos->start = pos->end;
-		pos->end = tmp;
-	}
-	while (pos->start < pos->end)
-	{
-		ft_putstr_fd((char *)pos->start->content, fd);
-		pos->start = pos->start->next;
-	}
-	ft_putendl_fd((char *)pos->start->content, fd);
-	close(fd);
+	copy(pos, cursor, shell);
 }
 

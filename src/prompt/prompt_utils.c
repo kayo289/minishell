@@ -5,23 +5,27 @@ void		init_pos(t_pos *pos, char *ps)
 	pos->cursor = ft_strlen(ps);
 	pos->max_lf = ft_strlen(ps);
 	pos->max_rg = ft_strlen(ps);
-	pos->start = 0;
-	pos->end = 0;
+
+	pos->select.mode = false;
+	pos->select.start = ft_strlen(ps);
+	pos->select.end = ft_strlen(ps);
+	pos->select.startp = NULL;
+	pos->select.endp = NULL;
 }
 
 void		del(t_pos *pos, t_dlist **cursor)
 {
 	t_dlist *save;
+	t_dlist *tmp;
 
-	if (pos->cursor > pos->max_lf)
+	if (pos->max_lf < pos->cursor)
 	{
-		write(1, "\b", 1);
+		tmp = *cursor;
+		save = (*cursor)->next;
+		move_to_lf(pos, cursor);
 		term_mode("dc");
-		save = (*cursor)->prev;
-		ft_dlstdelone(*cursor, free);
-		*cursor = save;
-		pos->cursor--;
-		pos->max_rg--;
+		(*cursor)->next = save;
+		ft_dlstdelone(tmp, free);
 	}
 }
 

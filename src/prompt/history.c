@@ -28,11 +28,9 @@ void		save_history(t_dlist *line, t_shell *shell)
 
 static void	clear_input(t_pos *pos, t_dlist **cursor)
 {
+	move_to_end(pos, cursor);
 	while (pos->max_lf < pos->cursor)
-	{
-		move_to_lf(pos, cursor);
-		term_mode("dc");
-	}
+		del(pos, cursor);
 	init_pos(pos, "minishell$ ");
 	*cursor = ft_dlsttop(*cursor);
 	ft_dlstclear(cursor, free);
