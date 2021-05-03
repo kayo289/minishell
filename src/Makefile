@@ -23,7 +23,8 @@ NAME_SRC = \
 	parser/parser.c \
 	interpreter/interpreter.c \
 	interpreter/signal.c \
-	interpreter/redirect.c \
+	interpreter/redirect/redirect.c \
+	interpreter/redirect/here_documents.c \
 	interpreter/cmds_execute.c \
 	interpreter/bltin_execute.c \
 	shell_variable/get_shell_var.c \
