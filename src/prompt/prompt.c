@@ -38,7 +38,7 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 	while(1)
 	{
 		read(0, &key, 1);
-		if (key == SHIFT_SPACE)
+		if (key == CTRL_SPACE)
 			select_mode(&pos, cursor);
 		else if(key == CTRLV)
 			paste(&pos, cursor, shell);
