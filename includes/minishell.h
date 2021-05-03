@@ -149,9 +149,11 @@ void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
 void	save_token(t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
 //		literal
-void	literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
+void	literal(t_dlist **line, t_ip *ip, t_list **tokens,t_shell *shell);
 char	*expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell);
 void	quoting(t_dlist **line, t_ip *ip, t_shell *shell);
+void	dollar(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
+void	wildcard(t_ip *ip, t_list **tokens);
 //		metachcharacter
 void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 
