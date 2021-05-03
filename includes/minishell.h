@@ -33,7 +33,7 @@
 #define END			0
 #define ERROR		-1
 #define FAIL		-1
-
+#define INIT		-1
 #define BUFFER_SIZE 1024
 #define HASH_SIZE	29999
 
