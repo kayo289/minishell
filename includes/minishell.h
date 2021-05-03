@@ -20,22 +20,27 @@
 #include "queue.h"
 #include "libft.h"
 
-#define CTRLC	3
-#define CTRLD	4
-#define LF		10
-#define ESC		27
-#define DEL		127
-#define SUCESS	1
-#define END		0
-#define ERROR	-1
-#define FAIL	-1
-#define INIT	-1
+#define SHIFT_SPACE 0
+#define CTRLV		22
+#define CTRLX		24
+#define CTRLY		25
+#define CTRLC		3
+#define CTRLD		4
+#define LF			10
+#define ESC			27
+#define DEL			127
+#define SUCESS		1
+#define END			0
+#define ERROR		-1
+#define FAIL		-1
+#define INIT		-1
 #define BUFFER_SIZE 1024
 #define HASH_SIZE	29999
 
 typedef enum u_token		t_token;
 typedef enum u_operator		t_operator;
 typedef enum u_exec_env		t_exec_env;
+typedef	struct s_select		t_select;
 typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
@@ -79,6 +84,7 @@ struct s_shell
 	t_list	*var[HASH_SIZE];
 	t_dlist	*hist_lst;
 	char	*histfile_path;
+	char	*clipboard_path;
 	int		exit_status;
 };
 
@@ -88,11 +94,21 @@ struct s_param
 	char *value;
 };
 
+struct  s_select
+{
+	bool	mode;
+	int		start;
+	int		end;
+	t_dlist *startp;
+	t_dlist *endp;
+};
+
 struct  s_pos
 {
 	int cursor;
 	int max_rg;
 	int max_lf;
+	t_select select;
 };
 
 struct	s_ip
@@ -138,6 +154,12 @@ void	move_to_home(t_pos *pos, t_dlist **cursor);
 void	move_to_end(t_pos *pos, t_dlist **cursor);
 void	move_to_up(t_pos *pos, t_dlist **cursor);
 void	move_to_down(t_pos *pos, t_dlist **cursor);
+
+// copy_and_paste
+void	select_mode(t_pos *pos, t_dlist **cursor);
+void	copy(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	paste(t_pos *pos, t_dlist **cursor, t_shell *shell);
+void	cut(t_pos *pos, t_dlist **cursor, t_shell *shell);
 
 // history
 void	history_next(t_pos *pos, t_dlist **cursor, t_shell *shell);

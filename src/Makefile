@@ -34,6 +34,7 @@ NAME_SRC = \
 	shell_variable/hash.c \
 	prompt/prompt.c \
 	prompt/prompt_utils.c \
+	prompt/copy_and_paste.c \
 	prompt/move.c \
 	prompt/history.c \
 	bltin/cd.c \

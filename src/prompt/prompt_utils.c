@@ -2,24 +2,30 @@
 
 void		init_pos(t_pos *pos, char *ps)
 {
-	pos->max_lf = ft_strlen(ps);
 	pos->cursor = ft_strlen(ps);
+	pos->max_lf = ft_strlen(ps);
 	pos->max_rg = ft_strlen(ps);
+
+	pos->select.mode = false;
+	pos->select.start = ft_strlen(ps);
+	pos->select.end = ft_strlen(ps);
+	pos->select.startp = NULL;
+	pos->select.endp = NULL;
 }
 
 void		del(t_pos *pos, t_dlist **cursor)
 {
 	t_dlist *save;
+	t_dlist *tmp;
 
-	if (pos->cursor > pos->max_lf)
+	if (pos->max_lf < pos->cursor)
 	{
-		write(1, "\b", 1);
+		tmp = *cursor;
+		save = (*cursor)->next;
+		move_to_lf(pos, cursor);
 		term_mode("dc");
-		save = (*cursor)->prev;
-		ft_dlstdelone(*cursor, free);
-		*cursor = save;
-		pos->cursor--;
-		pos->max_rg--;
+		(*cursor)->next = save;
+		ft_dlstdelone(tmp, free);
 	}
 }
 
@@ -39,12 +45,12 @@ void		esc(t_pos *pos, t_dlist **cursor, t_shell *shell)
 			move_to_rg(pos, cursor);
 		else if(key == 'D')
 			move_to_lf(pos, cursor);
-		else if(key == '1')
-			move_to_word(pos, cursor);
 		else if(key == 'F')
 			move_to_end(pos, cursor);
 		else if(key == 'H')
 			move_to_home(pos, cursor);
+		else if(key == '1')
+			move_to_word(pos, cursor);
 	}
 }
 
