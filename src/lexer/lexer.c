@@ -2,9 +2,13 @@
 
 char next_ch(t_dlist **line, t_ip *ip)
 {
-	ip->ch = ((char*)(*line)->content)[0];
-	if ((*line)->next != NULL)
+	if (*line != NULL)
+	{
+		ip->ch = ((char*)(*line)->content)[0];
 		*line = (*line)->next;
+	}
+	else
+		ip->ch = '\0';
 	return (ip->ch);
 }
 

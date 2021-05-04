@@ -45,8 +45,6 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 		else if (key == LF || key == CTRLC)
 		{
 			ft_putchar_fd('\n', 1);
-			*cursor = ft_dlstlast(*cursor);
-			insert(cursor, '\0', &pos);
 			return (key);
 		}
 		else if (key == CTRLD)
