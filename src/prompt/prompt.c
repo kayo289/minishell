@@ -5,7 +5,7 @@ static int		outc(int c)
 	return write(1, &c, 1);
 }
 
-void			term_mode(char *p)
+void			term_mode(char *p, int arg_cols, int arg_rows)
 {
 	char	buf[BUFFER_SIZE];
 	char	*term;
@@ -24,7 +24,7 @@ void			term_mode(char *p)
 	}
 	cptr = buf;
 	if (tgetstr(p, &cptr) != NULL)
-		tputs(buf, 1, outc);
+		tputs(tgoto(buf, arg_cols, arg_rows), 1, outc);
 	else if ((n = tgetnum(p)) != -1)
 		(void)printf("%d\n", n);
 }
@@ -78,9 +78,9 @@ static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 	{
 		*line = ft_dlstnew(NULL);
 		ft_putstr_fd(ps, 1);
-		term_mode("im");
+		term_mode("im", -1, -1);
 		ret = prompt_input(line, ps, shell);
-		term_mode("ei");
+		term_mode("ei", -1, -1);
 		if (ret == CTRLC || ret == CTRLD)
 		{
 			*line = ft_dlsttop(*line);
