@@ -1,10 +1,11 @@
 #include "../../includes/libft.h"
 
-static char	**last_environ;
+
 
 static void add_to_environ(char *param)
 {
 	extern char	**environ;
+	static char	**last_environ;
 	char		**new_environ;
 	int			size;
 	int			i;
