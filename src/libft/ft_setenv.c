@@ -14,6 +14,8 @@ static void add_to_environ(char *param)
 	new_environ = (char **)ft_calloc((size + 2), sizeof(char *));
 	ft_memcpy(new_environ, environ, sizeof(char*) * size);
 	new_environ[size] = param;
+	if ((void*)environ < (void*)&new_environ)
+		free(environ);
 	environ = new_environ;
 	last_environ = environ;
 }
