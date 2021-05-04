@@ -23,5 +23,4 @@ void err_badfd(int n, t_shell *shell)
 	ft_putnbr_fd(n, 2);
 	ft_putendl_fd(": Bad file descriptor", 2);
 	shell->exit_status = 1;
-	minishell_end(shell);
 }	

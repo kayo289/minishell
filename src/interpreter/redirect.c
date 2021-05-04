@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static void gt(char *file, int n)
 {
@@ -44,6 +44,23 @@ static void lt(char *file, int n)
 	dup2(fd, n);
 }
 
+static int get_file_descriptor(char **rdt)
+{
+	int n;
+
+	if (!ft_isalnum(**rdt))
+		return (INIT);
+	n = 0;
+	while (ft_isalnum(**rdt))
+	{
+		n = n * 10 + (**rdt - '0');
+		if (n > 256)
+			return (n);
+		(*rdt)++;
+	}
+	return (n);
+}
+
 void redirect(t_queue *fds, t_shell *shell)
 {
 	int		n;
@@ -54,16 +71,11 @@ void redirect(t_queue *fds, t_shell *shell)
 	{
 		rdt = deq(fds);
 		file = deq(fds);
-		n = INIT;
-		if (ft_isalnum(*rdt))
+		n = get_file_descriptor(&rdt);
+		if (n > 256)
 		{
-			n = 0;
-			while (ft_isalnum(*rdt))
-			{
-				n = n * 10 + (*rdt++ - '0');
-				if (n > 256)
-					err_badfd(n, shell);
-			}
+			err_badfd(n, shell);
+			return;
 		}
 		if (ft_strcmp(rdt, ">>") == EQUAL)
 			dgt(file, n);

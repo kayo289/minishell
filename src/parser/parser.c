@@ -87,6 +87,8 @@ static void lists(t_ip *ip, t_list **tokens, t_list **gmrs)
 				gmr->op = SEMICOLON_OP;
 			next_token(ip, tokens);
 		}
+		else
+			gmr->op = NEWLINE_OP;
 		ft_lstadd_back(gmrs, ft_lstnew(gmr));
 	}
 }

@@ -1,152 +1,60 @@
 #include "../../includes/minishell.h"
 
-static void assign_variable(t_queue *vars, t_shell *shell)
+static bool check_operator(t_gmr *gmr, t_shell *shell)
 {
-	char *var;
-
-	while (!q_empty(vars))
+	if (gmr->op == ANDAND_OP)
 	{
-		var = deq(vars);
-		set_shell_var(shell, var);
+		if (shell->exit_status != 0)
+			return (false);
 	}
+	else if (gmr->op == OROR_OP)
+	{
+		if (shell->exit_status == 0)
+			return (false);
+	}
+	return (true);
 }
 
-static void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
+static void set_stdfd(t_stdfd *stdfd)
 {
-	int		pfd[2];
-	pid_t	pid;
-	int		status;
-	int		n;
-	t_data *data;
-
-	if (datas == NULL)
-		return;
-	data = (t_data *)datas->content;
-	pipe(pfd);
-	pid = fork();
-	if (pid < 0)	
-	{
-		ft_putendl_fd(strerror(errno), 2);
-		exit(1);
-	}
-	else if (pid == 0)
-	{
-		n = 0;
-		if (data->args[0] == NULL)
-			assign_variable(&data->vars, shell);
-		else
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			dup2(ppfd[0], 0);
-			close(ppfd[0]);
-			close(ppfd[1]);
-
-			if (datas->next != NULL)
-				dup2(pfd[1], 1);
-			close(pfd[0]);
-			close(pfd[1]);
-
-			redirect(&data->fds, shell);
-			if (lookup_bltin(data->args))
-				n = bltin_execute(data->args, shell);
-			else
-				cmds_execute(data->args, shell);
-		}
-		exit(n);
-	}
-	close(ppfd[0]);
-	close(ppfd[1]);
-	exec_pipeline(datas->next, pfd, shell);
-	waitpid(pid, &status, 0);
-	if (datas->next == NULL)
-	{
-		if (WIFEXITED(status))
-			shell->exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			shell->exit_status = WTERMSIG(status) + 128;
-	}
+	stdfd->in = dup(0);
+	stdfd->out = dup(1);
+	stdfd->err = dup(2);
 }
 
-static void exec_simplecmd(t_list *datas, t_shell *shell)
+static void get_stdfd(t_stdfd *stdfd)
 {
-	pid_t	pid;
-	int		status;
-	t_data	*data;
-
-	data = datas->content;
-	if (data->args[0] == NULL)
-	{
-		assign_variable(&data->vars, shell);
-		return;
-	}
-	redirect(&data->fds, shell);
-	if (lookup_bltin(data->args))
-		bltin_execute(data->args, shell);
-	else
-	{
-		pid = fork();
-		if (pid < 0)	
-		{
-			ft_putendl_fd(strerror(errno), 2);
-			exit(1);
-		}
-		else if (pid == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			cmds_execute(data->args, shell);
-		}
-		else if (pid > 0)
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				shell->exit_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				shell->exit_status = WTERMSIG(status) + 128;
-		}
-	}
+	dup2(stdfd->in, 0);
+	dup2(stdfd->out, 1);
+	dup2(stdfd->err, 2);
 }
 
 void interpreter(t_list *gmrs, t_shell *shell)
 {
-	int pfd[2];
-	int stdin_fd;
-	int stdout_fd;
-	int stderr_fd;
-	bool run;
-	t_gmr *gmr;
+	int		pfd[2];
+	t_gmr	*gmr;
+	bool	run;
+	t_stdfd	stdfd;
 
 	run = true;
+	stdfd.in = 0;
+	stdfd.out = 1;
+	stdfd.err = 2;
 	set_signal();
 	while (gmrs != NULL)
 	{
-		stdin_fd = dup(0);
-		stdout_fd = dup(1);
-		stderr_fd = dup(2);
-		pipe(pfd);
 		gmr = (t_gmr *)gmrs->content;
+		get_stdfd(&stdfd);
 		if (run)
 		{
+			pipe(pfd);
 			if (gmr->exec_env == MAINSHELL)
 				exec_simplecmd(gmr->datas, shell);
 			else if (gmr->exec_env == SUBSHELL)
 				exec_pipeline(gmr->datas, pfd, shell);
 		}
-		run = true;
-		if (gmr->op == ANDAND_OP)
-		{
-			if (shell->exit_status != 0)
-				run = false;
-		}
-		else if (gmr->op == OROR_OP)
-		{
-			if (shell->exit_status == 0)
-				run = false;
-		}
-		dup2(stdin_fd, 0);
-		dup2(stdout_fd, 1);
-		dup2(stderr_fd, 2);
+		set_stdfd(&stdfd);
+		run = check_operator(gmr, shell);
 		gmrs = gmrs->next;
 	}
 }

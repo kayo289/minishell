@@ -65,8 +65,12 @@ void	cmds_execute(char **args, t_shell *shell)
 		}
 	}
 	execve(cmd_path, args, environ);
+	free(cmd_path);
 	ft_putendl_fd(strerror(errno), 2);
-	shell->exit_status = 126;
+	if (errno == ENOENT)
+		shell->exit_status = 127;
+	else
+		shell->exit_status = 126;
 	minishell_end(shell);
 }
 

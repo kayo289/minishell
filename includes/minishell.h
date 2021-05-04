@@ -46,6 +46,7 @@ typedef struct s_data		t_data;
 typedef struct s_gmr		t_gmr;
 typedef struct s_param		t_param;
 typedef struct s_shell		t_shell;
+typedef	struct s_stdfd		t_stdfd;
 
 enum u_token
 {
@@ -126,6 +127,14 @@ struct	s_gmr
 	t_list		*datas;
 };
 
+struct	s_stdfd
+{
+	int in;
+	int out;
+	int err;
+};
+
+
 // minishell
 void	minishell_end(t_shell *shell);
 
@@ -181,12 +190,17 @@ void	parser(t_list *tokens, t_shell *shell);
 
 // interpreter
 void	interpreter(t_list *gmrs, t_shell *shell);
+void	exec_pipeline(t_list *datas, int ppfd[], t_shell *shell);
+void	exec_simplecmd(t_list *datas, t_shell *shell);
+void	bltin_execute(char **args, t_shell *shell);
+void	cmds_execute(char **args, t_shell *shell);
 void	redirect(t_queue *fds, t_shell *shell);
 void	here_documents(char *word, t_shell *shell);
 void	set_signal(void);
+void	set_signal_ign(void);
+void	set_signal_dfl(void);
 bool	lookup_bltin(char **args);
-int		bltin_execute(char **args, t_shell *shell);
-void	cmds_execute(char **args, t_shell *shell);
+void	assign_variable(t_queue *vars, t_shell *shell);
 
 // bltin
 int		minishell_cd(char **argv);
