@@ -18,7 +18,6 @@ static void minishell_loop(t_shell *shell)
 void minishell_end(t_shell *shell)
 {
 	int i;
-	extern char **environ;
 
 	i = 0;
 	while (i < HASH_SIZE)
@@ -28,7 +27,6 @@ void minishell_end(t_shell *shell)
 	}
 	shell->hist_lst = ft_dlsttop(shell->hist_lst);
 	ft_dlstclear(&shell->hist_lst, free);
-	free(environ);
 	free(shell->histfile_path);
 	exit(shell->exit_status);
 }

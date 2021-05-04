@@ -85,7 +85,7 @@ int minishell_export(char **argv, t_shell *shell)
 			if (value == NULL)
 				value = "";
 			ft_setenv(str[0], value);
-			// setenv(str[0], value, 1);
+			//setenv(str[0], value, 1);
 			dp_free(str);
 			i++;
 		}

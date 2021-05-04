@@ -1,20 +1,21 @@
 #include "../../includes/libft.h"
 
+static char **last_environ;
+
 static void add_to_environ(char *param)
 {
 	extern char	**environ;
 	char		**new_environ;
 	int			size;
 
+	last_environ = NULL;
 	size = 0;
 	while (environ[size] != NULL)
 		size++;
 	new_environ = (char **)ft_calloc((size + 2), sizeof(char *));
 	ft_memcpy(new_environ, environ, sizeof(char*) * size);
 	new_environ[size] = param;
-	if ((void*)environ < (void*)&new_environ)
-		free(environ);
-	environ = new_environ;
+	last_environ = environ = new_environ;
 }
 
 int	ft_setenv(char *name, char *value)
@@ -39,12 +40,12 @@ int	ft_setenv(char *name, char *value)
 	{
 		if (!ft_strncmp(*ep, name, namelen) && (*ep)[namelen] == '=')
 		{
+			free(*ep);
 			*ep = new_value;
 			return (0);
 		}
 		ep++;
 	}
 	add_to_environ(new_value);
-	// free(new_value);
 	return (0);
 }
