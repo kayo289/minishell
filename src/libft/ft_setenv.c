@@ -8,14 +8,14 @@ static void add_to_environ(char *param)
 	char		**new_environ;
 	int			size;
 
-	last_environ = NULL;
 	size = 0;
 	while (environ[size] != NULL)
 		size++;
 	new_environ = (char **)ft_calloc((size + 2), sizeof(char *));
 	ft_memcpy(new_environ, environ, sizeof(char*) * size);
 	new_environ[size] = param;
-	last_environ = environ = new_environ;
+	environ = new_environ;
+	last_environ = environ;
 }
 
 int	ft_setenv(char *name, char *value)
