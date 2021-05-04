@@ -11,9 +11,9 @@ void		move_to_rg(t_pos *pos, t_dlist **cursor)
 		*cursor = (*cursor)->next;
 		pos->cursor++;
 		if (pos->cursor % ws.ws_col == 0)
-			term_mode("do");
+			term_mode("do", -1, -1);
 		else
-			term_mode("nd");
+			term_mode("nd", -1, -1);
 	}
 }
 
@@ -30,13 +30,13 @@ void		move_to_lf(t_pos *pos, t_dlist **cursor)
 		pos->cursor--;
 		if ((pos->cursor + 1) % ws.ws_col == 0)
 		{
-			term_mode("up");
+			term_mode("up", -1, -1);
 			i = -1;
 			while (++i < ws.ws_col)
-				term_mode("nd");
+				term_mode("nd", -1, -1);
 		}
 		else
-			term_mode("le");
+			term_mode("le", -1, -1);
 	}
 }
 

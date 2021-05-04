@@ -40,7 +40,6 @@
 typedef enum u_token		t_token;
 typedef enum u_operator		t_operator;
 typedef enum u_exec_env		t_exec_env;
-typedef	struct s_select		t_select;
 typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
@@ -94,20 +93,16 @@ struct s_param
 	char *value;
 };
 
-struct  s_select
-{
-	bool	mode;
-	int		start;
-	int		end;
-	t_dlist *p;
-};
 
 struct  s_pos
 {
 	int cursor;
 	int max_rg;
 	int max_lf;
-	t_select select;
+
+	bool	is_select;
+	int		select;
+	t_dlist *selectp;
 };
 
 struct	s_ip
@@ -136,7 +131,7 @@ void	minishell_end(t_shell *shell);
 
 // prompt
 void	prompt(char *ps, t_dlist **line, t_shell *shell);
-void	term_mode(char *p);
+void	term_mode(char *p, int arg_cols, int arg_rows);
 
 // prompt_utils
 void	insert(t_dlist **lst, char c, t_pos *pos);

@@ -6,10 +6,9 @@ void		init_pos(t_pos *pos, char *ps)
 	pos->max_lf = ft_strlen(ps);
 	pos->max_rg = ft_strlen(ps);
 
-	pos->select.mode = false;
-	pos->select.start = ft_strlen(ps);
-	pos->select.end = ft_strlen(ps);
-	pos->select.p = NULL;
+	pos->is_select = false;
+	pos->select = ft_strlen(ps);
+	pos->selectp = NULL;
 }
 
 void		del(t_pos *pos, t_dlist **cursor)
@@ -25,7 +24,7 @@ void		del(t_pos *pos, t_dlist **cursor)
 			(*cursor)->next->prev = (*cursor)->prev;
 		pos->max_rg--;
 		move_to_lf(pos, cursor);
-		term_mode("dc");
+		term_mode("dc", -1, -1);
 		ft_dlstdelone(tmp, free);
 	}
 }
@@ -78,7 +77,7 @@ void		ctrl_d(t_pos *pos, t_dlist **cursor)
 	if (pos->cursor < pos->max_rg)
 	{
 		ft_dlstdelone((*cursor)->next, free);
-		term_mode("dc");
+		term_mode("dc", -1, -1);
 		pos->max_rg--;
 	}
 }

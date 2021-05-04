@@ -2,9 +2,9 @@
 
 void select_mode(t_pos *pos, t_dlist **cursor)
 {
-	pos->select.mode = true;
-	pos->select.start = pos->cursor;
-	pos->select.p = *cursor;
+	pos->is_select = true;
+	pos->select = pos->cursor;
+	pos->selectp = *cursor;
 }
 
 void paste(t_pos *pos, t_dlist **cursor, t_shell *shell)
@@ -37,36 +37,45 @@ static void swap(int *a, int *b)
 void copy(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	int		fd;
-	int		i;
+	int		start;
+	int		end;
 
-	if (!pos->select.mode)
+	if (!pos->is_select)
 		return;
-	pos->select.mode = false;
-	pos->select.end = pos->cursor;	
+	pos->is_select = false;
+	start = pos->select;	
+	end = pos->cursor;	
 	if ((fd = open(shell->clipboard_path, O_WRONLY | O_TRUNC)) < 0)
 		return;
-	if (pos->select.start > pos->select.end)
+	if (start > end)
 	{
-		swap(&pos->select.start, &pos->select.end);
-		pos->select.p = *cursor;
+		swap(&start, &end);
+		pos->selectp = *cursor;
 	}
-	i = pos->select.start;
-	while (i++ < pos->select.end)
+	while (start++ < end)
 	{
-		ft_putstr_fd((char *)pos->select.p->content, fd);
-		pos->select.p = pos->select.p->next;
+		ft_putstr_fd((char *)pos->selectp->content, fd);
+		pos->selectp = pos->selectp->next;
 	}
-	ft_putendl_fd((char *)pos->select.p->content, fd);
+	ft_putendl_fd((char *)pos->selectp->content, fd);
 }
 
 void cut(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
-	if (!pos->select.mode)
+	int	start;
+	int	end;
+
+	if (!pos->is_select)
 		return;
 	copy(pos, cursor, shell);
-	if (pos->select.start < pos->select.end)
+	if (pos->select > pos->cursor)
 	{
-		while (pos->select.start++ < pos->select.end)
-			del(pos, cursor);
+		term_mode("ch", -1, pos->select);
+		swap(&pos->select, &pos->cursor);
+		*cursor = pos->selectp;
 	}
+	start = pos->select;
+	end = pos->cursor;
+	while (start++ <= end)
+		del(pos, cursor);
 }
