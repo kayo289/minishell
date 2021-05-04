@@ -22,11 +22,14 @@ NAME_SRC = \
 	lexer/metacharacter/metacharacter.c \
 	parser/parser.c \
 	interpreter/interpreter.c \
-	interpreter/signal.c \
-	interpreter/redirect/redirect.c \
-	interpreter/redirect/here_documents.c \
+	interpreter/exec_pipeline.c \
+	interpreter/exec_simplecmd.c \
 	interpreter/cmds_execute.c \
 	interpreter/bltin_execute.c \
+	interpreter/assign_variable.c \
+	interpreter/signal.c \
+	interpreter/redirect.c \
+	interpreter/here_documents.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \
