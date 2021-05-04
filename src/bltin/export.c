@@ -84,12 +84,11 @@ int minishell_export(char **argv, t_shell *shell)
 			value = get_shell_var(shell, str[0]);
 			if (value == NULL)
 				value = "";
-			//ft_setenv(str[0], value);
-			setenv(str[0], value, 1);
+			ft_setenv(str[0], value);
+			//setenv(str[0], value, 1);
 			dp_free(str);
 			i++;
 		}
 	}
 	return (0);
-	setenv(str[0], value, 1);
 }
