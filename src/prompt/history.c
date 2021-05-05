@@ -29,9 +29,21 @@ void		save_history(t_dlist *line, t_shell *shell)
 
 static void	clear_input(t_pos *pos, t_dlist **cursor)
 {
-	move_to_end(pos, cursor);
-	while (pos->max_lf < pos->cursor)
-		del(pos, cursor);
+	struct winsize	ws;
+	int				i;
+	int				n;
+
+	if(ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1)
+		return;
+	i = 0;
+	n = pos->cursor / ws.ws_col;
+	while (i < n)
+	{
+		term_mode("up", -1, -1);
+		i++;
+	}
+	term_mode("ch", -1, pos->max_lf);
+	term_mode("cd", -1, -1);
 
 	init_pos(pos, "minishell$ ");
 	*cursor = ft_dlsttop(*cursor);
@@ -53,14 +65,12 @@ static void generate_prompt(t_pos *pos, t_dlist **cursor, t_shell *shell)
 		insert(cursor, line[i], pos);
 		i++;
 	}
-	//*cursor = ft_dlstlast(*cursor);
 }
 
 void		history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	if (shell->hist_lst->next == NULL)
 		return;
-	//if (pos->cursor > pos->max_lf)
 	clear_input(pos, cursor);
 	shell->hist_lst = shell->hist_lst->next;
 	generate_prompt(pos, cursor, shell);
@@ -70,7 +80,6 @@ void		history_next(t_pos *pos, t_dlist **cursor, t_shell *shell)
 {
 	if (shell->hist_lst->prev == NULL)
 		return;
-	//if (pos->cursor > pos->max_lf)
 	clear_input(pos, cursor);
 	shell->hist_lst = shell->hist_lst->prev;
 	generate_prompt(pos, cursor, shell);

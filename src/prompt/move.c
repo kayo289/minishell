@@ -67,6 +67,8 @@ void		move_to_down(t_pos *pos, t_dlist **cursor)
 		return;
     if (pos->cursor + ws.ws_col < pos->max_rg)
 	{
+		term_mode("do", -1, -1);
+		return;
 		i = 0;
 		while (i < ws.ws_col)
 		{
@@ -75,7 +77,6 @@ void		move_to_down(t_pos *pos, t_dlist **cursor)
 		}
 	}
 }
-
 
 static void		move_to_next_word(t_pos *pos, t_dlist **cursor)
 {

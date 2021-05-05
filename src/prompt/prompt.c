@@ -14,12 +14,12 @@ void			term_mode(char *p, int arg_cols, int arg_rows)
 
 	if ((term = getenv("TERM")) == NULL)
 	{
-		ft_putendl_fd(strerror(errno), 2);
+		ft_putendl_fd("Error: getenv", 2);
 		exit(1);
 	}
 	if (tgetent(buf, term) != 1)
 	{
-		ft_putendl_fd(strerror(errno), 2);
+		ft_putendl_fd("Error: tgetent", 2);
 		exit(1);
 	}
 	cptr = buf;
@@ -49,8 +49,10 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 
 		else if (key == ESC)
 			esc(&pos, cursor, shell);
+		else if (key == BKS)
+			backspace(&pos, cursor);
 		else if (key == DEL)
-			del(&pos, cursor);
+			delete(&pos, cursor);
 		else if (key == LF || key == CTRLC)
 		{
 			ft_putchar_fd('\n', 1);
@@ -60,7 +62,7 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 		{
 			if ((*cursor)->next == NULL && (*cursor)->prev == NULL)
 				return (key);
-			ctrl_d(&pos, cursor);
+			delete(&pos, cursor);
 		}
 		else if (ft_isprint(key))
 			insert(cursor, key, &pos);
