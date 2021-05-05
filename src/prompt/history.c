@@ -19,6 +19,7 @@ void		save_history(t_dlist *line, t_shell *shell)
 	if (*buf != '\0')
 	{
 		ft_putendl_fd(buf, fd);
+		shell->hist_lst = ft_dlsttop(shell->hist_lst);
 		ft_dlstinsert(&shell->hist_lst, ft_dlstnew(buf));
 	}
 	else
@@ -31,7 +32,7 @@ static void	clear_input(t_pos *pos, t_dlist **cursor)
 	move_to_end(pos, cursor);
 	while (pos->max_lf < pos->cursor)
 		del(pos, cursor);
-	
+
 	init_pos(pos, "minishell$ ");
 	*cursor = ft_dlsttop(*cursor);
 	ft_dlstclear(cursor, free);

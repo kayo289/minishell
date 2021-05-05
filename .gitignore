@@ -3,4 +3,6 @@ a.out
 *.a
 *.h.gch
 .minishell_history
+.minishell_clipboard
 src/.minishell_history
+src/.minishell_clipboard

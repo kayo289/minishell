@@ -18,13 +18,9 @@ void		del(t_pos *pos, t_dlist **cursor)
 	if (pos->max_lf < pos->cursor)
 	{
 		tmp = *cursor;
-		if ((*cursor)->prev != NULL)
-			(*cursor)->prev->next = (*cursor)->next;
-		if ((*cursor)->next != NULL)
-			(*cursor)->next->prev = (*cursor)->prev;
-		pos->max_rg--;
 		move_to_lf(pos, cursor);
 		term_mode("dc", -1, -1);
+		pos->max_rg--;
 		ft_dlstdelone(tmp, free);
 	}
 }
