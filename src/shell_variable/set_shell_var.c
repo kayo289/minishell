@@ -1,46 +1,33 @@
 #include "../../includes/minishell.h"
 
-static t_param *create_param(char *param)
-{
-	t_param *p;
-	char **str;
-	char *tmp;
-	int i;
-
-	str = ft_split(param, '=');
-	p = (t_param *)malloc(sizeof(t_param));
-	p->key = ft_strdup(str[0]);
-	p->value = ft_strdup("");
-	i = 1;
-	while (str[i] != NULL)
-	{
-		tmp = p->value;
-		p->value = ft_strjoin(p->value, str[i++]);
-		free(tmp);
-	}
-	dp_free(str);
-	return (p);
-}
-
 void set_shell_var(t_shell *this, char *param)
 {
-	t_param	*p;
-	//t_param *tmp;
 	t_list	*lst;
+	char	*tmp;
+	char	*var;
+	char	*name;
 	int		h;
 
-	p = create_param(param);
-	h = hash(p->key);
+	name = get_param_name(param);
+	h = hash(name);
 	lst = this->var[h];
 	while (lst != NULL)
 	{
-		if (ft_strcmp(((t_param *)lst->content)->key, p->key) == EQUAL)
+		var = get_param_name(lst->content);
+		if (ft_strcmp(var, name) == EQUAL)
 		{
-			param_free((t_param *)lst->content);
-			lst->content = p;
+			tmp = lst->content;
+			lst->content = ft_strdup(param);
+			set_environ(this, name);
+			free(tmp);
+			free(name);
+			free(var);
 			return;
 		}
+		free(var);
 		lst = lst->next;
 	}
-	ft_lstadd_back(&this->var[h], ft_lstnew(p));
+	free(name);
+	ft_lstadd_back(&this->var[h], ft_lstnew(ft_strdup(param)));
+	return;
 }

@@ -22,7 +22,7 @@ void minishell_end(t_shell *shell)
 	i = 0;
 	while (i < HASH_SIZE)
 	{
-		ft_lstclear(&shell->var[i], param_free);
+		ft_lstclear(&shell->var[i], free);
 		i++;
 	}
 	shell->hist_lst = ft_dlsttop(shell->hist_lst);

@@ -19,13 +19,6 @@ void ip_free(void *content)
 	free((t_ip *)content);
 }
 
-void param_free(void *content)
-{
-	free(((t_param *)content)->key);
-	free(((t_param *)content)->value);
-	free((t_param *)content);
-}
-
 void data_free(void *content)
 {
 	t_queue queue;
