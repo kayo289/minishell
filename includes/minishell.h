@@ -220,6 +220,7 @@ void	err_syntax(t_ip *ip, t_shell *shell);
 void	err_notfound(char *cmd, t_shell *shell);
 void	err_badfd(int n, t_shell *shell);
 void	err_errno(char *s, char *arg);
+void	err_cstmmsg(char *s, char *msg);
 
 // free
 void	dp_free(char **str);
