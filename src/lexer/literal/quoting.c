@@ -10,19 +10,24 @@ static void double_quote(t_dlist **line, t_ip *ip, t_shell *shell)
 {
 	char *val;
 
-	while (next_ch(line, ip) != '\"')
+	next_ch(line, ip);
+	while (ip->ch != '\"')
 	{
 		if (ip->ch == '\0')
 			break;
-		else if (ip->ch == '$')
+		if (ip->ch == '$')
 		{
 			if ((val = expand_parameter(line, ip, shell)) != NULL)
 				ip->id_string = ft_strjoin(ip->id_string, val);
 		}
-		else if (ip->ch == '\\')
-			escape_character(line, ip);
 		else
-			ft_charjoin(&ip->id_string, ip->ch);
+		{
+			if (ip->ch == '\\')
+				escape_character(line, ip);
+			else
+				ft_charjoin(&ip->id_string, ip->ch);
+			next_ch(line, ip);
+		}
 	}
 }
 

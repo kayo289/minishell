@@ -28,17 +28,15 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell)
 
 	key = ft_calloc(sizeof(char), 1);
 	next_ch(line, ip);
-	if (ip->ch == '\0')
-	{
+	if (!ft_issnack_case(ip->ch))
 		return ("$");
-	}
-	if (ip->ch == '{')
-		brace(line, &key, ip, shell);
-	else if (ip->ch == '?')
+	if (ip->ch == '?')
 	{
 		next_ch(line, ip);
 		return (ft_itoa(shell->exit_status));
 	}
+	if (ip->ch == '{')
+		brace(line, &key, ip, shell);
 	else
 	{
 		while (ft_issnack_case(ip->ch))
