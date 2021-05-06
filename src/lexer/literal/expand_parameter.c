@@ -30,8 +30,7 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell)
 	next_ch(line, ip);
 	if (ip->ch == '\0')
 	{
-		ft_charjoin(&ip->id_string, '$');
-		return (NULL);
+		return ("$");
 	}
 	if (ip->ch == '{')
 		brace(line, &key, ip, shell);
