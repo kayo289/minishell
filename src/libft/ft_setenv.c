@@ -49,7 +49,6 @@ int	ft_setenv(char *name, char *value)
 	{
 		if (!ft_strncmp(*ep, name, namelen) && (*ep)[namelen] == '=')
 		{
-			free(*ep);
 			*ep = new_value;
 			return (0);
 		}

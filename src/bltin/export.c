@@ -67,8 +67,7 @@ static void show_env(void)
 
 int minishell_export(char **argv, t_shell *shell)
 {
-	char **str;
-	char *value;
+	char *name;
 	int i;
 
  	if (argv[1] == NULL)
@@ -80,13 +79,9 @@ int minishell_export(char **argv, t_shell *shell)
 		{
 			if (ft_strchr(argv[i], '=') != NULL)
 				set_shell_var(shell, argv[i]);
-			str = ft_split(argv[i], '=');
-			value = get_shell_var(shell, str[0]);
-			if (value == NULL)
-				value = "";
-			ft_setenv(str[0], value);
-			//setenv(str[0], value, 1);
-			dp_free(str);
+			name = get_param_name(argv[i]);
+			set_environ(shell, name);
+			free(name);
 			i++;
 		}
 	}

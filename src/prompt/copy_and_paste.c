@@ -77,5 +77,5 @@ void cut(t_pos *pos, t_dlist **cursor, t_shell *shell)
 	start = pos->select;
 	end = pos->cursor;
 	while (start++ <= end)
-		del(pos, cursor);
+		delete(pos, cursor);
 }

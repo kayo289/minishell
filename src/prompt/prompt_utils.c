@@ -11,20 +11,16 @@ void		init_pos(t_pos *pos, char *ps)
 	pos->selectp = NULL;
 }
 
-void		del(t_pos *pos, t_dlist **cursor)
+void		backspace(t_pos *pos, t_dlist **cursor)
 {
 	t_dlist *tmp;
 
 	if (pos->max_lf < pos->cursor)
 	{
 		tmp = *cursor;
-		if ((*cursor)->prev != NULL)
-			(*cursor)->prev->next = (*cursor)->next;
-		if ((*cursor)->next != NULL)
-			(*cursor)->next->prev = (*cursor)->prev;
-		pos->max_rg--;
 		move_to_lf(pos, cursor);
 		term_mode("dc", -1, -1);
+		pos->max_rg--;
 		ft_dlstdelone(tmp, free);
 	}
 }
@@ -59,20 +55,20 @@ void		insert(t_dlist **cursor, char c, t_pos *pos)
 	char	*s;
 	t_dlist *new;
 
+	ft_putchar_fd(c, 1);
 	s = ft_calloc(sizeof(char), 2);
 	s[0] = c;
 	new = ft_dlstnew(s);
 	if (pos->cursor >= pos->max_rg)
-		ft_dlstadd_back(cursor, new);
-	else
 		ft_dlstinsert(cursor, new);
+	else
+		ft_dlstadd_back(cursor, new);
 	*cursor = (*cursor)->next;
-	ft_putchar_fd(c, 1);
 	pos->max_rg++;
 	pos->cursor++;
 }
 
-void		ctrl_d(t_pos *pos, t_dlist **cursor)
+void		delete(t_pos *pos, t_dlist **cursor)
 {
 	if (pos->cursor < pos->max_rg)
 	{

@@ -28,7 +28,8 @@
 #define CTRLD		4
 #define LF			10
 #define ESC			27
-#define DEL			127
+#define DEL			126
+#define BKS			127
 #define SUCESS		1
 #define END			0
 #define ERROR		-1
@@ -44,7 +45,6 @@ typedef struct s_pos		t_pos;
 typedef struct s_ip			t_ip;
 typedef struct s_data		t_data;
 typedef struct s_gmr		t_gmr;
-typedef struct s_param		t_param;
 typedef struct s_shell		t_shell;
 typedef	struct s_stdfd		t_stdfd;
 
@@ -87,13 +87,6 @@ struct s_shell
 	char	*clipboard_path;
 	int		exit_status;
 };
-
-struct s_param
-{
-	char *key;
-	char *value;
-};
-
 
 struct  s_pos
 {
@@ -144,10 +137,10 @@ void	term_mode(char *p, int arg_cols, int arg_rows);
 
 // prompt_utils
 void	insert(t_dlist **lst, char c, t_pos *pos);
-void 	del(t_pos *pos, t_dlist **cursor);
+void 	backspace(t_pos *pos, t_dlist **cursor);
 void	esc(t_pos *pos, t_dlist **cursor, t_shell *shell);
 void	init_pos(t_pos *pos, char *ps);
-void	ctrl_d(t_pos *pos, t_dlist **cursor);
+void	delete(t_pos *pos, t_dlist **cursor);
 
 // move
 void	move_to_rg(t_pos *pos, t_dlist **cursor);
@@ -203,7 +196,7 @@ bool	lookup_bltin(char **args);
 void	assign_variable(t_queue *vars, t_shell *shell);
 
 // bltin
-int		minishell_cd(char **argv);
+int		minishell_cd(char **argv, t_shell *shell);
 int		minishell_pwd(char **argv);
 int		minishell_echo(char **argv);
 int		minishell_unset(char **argv, t_shell *shell);
@@ -211,6 +204,9 @@ int		minishell_exit(char **argv, t_shell *shell);
 int		minishell_export(char **argv, t_shell *shell);
 
 // shell_var
+char	*get_param_name(char *param);
+char	*get_param_value(char *param);
+void	set_environ(t_shell *shell, char *name);
 void	new_shell_var(t_shell *this);
 void	set_shell_var(t_shell *this, char *param);
 char	*get_shell_var(t_shell *this, char *name);

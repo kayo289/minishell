@@ -36,7 +36,7 @@ static void read_history_file(t_shell *shell)
 	char 	*path;
 	int		fd;
 
-	if ((fd = open(".minishell_history", O_RDONLY)) < 0)
+	if ((fd = open(".minishell_history", O_RDONLY | O_CREAT, S_IREAD | S_IWRITE)) < 0)
 		return;
 	path = getcwd(NULL, 0);
 	shell->histfile_path = ft_strjoin(path, "/.minishell_history");
