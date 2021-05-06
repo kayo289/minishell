@@ -25,7 +25,7 @@ int minishell_cd(char **argv, t_shell *shell)
 		new_path = getcwd(NULL, 0);
 	else
 	{
-		err_errno("cd", argv[1]);
+		err_errno("cd", new_path);
 		free(old_path);
 		return (1);
 	}
