@@ -33,10 +33,10 @@ int minishell_exit(char **argv, t_shell *shell)
 			i++;
 		}
 		n = 0;
-		str = "";
 		while (argv[1][i] != '\0')
 		{
-			str = ft_strjoin(str, &argv[1][i]);
+			str = "";
+			str = ft_strjoin(str, argv[1]);
 			if (ft_isdigit(argv[1][i]))
 			{
 				if (n * minus <= (LLONG_MAX - (long long)(argv[1][i] - '0')) / 10 ||
