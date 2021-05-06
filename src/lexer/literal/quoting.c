@@ -8,6 +8,7 @@ static void escape_character(t_dlist **line, t_ip *ip)
 
 static void double_quote(t_dlist **line, t_ip *ip, t_shell *shell)
 {
+	t_ip next_ip;
 	char *val;
 
 	while (next_ch(line, ip) != '\"')
@@ -18,8 +19,25 @@ static void double_quote(t_dlist **line, t_ip *ip, t_shell *shell)
 		{
 			if ((val = expand_parameter(line, ip, shell)) != NULL)
 				ip->id_string = ft_strjoin(ip->id_string, val);
+			if(ip->ch == '\"')
+			{
+				next_ch(line, ip);
+				return;
+			}
 		}
-		ft_charjoin(&ip->id_string, ip->ch);
+		if (ip->ch == '\\')
+		{
+			next_ch(line, &next_ip);
+			if (ft_strchr("$`\\\"", next_ip.ch) != NULL)
+				ft_charjoin(&ip->id_string, next_ip.ch);
+			else
+			{
+				ft_charjoin(&ip->id_string, ip->ch);
+				ft_charjoin(&ip->id_string, next_ip.ch);
+			}
+		}
+		else
+			ft_charjoin(&ip->id_string, ip->ch);
 	}
 }
 

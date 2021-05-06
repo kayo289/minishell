@@ -26,10 +26,12 @@
 #define CTRLY		25
 #define CTRLC		3
 #define CTRLD		4
+#define TAB			9
 #define LF			10
 #define ESC			27
 #define DEL			126
 #define BKS			127
+
 #define SUCESS		1
 #define END			0
 #define ERROR		-1

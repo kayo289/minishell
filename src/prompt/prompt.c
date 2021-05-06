@@ -64,7 +64,7 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 				return (key);
 			delete(&pos, cursor);
 		}
-		else if (ft_isprint(key))
+		else if (ft_isprint(key) || key == TAB)
 			insert(cursor, key, &pos);
 	}
 }
