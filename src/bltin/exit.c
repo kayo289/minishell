@@ -40,7 +40,6 @@ int minishell_exit(char **argv, t_shell *shell)
 				exit_err("numeric argument required");
 			i++;
 		}
-		printf("%ld\n", n);
 		shell->exit_status = n * minus;
 	}
 	exit(shell->exit_status);
