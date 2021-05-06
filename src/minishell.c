@@ -7,22 +7,19 @@ static void minishell_loop_c(t_shell *shell, char *input)
 	char *s;
 	int i;
 
-	while (1)
+	line = NULL;
+	i = 0;
+	while (input[i] != '\0')
 	{
-		line = NULL;
-		i = 0;
-		while (input[i] != '\0')
-		{
-			s = ft_calloc(sizeof(char), 2);
-			s[0] = input[i];
-			ft_dlstadd_back(&line, ft_dlstnew(s));
-			i++;
-		}
-		lexer(line, &tokens, shell);
-		parser(tokens, shell);
-		ft_dlstclear(&line, free);
-		ft_lstclear(&tokens, ip_free);
+		s = ft_calloc(sizeof(char), 2);
+		s[0] = input[i];
+		ft_dlstadd_back(&line, ft_dlstnew(s));
+		i++;
 	}
+	lexer(line, &tokens, shell);
+	parser(tokens, shell);
+	ft_dlstclear(&line, free);
+	ft_lstclear(&tokens, ip_free);
 }
 
 static void minishell_loop(t_shell *shell)
