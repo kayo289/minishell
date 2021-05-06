@@ -109,7 +109,7 @@ void			prompt(char *ps, t_dlist **line, t_shell *shell)
 	tcsetattr(STDIN_FILENO, TCSANOW, &tty_save);
 	if (ret == CTRLD)
 	{
-		ft_putendl_fd("exit", 1);
+		ft_putendl_fd("exit", 2);
 		ft_dlstclear(line, free);
 		minishell_end(shell);
 	}
