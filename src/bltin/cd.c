@@ -8,14 +8,18 @@ int minishell_cd(char **argv, t_shell *shell)
 
 	old_path = getcwd(NULL, 0);
 	if (argv[1] == NULL)
+	{
 		new_path = getenv("HOME");
+		if (ft_strcmp(new_path, "") == EQUAL)
+			return (0);
+	}
 	else
 		new_path = argv[1];
 	if (chdir(new_path) == 0)
 		new_path = getcwd(NULL, 0);
 	else
 	{
-		//ft_putendl_fd(strerror(errno), 2);
+		ft_putendl_fd(strerror(errno), 2);
 		free(old_path);
 		return (1);
 	}
