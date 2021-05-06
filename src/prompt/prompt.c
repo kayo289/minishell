@@ -77,7 +77,7 @@ static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 	while (ret != LF)
 	{
 		*line = ft_dlstnew(NULL);
-		ft_putstr_fd(ps, 1);
+		ft_putstr_fd(ps, 2);
 		term_mode("im", -1, -1);
 		ret = prompt_input(line, ps, shell);
 		term_mode("ei", -1, -1);
