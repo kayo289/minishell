@@ -44,13 +44,11 @@ int	ft_unsetenv(char *name)
 	adress = get_env_adress(name);
 	if (adress != NULL)
 	{
-		free(*adress);
-		while (*adress)
+		while (*adress != NULL)
 		{
 			*adress = *(adress + 1);
 			adress++;
 		}
-		adress++;
 	}
 	return (0);
 }
