@@ -27,9 +27,9 @@ char *expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell)
 	char *val;
 
 	key = ft_calloc(sizeof(char), 1);
-	next_ch(line, ip);
-	if (!ft_issnack_case(ip->ch))
+	if (*line == NULL || !ft_issnack_case(((char*)(*line)->content)[0]))
 		return ("$");
+	next_ch(line, ip);
 	if (ip->ch == '?')
 	{
 		next_ch(line, ip);
