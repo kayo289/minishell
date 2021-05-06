@@ -10,6 +10,36 @@ void exit_err(char *s, char *msg)
 	exit(255);
 }
 
+static int ft_isdigits(char *num)
+{
+	int i;
+
+	i = 0;
+	while(num[i] != '\0')
+	{
+		if (ft_isdigit(num[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static int calc_intarg_n(char **argv)
+{
+	int i;
+	int cnt;
+
+	i = 0;
+	cnt = 0;
+	while(argv[i] != NULL)
+	{
+		if(ft_isdigits(argv[i]) == 1)
+			cnt++;
+		i++;
+	}
+	return (cnt);
+}
+
 int minishell_exit(char **argv, t_shell *shell)
 {
 	int i;
@@ -20,7 +50,7 @@ int minishell_exit(char **argv, t_shell *shell)
 	ft_putendl_fd("exit", 2);
 	if (argv[1] != NULL)
 	{
-		if (argv[2] != NULL)
+		if (calc_intarg_n(argv) > 1)
 		{
 			err_cstmmsg("exit", "too many arguments");
 			return (1);
