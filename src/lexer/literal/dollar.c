@@ -34,6 +34,5 @@ void dollar(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
 		}
 	}
 	free(str);
-	next_ch(line, ip);
 }
 
