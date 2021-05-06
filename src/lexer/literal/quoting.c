@@ -19,8 +19,6 @@ static void double_quote(t_dlist **line, t_ip *ip, t_shell *shell)
 			if ((val = expand_parameter(line, ip, shell)) != NULL)
 				ip->id_string = ft_strjoin(ip->id_string, val);
 		}
-		else if (ip->ch == '\\')
-			escape_character(line, ip);
 		else
 			ft_charjoin(&ip->id_string, ip->ch);
 	}
@@ -32,8 +30,6 @@ static void single_quote(t_dlist **line, t_ip *ip)
 	{
 		if (ip->ch == '\0')
 			break;
-		else if (ip->ch == '\\')
-			escape_character(line, ip);
 		else
 			ft_charjoin(&ip->id_string, ip->ch);
 	}
