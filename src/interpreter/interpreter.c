@@ -12,11 +12,6 @@ static bool check_operator(t_gmr *gmr, t_shell *shell)
 		if (shell->exit_status == 0)
 			return (false);
 	}
-	else if (gmr->op == SEMICOLON_OP)
-	{
-		if (shell->exit_status != 0)
-			return (false);
-	}
 	return (true);
 }
 
