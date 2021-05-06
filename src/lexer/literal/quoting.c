@@ -17,8 +17,10 @@ static void double_quote(t_dlist **line, t_ip *ip, t_shell *shell)
 			break;
 		if (ip->ch == '$')
 		{
-			if ((val = expand_parameter(line, ip, shell)) != NULL)
-				ip->id_string = ft_strjoin(ip->id_string, val);
+			val = expand_parameter(line, ip, shell);
+			if (val == NULL)
+				val = " ";
+			ip->id_string = ft_strjoin(ip->id_string, val);
 			if(ip->ch == '\"')
 			{
 				next_ch(line, ip);
