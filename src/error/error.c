@@ -24,3 +24,13 @@ void err_badfd(int n, t_shell *shell)
 	ft_putendl_fd(": Bad file descriptor", 2);
 	shell->exit_status = 1;
 }	
+
+void err_errno(char *s, char *arg)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(strerror(errno), 2);
+}

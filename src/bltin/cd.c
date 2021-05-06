@@ -19,7 +19,7 @@ int minishell_cd(char **argv, t_shell *shell)
 		new_path = getcwd(NULL, 0);
 	else
 	{
-		ft_putendl_fd(strerror(errno), 2);
+		err_errno("cd", argv[1]);
 		free(old_path);
 		return (1);
 	}
