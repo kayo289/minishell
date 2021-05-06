@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <limits.h>
 #include <signal.h>
 #include <termios.h>
 #include <termcap.h>
