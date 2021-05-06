@@ -2,27 +2,17 @@
 
 static int strcmp_ignorecase(const char* s1, const char* s2)
 {
-    // １文字ずつ、小文字に統一して比較する。
-    // この比較が真になり続けた場合、２つの文字列は一致する。
-    while (ft_tolower(*s1) == ft_tolower(*s2)) {
-
-        // s1とs2 が同時に '\0' に到達したのなら、２つの文字列は一致している。
-        // 一方が先に '\0' に到達するケースでは、while文の条件式を満たさなくなるため、
-        // while文から脱出している。
-        if (*s1 == '\0') {
-            return 0;
-        }
-
-        ++s1;
-        ++s2;
-    }
-
-    // 一致しなくなった文字同士で比較して、
-    // s1 の側が小さいなら 0 より小さい値を、s1 の側が大きいなら 0 より大きい値を返す。
-    return ft_tolower(*s1) - ft_tolower(*s2);
+	while (ft_tolower(*s1) == ft_tolower(*s2))
+	{
+		if (*s1 == '\0')
+			return 0;
+		++s1;
+		++s2;
+	}
+	return (ft_tolower(*s1) - ft_tolower(*s2));
 }
 
-static void bubble_sort(char **tab)
+static void sort(char **tab)
 {
 	char *tmp;
 	int i;
@@ -48,67 +38,114 @@ static void bubble_sort(char **tab)
 	}
 }
 
-/* マッチング関数 */
-bool match( char * s1 , char * s2 ) {
+bool match( char * s1 , char * s2 )
+{
 
-  /* 収束条件 ① */
-  if( s1[0] == '\0' && s2[0] == '\0' ) {
-    return true;
-  }
+	if(s1[0] == '\0' && s2[0] == '\0')
+		return true;
 
-  /* '*'の処理 */
-  if( s1[0] == '*' ) {
-    if( s2[0] == '\0' ) {
-      /* '*'は０文字以上とマッチするので ⑥ */
-      return match( &s1[1] , &s2[0] );
-    }
-    else {
-      /* '*'が１文字にマッチしたかチェック */
-      if( match( &s1[1] , &s2[0] ) == true ) {
-        /* 収束条件 ⑦ */
-        return true;/* マッチしたのでtrue */
-      }
-      else {
-        /* アンマッチだったのでバックトラック ⑧ */
-        return match( &s1[0] , &s2[1] );
-      }
-    }
-  }
-
-  /* 同一文字同士で１文字マッチしたので次へ ③ */
-  /* (ここでは既に'?'や'*'は排除されている) */
-  if( s1[0] == s2[0] ) {
-    return match( &s1[1] , &s2[1] );
-  }
-
-  /* 収束条件 ② */
-  /* (異なる文字同士で１文字アンマッチだったのでfalse) */
-  return false;
-
+	if(s1[0] == '*')
+	{
+		if(s2[0] == '\0')
+			return (match(&s1[1], &s2[0]));
+		else
+		{
+			if(match(&s1[1], &s2[0]) == true)
+				return true;
+			else
+				return match(&s1[0], &s2[1]);
+		}
+	}
+	if(s1[0] == s2[0])
+		return match(&s1[1] , &s2[1]);
+	return (false);
 }
 
-void wildcard(t_ip *ip, t_list **tokens)
+static char **ft_dstrjoin(char **src, char **dest)
+{
+	char **result;
+	int i;
+	int j;
+
+	result = ft_calloc2(sizeof(char), 1);
+	if (src != NULL)
+	{
+		i = 0;
+		while (src[i] != NULL)
+		{
+			result = ft_realloc2(result, ft_strdup(src[i]));
+			i++;
+		}
+		free(src);
+	}
+	if (dest != NULL)
+	{	
+		j = 0;
+		while (dest[j] != NULL)
+		{
+			result = ft_realloc2(result, ft_strdup(dest[j]));
+			j++;
+		}
+		free(dest);
+	}
+	return (result);
+}
+
+static char **recursive(char *dty, char **str)
 {
 	DIR				*dir;
 	struct dirent	*dp;
+	struct stat		st;
 	char			**store;
-	int				i;
-
-	if ((dir = opendir(".")) == NULL)
+	char			*s;
+	char			*tmp;
+	
+	store = ft_calloc2(sizeof(char *), 1);
+	if ((dir = opendir(dty)) == NULL)
 	{
 		ft_putendl_fd(strerror(errno), 2);
-		return ;
+		return (NULL);
 	}
-	store = ft_calloc2(sizeof(char *), 1);
 	while ((dp = readdir(dir)) != NULL)
 	{
 		if (dp->d_name[0] == '.')
 			continue;
-		if (match(ip->id_string, dp->d_name))
-			store = ft_realloc2(store, ft_strdup(dp->d_name));
+		if (match(*str, dp->d_name))
+		{
+			if (*(str + 1) == NULL)
+				store = ft_realloc2(store, ft_strdup(dp->d_name));
+			else
+			{
+				if (stat(dp->d_name, &st) != 0)
+					continue;
+				if ((st.st_mode & S_IFMT) == S_IFDIR)
+					store = ft_dstrjoin(store, recursive(dp->d_name, str+1));
+				else
+				{
+					tmp = ft_strjoin(dty, "/");
+					s = ft_strjoin(tmp, dp->d_name);
+					free(tmp);
+					store = ft_realloc2(store, s);
+				}
+			}
+		}
 	}
 	closedir(dir);
-	bubble_sort(store);
+	return (store);
+}
+
+
+void wildcard(t_ip *ip, t_list **tokens)
+{
+	char 	**store;
+	char 	**str;
+	int		i;
+
+	str = ft_split(ip->id_string, '/');
+	store = recursive(".", str);
+	if (store == NULL)
+		return;
+	sort(store);
 	i = -1;
 	while (store[++i] != NULL)
 	{
