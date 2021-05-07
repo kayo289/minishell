@@ -57,7 +57,26 @@ void minishell_end(t_shell *shell)
 int main(int argc, char **argv)
 {
 	t_shell shell;
+	extern char **environ;
+	char **ep;
+	char *tmp;
+	int shlvl;
 
+	if (environ != NULL)
+	{
+		ep = environ;
+		while (*ep != NULL)
+		{
+			if (!ft_strncmp(*ep, "SHLVL", 5))
+			{
+				shlvl = ft_atoi(getenv("SHLVL"));
+				tmp = ft_itoa(shlvl + 1);
+				*ep = ft_strjoin("SHLVL=", tmp);
+				free(tmp);
+			}
+			ep++;
+		}
+	}
 	new_shell_var(&shell);
 	if (argc > 2 && ft_strncmp("-c", argv[1], 3) == 0)
 		minishell_loop_c(&shell, argv[2]);
