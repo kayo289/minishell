@@ -1,5 +1,8 @@
 #include "../../includes/minishell.h"
 
+#define LIMIT			(LLONG_MAX / 10)
+#define POSITIVE_LAST_D	(LLONG_MAX % 10)
+
 void exit_err(char *s, char *msg)
 {
 	ft_putstr_fd("minishell: ", 2);
@@ -42,10 +45,10 @@ static int calc_intarg_n(char **argv)
 
 int minishell_exit(char **argv, t_shell *shell)
 {
+	long long n;
+	long long last_d;
 	int i;
-	long long int n;
-	int minus;
-	char *str;
+	int sign;
 
 	ft_putendl_fd("exit", 2);
 	if (argv[1] != NULL)
@@ -55,31 +58,36 @@ int minishell_exit(char **argv, t_shell *shell)
 			err_cstmmsg("exit", "too many arguments");
 			return (1);
 		}
-		minus = 1;
+		sign = 1;
+		last_d = POSITIVE_LAST_D;
 		i = 0;
 		if (argv[1][i] == '-')
 		{
-			minus = -1;
+			sign = -1;
+			last_d++;
 			i++;
 		}
+		else if (argv[1][i] == '+')
+			i++;
 		n = 0;
 		while (argv[1][i] != '\0')
 		{
-			str = "";
-			str = ft_strjoin(str, argv[1]);
 			if (ft_isdigit(argv[1][i]))
 			{
-				if (n * minus <= (LLONG_MAX - (long long)(argv[1][i] - '0')) / 10 ||
-					n * minus >= (LLONG_MIN - (long long)(argv[1][i] - '0')) / 10)
-					n = n * 10 + (argv[1][i] - '0');
-				else
-					exit_err(str, "numeric argument required");
+				if (n >= LIMIT)
+				{
+					if (n > LIMIT || (argv[1][i] - '0') > last_d)
+						exit_err(argv[1], "numeric argument required");
+				}
+				n = n * 10 + (argv[1][i] - '0');
 			}
 			else
-				exit_err(str, "numeric argument required");
+				exit_err(argv[1], "numeric argument required");
 			i++;
 		}
-		shell->exit_status = n * minus;
+		if (n > 255)
+			n = 255;
+		shell->exit_status = n * sign;
 	}
 	exit(shell->exit_status);
 	return (0);
