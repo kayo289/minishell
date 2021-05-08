@@ -13,6 +13,29 @@ void exit_err(char *s, char *msg)
 	exit(255);
 }
 
+static int ft_isdigits(char *num)
+{
+	int i;
+	char *n;
+
+	i = 0;
+	n = ft_strtrim(num, " ");
+	while(n[i] != '\0')
+	{
+		if (ft_isdigit(n[i]) == 0)
+		{
+			free(n);
+			return (0);
+		}
+		i++;
+	}
+	free(n);
+	if (i == 0)
+		return (0);
+	else
+		return (1);
+}
+
 int minishell_exit(char **argv, t_shell *shell)
 {
 	long long n;
@@ -29,6 +52,7 @@ int minishell_exit(char **argv, t_shell *shell)
 			j++;
 		sign = 1;
 		last_d = POSITIVE_LAST_D;
+		n = 0;
 		i = 0;
 		if (argv[j][i] == '-')
 		{
@@ -38,9 +62,13 @@ int minishell_exit(char **argv, t_shell *shell)
 		}
 		else if (argv[j][i] == '+')
 			i++;
-		n = 0;
+		if (ft_isdigits(&argv[j][i]) == 0)
+			exit_err(argv[j], "numeric argument required");
+		argv[j] = ft_strtrim(argv[j], " ");
 		while (argv[j][i] != '\0')
 		{
+			while(argv[j][i] == ' ')
+				i++;
 			if (ft_isdigit(argv[j][i]))
 			{
 				if (n >= LIMIT)
