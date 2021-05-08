@@ -89,8 +89,8 @@ int minishell_exit(char **argv, t_shell *shell)
 				exit_err(argv[j], "numeric argument required");
 			i++;
 		}
-		if (n - 1 == INT_MAX)
-			shell->exit_status = 0;
+		if (n - 1 == INT_MAX || n - 2 == INT_MAX)
+			shell->exit_status = n - 1 - INT_MAX;
 		else if (n > 255)
 			shell->exit_status = 255;
 		else
