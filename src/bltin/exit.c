@@ -48,6 +48,7 @@ int minishell_exit(char **argv, t_shell *shell)
 	long long n;
 	long long last_d;
 	int i;
+	int j;
 	int sign;
 
 	ft_putendl_fd("exit", 2);
@@ -58,31 +59,34 @@ int minishell_exit(char **argv, t_shell *shell)
 			err_cstmmsg("exit", "too many arguments");
 			return (1);
 		}
+		j = 1;
+		if (ft_strcmp(argv[j], "--") == 0)
+			j++;
 		sign = 1;
 		last_d = POSITIVE_LAST_D;
 		i = 0;
-		if (argv[1][i] == '-')
+		if (argv[j][i] == '-')
 		{
 			sign = -1;
 			last_d++;
 			i++;
 		}
-		else if (argv[1][i] == '+')
+		else if (argv[j][i] == '+')
 			i++;
 		n = 0;
-		while (argv[1][i] != '\0')
+		while (argv[j][i] != '\0')
 		{
-			if (ft_isdigit(argv[1][i]))
+			if (ft_isdigit(argv[j][i]))
 			{
 				if (n >= LIMIT)
 				{
-					if (n > LIMIT || (argv[1][i] - '0') > last_d)
-						exit_err(argv[1], "numeric argument required");
+					if (n > LIMIT || (argv[j][i] - '0') > last_d)
+						exit_err(argv[j], "numeric argument required");
 				}
-				n = n * 10 + (argv[1][i] - '0');
+				n = n * 10 + (argv[j][i] - '0');
 			}
 			else
-				exit_err(argv[1], "numeric argument required");
+				exit_err(argv[j], "numeric argument required");
 			i++;
 		}
 		if (n > 255)
