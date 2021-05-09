@@ -17,71 +17,46 @@ static int ft_isdigits(char *num)
 {
 	int i;
 	char *n;
+	int flag;
 
 	i = 0;
+	flag = 0;
 	n = ft_strtrim(num, " ");
+	if (num[i] == '+' || num[i] == '-')
+		i++;
 	while(n[i] != '\0')
 	{
-		if (ft_isdigit(n[i]) == 0)
-		{
-			free(n);
+		if (ft_isdigit(n[i]) == 1)
+			flag = 1;
+		else
 			return (0);
-		}
 		i++;
 	}
 	free(n);
-	if (i == 0)
-		return (0);
-	else
-		return (1);
+	return (flag);
 }
 
 int minishell_exit(char **argv, t_shell *shell)
 {
 	long long n;
-	long long last_d;
-	int i;
-	int j;
 	int sign;
+	int j;
 
 	ft_putendl_fd("exit", 2);
 	if (argv[1] != NULL)
 	{
 		j = 1;
+		// printf("----\n");
 		if (ft_strcmp(argv[j], "--") == 0)
 			j++;
-		sign = 1;
-		last_d = POSITIVE_LAST_D;
-		n = 0;
-		i = 0;
-		if (argv[j][i] == '-')
-		{
+		n = ft_atoi(argv[j]);
+		if (n < 0)
 			sign = -1;
-			last_d++;
-			i++;
-		}
-		else if (argv[j][i] == '+')
-			i++;
-		if (ft_isdigits(&argv[j][i]) == 0)
+		else
+			sign = 1;
+		n *= sign;
+		if (errno == ERANGE || ft_isdigits(argv[j]) == 0)
 			exit_err(argv[j], "numeric argument required");
-		argv[j] = ft_strtrim(argv[j], " ");
-		while (argv[j][i] != '\0')
-		{
-			while(argv[j][i] == ' ')
-				i++;
-			if (ft_isdigit(argv[j][i]))
-			{
-				if (n >= LIMIT)
-				{
-					if (n > LIMIT || (argv[j][i] - '0') > last_d)
-						exit_err(argv[j], "numeric argument required");
-				}
-				n = n * 10 + (argv[j][i] - '0');
-			}
-			else
-				exit_err(argv[j], "numeric argument required");
-			i++;
-		}
 		if (argv[j + 1])
 		{
 			err_cstmmsg("exit", "too many arguments");
@@ -89,10 +64,12 @@ int minishell_exit(char **argv, t_shell *shell)
 		}
 		if (n - 1 == INT_MAX || (n - 2 == INT_MAX && sign == 1))
 			shell->exit_status = n - 1 - INT_MAX;
-		else if (n > 255)
+		else if (n == LLONG_MIN)
+			shell->exit_status = 0;
+		else if (n > 255 || sign == -1)
 			shell->exit_status = 255;
 		else
-			shell->exit_status = n * sign;
+			shell->exit_status = n;
 	}
 	exit(shell->exit_status);
 	return (0);
