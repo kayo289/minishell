@@ -8,6 +8,7 @@ static int	is_space(int c)
 	else
 		return (0);
 }
+
 long long	ft_atoi(const char *str)
 {
 	int			i;
@@ -31,11 +32,11 @@ long long	ft_atoi(const char *str)
 		if (ans > LLONG_MAX && minus == 1)
 		{
 			errno = ERANGE;
-			return (-1);
+			return (LLONG_MAX);
 		}else if (ans - 1 > LLONG_MAX && minus == -1)
 		{
 			errno = ERANGE;
-			return (0);
+			return ((LLONG_MIN));
 		}
 	}
 	return (ans * minus);
