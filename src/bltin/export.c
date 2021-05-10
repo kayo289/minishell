@@ -24,6 +24,20 @@ static void bubble_sort(char **tab, int n)
 	}
 }
 
+static void print_env(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != 0)
+	{
+		if (ft_strchr("\'\"\\$`",str[i]) != NULL)
+			ft_putstr_fd("\\", 1);
+		ft_putchar_fd(str[i], 1);
+		i++;
+	}
+}
+
 static void show_env(void)
 {
 	extern char **environ;
@@ -50,7 +64,7 @@ static void show_env(void)
 		{
 			j = 1;
 			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(str[j++], 1);
+			print_env(str[j++]);
 			while (str[j] != NULL)
 			{
 				ft_putstr_fd("=", 1);
@@ -81,7 +95,7 @@ static int has_err(char *argv)
 	int i;
 
 	i = 0;
-	if (!ft_isalpha(argv[i]))
+	if (argv[i] != '_' && !ft_isalpha(argv[i]))
 		return (1);
 	return (0);
 }
