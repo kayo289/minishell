@@ -38,7 +38,7 @@ static void sort(char **tab)
 	}
 }
 
-bool match( char * s1 , char * s2 )
+bool match(char *s1, char *s2)
 {
 
 	if(s1[0] == '\0' && s2[0] == '\0')
@@ -135,7 +135,7 @@ static char **recursive(char *dty, char **str)
 }
 
 
-void wildcard(t_ip *ip, t_list **tokens)
+void wildcard(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	char 	**store;
 	char 	**str;
@@ -152,7 +152,7 @@ void wildcard(t_ip *ip, t_list **tokens)
 		ip->sy = IDENTIFY;
 		ip->id_string = store[i];
 		if (store[i + 1] != NULL)
-			save_token(ip, tokens);
+			save_token(line, ip, tokens);
 	}
 	free(store);
 }

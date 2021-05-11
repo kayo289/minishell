@@ -29,7 +29,7 @@ void data_free(void *content)
 	queue = ((t_data *)content)->fds; 
 	while (!q_empty(&queue))
 		deq(&queue);
-	free(((t_data *)content)->args);
+	free(((t_data *)content)->words);
 	free((t_data *)content);
 }
 

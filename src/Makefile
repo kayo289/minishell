@@ -16,10 +16,8 @@ NAME_SRC = \
 	lexer/lexer.c \
 	lexer/literal/literal.c \
 	lexer/literal/quoting.c \
-	lexer/literal/dollar.c \
-	lexer/literal/wildcard.c \
-	lexer/literal/expand_parameter.c \
 	lexer/metacharacter/metacharacter.c \
+	lexer/literal/wildcard.c \
 	parser/parser.c \
 	interpreter/interpreter.c \
 	interpreter/exec_pipeline.c \
@@ -27,9 +25,10 @@ NAME_SRC = \
 	interpreter/cmds_execute.c \
 	interpreter/bltin_execute.c \
 	interpreter/assign_variable.c \
-	interpreter/signal.c \
+	interpreter/expansion.c \
 	interpreter/redirect.c \
 	interpreter/here_documents.c \
+	interpreter/signal.c \
 	shell_variable/get_shell_var.c \
 	shell_variable/set_shell_var.c \
 	shell_variable/new_shell_var.c \

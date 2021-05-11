@@ -1,5 +1,6 @@
 #include "../includes/minishell.h"
 
+/*
 static void minishell_loop_c(t_shell *shell, char *input)
 {
 	t_dlist *line;
@@ -16,11 +17,12 @@ static void minishell_loop_c(t_shell *shell, char *input)
 		ft_dlstadd_back(&line, ft_dlstnew(s));
 		i++;
 	}
-	lexer(line, &tokens, shell);
+	lexer(line, &tokens);
 	parser(tokens, shell);
 	ft_dlstclear(&line, free);
 	ft_lstclear(&tokens, ip_free);
 }
+*/
 
 static void minishell_loop(t_shell *shell)
 {
@@ -30,10 +32,10 @@ static void minishell_loop(t_shell *shell)
 	while (1)
 	{
 		prompt("minishell$ ", &line, shell);
-		lexer(line, &tokens, shell);
+		lexer(line, &tokens);
 		parser(tokens, shell);
 		ft_dlstclear(&line, free);
-		ft_lstclear(&tokens, ip_free);
+		//ft_lstclear(&tokens, ip_free);
 	}
 } 
 
@@ -56,11 +58,11 @@ void minishell_end(t_shell *shell)
 
 int main(int argc, char **argv)
 {
-	t_shell shell;
 	extern char **environ;
 	char **ep;
 	char *tmp;
 	int shlvl;
+	t_shell shell;
 
 	if (environ != NULL)
 	{
@@ -79,7 +81,8 @@ int main(int argc, char **argv)
 	}
 	new_shell_var(&shell);
 	if (argc > 2 && ft_strncmp("-c", argv[1], 3) == 0)
-		minishell_loop_c(&shell, argv[2]);
+		return 0;
+		//minishell_loop_c(&shell, argv[2]);
 	else
 		minishell_loop(&shell);
 	minishell_end(&shell);

@@ -37,7 +37,7 @@ static void meta_semicolon(t_dlist **line, t_ip *ip, t_list **tokens)
 		next_ch(line, &next_ip);
 	if (next_ip.ch == '}')
 	{
-		save_token(ip, tokens);
+		save_token(line, ip, tokens);
 		ft_charjoin(&ip->id_string, '}');
 		ip->sy = RIGHT_BRACE;
 		next_ch(line, ip);

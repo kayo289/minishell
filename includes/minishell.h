@@ -107,13 +107,14 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
+	t_dlist		*id_dlst;
 };
 
 struct s_data
 {
 	t_queue		vars;
 	t_queue		fds;
-	char		**args;
+	t_list		*words;
 };
 
 struct	s_gmr
@@ -166,19 +167,17 @@ void	history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell);
 void	save_history(t_dlist *line, t_shell *shell);
 
 // lexer
-void	lexer(t_dlist *line, t_list **tokens, t_shell *shell);
-void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
-void	save_token(t_ip *ip, t_list **tokens);
+void	lexer(t_dlist *line, t_list **tokens);
+void	get_token(t_dlist **line, t_ip *ip, t_list **tokens);
+void	save_token(t_dlist **line, t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
 
-//		literal
-void	literal(t_dlist **line, t_ip *ip, t_list **tokens,t_shell *shell);
-char	*expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell);
-void	quoting(t_dlist **line, t_ip *ip, t_shell *shell);
-void	dollar(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
-void	wildcard(t_ip *ip, t_list **tokens);
-//		metachcharacter
+//	literal
+void	literal(t_dlist **line, t_ip *ip, t_list **tokens);
+void	quoting(t_dlist **line, t_ip *ip);
+void	wildcard(t_dlist **line, t_ip *ip, t_list **tokens);
 
+//	metachcharacter
 void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 
 // parser
@@ -188,15 +187,16 @@ void	parser(t_list *tokens, t_shell *shell);
 void	interpreter(t_list *gmrs, t_shell *shell);
 void	exec_pipeline(t_list *datas, int ppfd[], t_shell *shell);
 void	exec_simplecmd(t_list *datas, t_shell *shell);
+bool	lookup_bltin(char **args);
 void	bltin_execute(char **args, t_shell *shell);
 void	cmds_execute(char **args, t_shell *shell);
+void	assign_variable(t_queue *vars, t_shell *shell);
+char	**expansion(t_list *words, t_shell *shell);
 void	redirect(t_queue *fds, t_shell *shell);
 void	here_documents(char *word, t_shell *shell);
 void	set_signal(void);
 void	set_signal_ign(void);
 void	set_signal_dfl(void);
-bool	lookup_bltin(char **args);
-void	assign_variable(t_queue *vars, t_shell *shell);
 
 // bltin
 int		minishell_cd(char **argv, t_shell *shell);
