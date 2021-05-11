@@ -6,7 +6,6 @@ int minishell_cd(char **argv, t_shell *shell)
 	char *new_path;
 	char *old_path;
 
-	
 	if (argv[1] == NULL)
 	{
 		new_path = getenv("HOME");
@@ -14,7 +13,7 @@ int minishell_cd(char **argv, t_shell *shell)
 			return (0);
 		if (new_path == NULL)
 		{
-			err_cstmmsg("cd", "HOME not set");
+			err_cstmmsg("cd", NULL, "HOME not set");
 			return (1);
 		}
 	}

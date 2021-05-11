@@ -35,10 +35,15 @@ void err_errno(char *s, char *arg)
 	ft_putendl_fd(strerror(errno), 2);
 }
 
-void err_cstmmsg(char *s, char *msg)
+void err_cstmmsg(char *s, char *c, char *msg)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd(": ", 2);
+	if (c != NULL)
+	{
+		ft_putstr_fd(c, 2);
+		ft_putstr_fd(": ", 2);
+	}
 	ft_putendl_fd(msg, 2);
 }
