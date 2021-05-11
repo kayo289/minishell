@@ -52,7 +52,7 @@ int minishell_exit(char **argv, t_shell *shell)
 			exit_err(argv[i], "numeric argument required");
 		if (argv[i + 1])
 		{
-			err_cstmmsg("exit", "too many arguments");
+			err_cstmmsg("exit", NULL, "too many arguments");
 			return (1);
 		}
 		shell->exit_status = n;
