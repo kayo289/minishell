@@ -1,28 +1,39 @@
 #include "../../includes/minishell.h"
 
+void ip_charjoin(t_ip *ip, char ch)
+{
+	char *s;
+	char *tmp;
+
+	s = ft_calloc(sizeof(char), 2);
+	s[0] = ch; 
+	tmp = ip->id_string;
+	ip->id_string = ft_strjoin(ip->id_string, s);
+	ft_lstadd_back(&ip->id_lst, ft_lstnew(s));
+	free(tmp);
+}
+
 char next_ch(t_dlist **line, t_ip *ip)
 {
-	if ((*line)->next != NULL)
+	if (*line != NULL)
 	{
-		*line = (*line)->next;
 		ip->ch = ((char*)(*line)->content)[0];
+		*line = (*line)->next;
 	}
 	else
 		ip->ch = '\0';
 	return (ip->ch);
 }
 
-void save_token(t_dlist **line, t_ip *ip, t_list **tokens)
+void save_token(t_ip *ip, t_list **tokens)
 {
 	t_ip	*tmp;
 
-	if ((*line)->next != NULL)
-		(*line)->prev->next = NULL;
 	tmp = malloc(sizeof(t_ip));
 	*tmp = *ip;
 	ft_lstadd_back(tokens, ft_lstnew(tmp));
 	ip->id_string = ft_calloc(sizeof(char), 1);
-	ip->id_dlst = *line;
+	ip->id_lst = NULL;
 }
 
 void get_token(t_dlist **line, t_ip *ip, t_list **tokens)
@@ -44,20 +55,20 @@ static void brace(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	if (ip->ch == '{')
 	{
-		ft_charjoin(&ip->id_string, '{');
+		ip_charjoin(ip, '{');
 		next_ch(line, ip);
 		if (ip->ch == ' ')
 		{
 			ip->sy = LEFT_BRACE; 
-			save_token(line, ip, tokens);
+			save_token(ip, tokens);
 			next_ch(line, ip);
 		}
 	}
 	else if (ip->ch == '}')
 	{
-		ft_charjoin(&ip->id_string, '}');
+		ip_charjoin(ip, '}');
 		ip->sy = RIGHT_BRACE; 
-		save_token(line, ip, tokens);
+		save_token(ip, tokens);
 		next_ch(line, ip);
 	}
 }
@@ -68,16 +79,16 @@ void lexer(t_dlist *line, t_list **tokens)
 
 	*tokens = NULL;
 	ip.id_string = ft_calloc(sizeof(char), 1);
-	ip.id_dlst = line->next;
+	ip.id_lst = NULL;
 	next_ch(&line, &ip);
 
 	brace(&line, &ip, tokens);
 	while (ip.ch != '\0')
 	{
 		get_token(&line, &ip, tokens);
-		save_token(&line, &ip, tokens);
+		save_token(&ip, tokens);
 	}
 	get_token(&line, &ip, tokens);
-	save_token(&line, &ip, tokens);
+	save_token(&ip, tokens);
 	free(ip.id_string);
 }

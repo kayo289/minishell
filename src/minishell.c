@@ -1,28 +1,24 @@
 #include "../includes/minishell.h"
 
-/*
 static void minishell_loop_c(t_shell *shell, char *input)
 {
 	t_dlist *line;
 	t_list	*tokens;
-	char *s;
-	int i;
+	char	*s;
 
 	line = NULL;
-	i = 0;
-	while (input[i] != '\0')
+	while (*input != '\0')
 	{
 		s = ft_calloc(sizeof(char), 2);
-		s[0] = input[i];
+		s[0] = *input;
 		ft_dlstadd_back(&line, ft_dlstnew(s));
-		i++;
+		input++;
 	}
 	lexer(line, &tokens);
 	parser(tokens, shell);
 	ft_dlstclear(&line, free);
 	ft_lstclear(&tokens, ip_free);
 }
-*/
 
 static void minishell_loop(t_shell *shell)
 {
@@ -35,7 +31,7 @@ static void minishell_loop(t_shell *shell)
 		lexer(line, &tokens);
 		parser(tokens, shell);
 		ft_dlstclear(&line, free);
-		//ft_lstclear(&tokens, ip_free);
+		ft_lstclear(&tokens, ip_free);
 	}
 } 
 
@@ -81,8 +77,7 @@ int main(int argc, char **argv)
 	}
 	new_shell_var(&shell);
 	if (argc > 2 && ft_strncmp("-c", argv[1], 3) == 0)
-		return 0;
-		//minishell_loop_c(&shell, argv[2]);
+		minishell_loop_c(&shell, argv[2]);
 	else
 		minishell_loop(&shell);
 	minishell_end(&shell);

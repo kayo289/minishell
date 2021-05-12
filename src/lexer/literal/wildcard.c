@@ -135,7 +135,7 @@ static char **recursive(char *dty, char **str)
 }
 
 
-void wildcard(t_dlist **line, t_ip *ip, t_list **tokens)
+void wildcard(t_ip *ip, t_list **tokens)
 {
 	char 	**store;
 	char 	**str;
@@ -152,7 +152,7 @@ void wildcard(t_dlist **line, t_ip *ip, t_list **tokens)
 		ip->sy = IDENTIFY;
 		ip->id_string = store[i];
 		if (store[i + 1] != NULL)
-			save_token(line, ip, tokens);
+			save_token(ip, tokens);
 	}
 	free(store);
 }

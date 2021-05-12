@@ -2,7 +2,7 @@
 
 static void dollar(t_dlist **line, t_ip *ip)
 {
-	ft_charjoin(&ip->id_string, ip->ch);
+	ip_charjoin(ip, ip->ch);
 	next_ch(line, ip);
 	if (ip->ch == '{')
 	{
@@ -10,14 +10,14 @@ static void dollar(t_dlist **line, t_ip *ip)
 		{
 			if (ip->ch == '\0')
 				break;
-			ft_charjoin(&ip->id_string, ip->ch);
+			ip_charjoin(ip, ip->ch);
 		}
 	}
 	else
 	{
 		while (ft_issnack_case(ip->ch)) 
 		{
-			ft_charjoin(&ip->id_string, ip->ch);
+			ip_charjoin(ip, ip->ch);
 			next_ch(line, ip);
 		}
 	}
@@ -27,7 +27,7 @@ static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	while (ft_isdigit(ip->ch))
 	{
-		ft_charjoin(&ip->id_string, ip->ch);
+		ip_charjoin(ip, ip->ch);
 		next_ch(line, ip);
 	}
 	if (ip->ch == '>' || ip->ch == '<')
@@ -36,7 +36,7 @@ static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
 
 static void string(t_dlist **line, t_ip *ip)
 {
-	ft_charjoin(&ip->id_string, ip->ch);
+	ip_charjoin(ip, ip->ch);
 	next_ch(line, ip);
 }
 
@@ -55,5 +55,5 @@ void literal(t_dlist **line, t_ip *ip, t_list **tokens)
 			string(line, ip);
 	}
 	if (ft_strchr(ip->id_string, '*') != NULL)
-		wildcard(line, ip, tokens);
+		wildcard(ip, tokens);
 }

@@ -15,6 +15,7 @@ void dp_free(char **str)
 
 void ip_free(void *content)
 {
+	ft_lstclear(&((t_ip *)content)->id_lst, free);
 	free(((t_ip *)content)->id_string);
 	free((t_ip *)content);
 }
@@ -29,7 +30,7 @@ void data_free(void *content)
 	queue = ((t_data *)content)->fds; 
 	while (!q_empty(&queue))
 		deq(&queue);
-	free(((t_data *)content)->words);
+	//ft_lstclear(&((t_data *)content)->words, free);
 	free((t_data *)content);
 }
 

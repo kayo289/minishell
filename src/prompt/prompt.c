@@ -99,6 +99,7 @@ void			prompt(char *ps, t_dlist **line, t_shell *shell)
 	struct termios	tty;
 	struct termios	tty_save;
 	int				ret;
+	t_dlist			*tmp;
 
 	tcgetattr(STDIN_FILENO, &tty);
 	tty_save = tty;
@@ -114,7 +115,9 @@ void			prompt(char *ps, t_dlist **line, t_shell *shell)
 	}
 	else if (ret == LF)
 	{
-		*line = ft_dlsttop(*line);
-		save_history((*line)->next, shell);
+		tmp = ft_dlsttop(*line);
+		*line = tmp->next;
+		ft_dlstdelone(tmp, free);
+		save_history(*line, shell);
 	}
 }

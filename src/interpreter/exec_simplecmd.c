@@ -44,5 +44,6 @@ void exec_simplecmd(t_list *datas, t_shell *shell)
 		bltin_execute(args, shell);
 	else
 		externalcmd_execute(args, shell);
+	dp_free(args);
 }
 

@@ -107,7 +107,7 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
-	t_dlist		*id_dlst;
+	t_list		*id_lst;
 };
 
 struct s_data
@@ -169,13 +169,14 @@ void	save_history(t_dlist *line, t_shell *shell);
 // lexer
 void	lexer(t_dlist *line, t_list **tokens);
 void	get_token(t_dlist **line, t_ip *ip, t_list **tokens);
-void	save_token(t_dlist **line, t_ip *ip, t_list **tokens);
+void	save_token(t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
+void	ip_charjoin(t_ip *ip, char ch);
 
 //	literal
 void	literal(t_dlist **line, t_ip *ip, t_list **tokens);
 void	quoting(t_dlist **line, t_ip *ip);
-void	wildcard(t_dlist **line, t_ip *ip, t_list **tokens);
+void	wildcard(t_ip *ip, t_list **tokens);
 
 //	metachcharacter
 void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
@@ -227,7 +228,6 @@ void	err_cstmmsg(char *s, char *c, char *msg);
 void	dp_free(char **str);
 void	ip_free(void *content);
 void	param_free(void *content);
-void	data_free(void *content);
 void	gmr_free(void *content);
 
 #endif
