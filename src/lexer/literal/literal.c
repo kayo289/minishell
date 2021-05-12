@@ -1,10 +1,33 @@
 #include "../../../includes/minishell.h"
 
+static void dollar(t_dlist **line, t_ip *ip)
+{
+	ip_charjoin(ip, ip->ch);
+	next_ch(line, ip);
+	if (ip->ch == '{')
+	{
+		while (next_ch(line, ip) != '}')
+		{
+			if (ip->ch == '\0')
+				break;
+			ip_charjoin(ip, ip->ch);
+		}
+	}
+	else
+	{
+		while (ft_issnack_case(ip->ch)) 
+		{
+			ip_charjoin(ip, ip->ch);
+			next_ch(line, ip);
+		}
+	}
+}
+
 static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	while (ft_isdigit(ip->ch))
 	{
-		ft_charjoin(&ip->id_string, ip->ch);
+		ip_charjoin(ip, ip->ch);
 		next_ch(line, ip);
 	}
 	if (ip->ch == '>' || ip->ch == '<')
@@ -13,21 +36,21 @@ static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
 
 static void string(t_dlist **line, t_ip *ip)
 {
-	ft_charjoin(&ip->id_string, ip->ch);
+	ip_charjoin(ip, ip->ch);
 	next_ch(line, ip);
 }
 
-void literal(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell)
+void literal(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	ip->sy = IDENTIFY;
-	while (ft_strchr("|><;& \0", ip->ch) == NULL)
+	while (ft_strchr("|><;& \t\0", ip->ch) == NULL)
 	{
 		if (ft_isdigit(ip->ch))
 			numeric(line, ip, tokens);
 		else if (ip->ch == '$')
-			dollar(line, ip, tokens, shell);
+			dollar(line, ip);
 		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
-			quoting(line, ip, shell);
+			quoting(line, ip);
 		else
 			string(line, ip);
 	}

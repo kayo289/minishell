@@ -9,9 +9,10 @@ static void exec_pipeline_error(t_shell *shell)
 static void exec_pipeline_child(t_list *datas, int pfd[], int ppfd[], t_shell *shell)
 {
 	t_data *data;
+	char	**args;
 
 	data = (t_data *)datas->content;
-	if (data->args[0] == NULL)
+	if (data->words == NULL)
 		assign_variable(&data->vars, shell);
 	else
 	{
@@ -25,11 +26,12 @@ static void exec_pipeline_child(t_list *datas, int pfd[], int ppfd[], t_shell *s
 		close(pfd[0]);
 		close(pfd[1]);
 
+		args = expansion(data->words, shell);
 		redirect(&data->fds, shell);
-		if (lookup_bltin(data->args))
-			bltin_execute(data->args, shell);
+		if (lookup_bltin(args))
+			bltin_execute(args, shell);
 		else
-			cmds_execute(data->args, shell);
+			cmds_execute(args, shell);
 	}
 	minishell_end(shell);
 }

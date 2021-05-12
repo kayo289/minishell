@@ -5,7 +5,7 @@ static void meta_or(t_dlist **line, t_ip *ip)
 	next_ch(line, ip);
 	if (ip->ch == '|')
 	{
-		ft_charjoin(&ip->id_string, ip->ch);
+		ip_charjoin(ip, ip->ch);
 		ip->sy = OROR;
 		next_ch(line, ip);
 	}
@@ -18,7 +18,7 @@ static void meta_and(t_dlist **line, t_ip *ip)
 	next_ch(line, ip);
 	if (ip->ch == '&')
 	{
-		ft_charjoin(&ip->id_string, ip->ch);
+		ip_charjoin(ip, ip->ch);
 		ip->sy = ANDAND;
 		next_ch(line, ip);
 	}
@@ -38,7 +38,7 @@ static void meta_semicolon(t_dlist **line, t_ip *ip, t_list **tokens)
 	if (next_ip.ch == '}')
 	{
 		save_token(ip, tokens);
-		ft_charjoin(&ip->id_string, '}');
+		ip_charjoin(ip, '}');
 		ip->sy = RIGHT_BRACE;
 		next_ch(line, ip);
 	}
@@ -74,7 +74,7 @@ static void meta_redirect(t_dlist **line, t_ip *ip)
 
 void metacharacter(t_dlist **line, t_ip *ip, t_list **tokens)
 {
-	ft_charjoin(&ip->id_string, ip->ch);
+	ip_charjoin(ip, ip->ch);
 	if (ip->ch == '|')
 		meta_or(line, ip);
 	else if (ip->ch == '&')

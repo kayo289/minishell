@@ -44,7 +44,7 @@ void interpreter(t_list *gmrs, t_shell *shell)
 	while (gmrs != NULL)
 	{
 		gmr = (t_gmr *)gmrs->content;
-		get_stdfd(&stdfd);
+		set_stdfd(&stdfd);
 		if (run)
 		{
 			pipe(pfd);
@@ -53,7 +53,7 @@ void interpreter(t_list *gmrs, t_shell *shell)
 			else if (gmr->exec_env == SUBSHELL)
 				exec_pipeline(gmr->datas, pfd, shell);
 		}
-		set_stdfd(&stdfd);
+		get_stdfd(&stdfd);
 		run = check_operator(gmr, shell);
 		gmrs = gmrs->next;
 	}

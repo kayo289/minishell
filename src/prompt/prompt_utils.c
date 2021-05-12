@@ -59,7 +59,7 @@ void		insert(t_dlist **cursor, char c, t_pos *pos)
 	s = ft_calloc(sizeof(char), 2);
 	s[0] = c;
 	new = ft_dlstnew(s);
-	if (pos->cursor >= pos->max_rg)
+	if (pos->cursor < pos->max_rg)
 		ft_dlstinsert(cursor, new);
 	else
 		ft_dlstadd_back(cursor, new);

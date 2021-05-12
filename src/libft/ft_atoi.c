@@ -9,11 +9,11 @@ static int	is_space(int c)
 		return (0);
 }
 
-int	ft_atoi(const char *str)
+long long	ft_atoi(const char *str)
 {
 	int			i;
 	int			minus;
-	long long	ans;
+	unsigned long long	ans;
 
 	ans = 0;
 	minus = 1;
@@ -29,10 +29,15 @@ int	ft_atoi(const char *str)
 	while (str[i] && ft_isdigit(str[i]))
 	{
 		ans = ans * 10 + (str[i++] - '0');
-		if (ans * minus > 2147483647)
-			return (-1);
-		else if (ans * minus < -2147483648)
-			return (0);
+		if (ans > LLONG_MAX && minus == 1)
+		{
+			errno = ERANGE;
+			return (LLONG_MAX);
+		}else if (ans - 1 > LLONG_MAX && minus == -1)
+		{
+			errno = ERANGE;
+			return ((LLONG_MIN));
+		}
 	}
-	return ((int)ans * minus);
+	return (ans * minus);
 }

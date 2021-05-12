@@ -4,6 +4,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <errno.h>
+# include <limits.h>
 
 #define __GNU_SOURCE
 # include <unistd.h>
@@ -40,7 +41,7 @@ char				*ft_strnstr(const char *str, const char *to_find, size_t n);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_substr(char const *s, size_t start, size_t len);
-int					ft_atoi(const char *str);
+long long			ft_atoi(const char *str);
 int					ft_isalpha(int n);
 int					ft_isdigit(int n);
 int					ft_isalnum(int n);

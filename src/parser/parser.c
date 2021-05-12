@@ -13,7 +13,7 @@ static void simple_command(t_ip *ip, t_list **tokens, t_data **data)
 	*data = malloc(sizeof(t_data));
 	(*data)->fds = NULL;
 	(*data)->vars = NULL;
-	(*data)->args = ft_calloc2(sizeof(char *), 1);
+	(*data)->words = NULL;
 
 	while (ip->sy == IDENTIFY)
 	{
@@ -27,7 +27,7 @@ static void simple_command(t_ip *ip, t_list **tokens, t_data **data)
 	while (ip->sy == IDENTIFY || ip->sy == REDIRECT)
 	{
 		if (ip->sy == IDENTIFY)
-			(*data)->args = ft_realloc2((*data)->args, ip->id_string);
+			ft_lstadd_back(&(*data)->words, ft_lstnew(ip->id_lst));
 		else if (ip->sy == REDIRECT)
 		{
 			enq(&(*data)->fds, ip->id_string);

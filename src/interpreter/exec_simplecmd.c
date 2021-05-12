@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void not_bltin_execute(char **args, t_shell *shell)
+static void externalcmd_execute(char **args, t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
@@ -30,17 +30,20 @@ static void not_bltin_execute(char **args, t_shell *shell)
 void exec_simplecmd(t_list *datas, t_shell *shell)
 {
 	t_data	*data;
+	char	**args;
 
 	data = datas->content;
-	if (data->args[0] == NULL)
+	if (data->words == NULL)
 	{
 		assign_variable(&data->vars, shell);
 		return;
 	}
+	args = expansion(data->words, shell);
 	redirect(&data->fds, shell);
-	if (lookup_bltin(data->args))
-		bltin_execute(data->args, shell);
+	if (lookup_bltin(args))
+		bltin_execute(args, shell);
 	else
-		not_bltin_execute(data->args, shell);
+		externalcmd_execute(args, shell);
+	dp_free(args);
 }
 

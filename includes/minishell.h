@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <limits.h>
 #include <signal.h>
 #include <termios.h>
 #include <termcap.h>
@@ -26,10 +27,12 @@
 #define CTRLY		25
 #define CTRLC		3
 #define CTRLD		4
+#define TAB			9
 #define LF			10
 #define ESC			27
 #define DEL			126
 #define BKS			127
+
 #define SUCESS		1
 #define END			0
 #define ERROR		-1
@@ -104,13 +107,14 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
+	t_list		*id_lst;
 };
 
 struct s_data
 {
 	t_queue		vars;
 	t_queue		fds;
-	char		**args;
+	t_list		*words;
 };
 
 struct	s_gmr
@@ -163,19 +167,18 @@ void	history_prev(t_pos *pos, t_dlist **cursor, t_shell *shell);
 void	save_history(t_dlist *line, t_shell *shell);
 
 // lexer
-void	lexer(t_dlist *line, t_list **tokens, t_shell *shell);
-void	get_token(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
+void	lexer(t_dlist *line, t_list **tokens);
+void	get_token(t_dlist **line, t_ip *ip, t_list **tokens);
 void	save_token(t_ip *ip, t_list **tokens);
 char	next_ch(t_dlist **line, t_ip *ip);
+void	ip_charjoin(t_ip *ip, char ch);
 
-//		literal
-void	literal(t_dlist **line, t_ip *ip, t_list **tokens,t_shell *shell);
-char	*expand_parameter(t_dlist **line, t_ip *ip, t_shell *shell);
-void	quoting(t_dlist **line, t_ip *ip, t_shell *shell);
-void	dollar(t_dlist **line, t_ip *ip, t_list **tokens, t_shell *shell);
+//	literal
+void	literal(t_dlist **line, t_ip *ip, t_list **tokens);
+void	quoting(t_dlist **line, t_ip *ip);
 void	wildcard(t_ip *ip, t_list **tokens);
-//		metachcharacter
 
+//	metachcharacter
 void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
 
 // parser
@@ -185,15 +188,16 @@ void	parser(t_list *tokens, t_shell *shell);
 void	interpreter(t_list *gmrs, t_shell *shell);
 void	exec_pipeline(t_list *datas, int ppfd[], t_shell *shell);
 void	exec_simplecmd(t_list *datas, t_shell *shell);
+bool	lookup_bltin(char **args);
 void	bltin_execute(char **args, t_shell *shell);
 void	cmds_execute(char **args, t_shell *shell);
+void	assign_variable(t_queue *vars, t_shell *shell);
+char	**expansion(t_list *words, t_shell *shell);
 void	redirect(t_queue *fds, t_shell *shell);
 void	here_documents(char *word, t_shell *shell);
 void	set_signal(void);
 void	set_signal_ign(void);
 void	set_signal_dfl(void);
-bool	lookup_bltin(char **args);
-void	assign_variable(t_queue *vars, t_shell *shell);
 
 // bltin
 int		minishell_cd(char **argv, t_shell *shell);
@@ -217,12 +221,13 @@ int		hash(char *name);
 void	err_syntax(t_ip *ip, t_shell *shell);
 void	err_notfound(char *cmd, t_shell *shell);
 void	err_badfd(int n, t_shell *shell);
+void	err_errno(char *s, char *arg);
+void	err_cstmmsg(char *s, char *c, char *msg);
 
 // free
 void	dp_free(char **str);
 void	ip_free(void *content);
 void	param_free(void *content);
-void	data_free(void *content);
 void	gmr_free(void *content);
 
 #endif
