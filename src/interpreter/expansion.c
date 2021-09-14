@@ -111,21 +111,10 @@ static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell
 		if (ch == '\0')
 			break;
 		if (ch == '$')
-		{
 			dollar(word, arg, args, shell);
-			ch = now_word(word);
-		}
-		else 
-		{
-			if (ch == '\\')
-			{
-				ch = next_word(word);
-				if (ft_strchr("$`\"\\", ch) == NULL)
-					ft_charjoin(arg, '\\');
-			}	
+		else
 			ft_charjoin(arg, ch);
-			ch = next_word(word);
-		}
+		ch = next_word(word);
 	}
 	next_word(word);
 }
