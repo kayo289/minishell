@@ -24,6 +24,20 @@ static void bubble_sort(char **tab, int n)
 	}
 }
 
+static void print_env(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != 0)
+	{
+		if (ft_strchr("\'\"\\$`",str[i]) != NULL)
+			ft_putstr_fd("\\", 1);
+		ft_putchar_fd(str[i], 1);
+		i++;
+	}
+}
+
 static void show_env(void)
 {
 	extern char **environ;
@@ -50,7 +64,7 @@ static void show_env(void)
 		{
 			j = 1;
 			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(str[j++], 1);
+			print_env(str[j++]);
 			while (str[j] != NULL)
 			{
 				ft_putstr_fd("=", 1);
@@ -65,6 +79,27 @@ static void show_env(void)
 	free(tab);
 }
 
+static void identifier_err(char *s, char *c, char *msg, t_shell *shell)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd(": `", 2);
+	ft_putstr_fd(c, 2);
+	ft_putstr_fd("': ", 2);
+	ft_putendl_fd(msg, 2);
+	shell->exit_status = 1;
+}
+
+static int has_err(char *argv)
+{
+	int i;
+
+	i = 0;
+	if (argv[i] != '_' && !ft_isalpha(argv[i]))
+		return (1);
+	return (0);
+}
+
 int minishell_export(char **argv, t_shell *shell)
 {
 	char *name;
@@ -77,11 +112,19 @@ int minishell_export(char **argv, t_shell *shell)
 		i = 1;
 		while (argv[i] != NULL)
 		{
-			if (ft_strchr(argv[i], '=') != NULL)
-				set_shell_var(shell, argv[i]);
-			name = get_param_name(argv[i]);
-			set_environ(shell, name);
-			free(name);
+			if (has_err(argv[i]) == 1)
+			{
+				identifier_err("export", argv[i], "not a valid identifier", shell);
+				return (1);
+			}
+			else
+			{
+				if (ft_strchr(argv[i], '=') != NULL)
+					set_shell_var(shell, argv[i]);
+				name = get_param_name(argv[i]);
+				set_environ(shell, name);
+				free(name);
+			}
 			i++;
 		}
 	}

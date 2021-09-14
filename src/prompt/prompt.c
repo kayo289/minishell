@@ -64,7 +64,7 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 				return (key);
 			delete(&pos, cursor);
 		}
-		else if (ft_isprint(key))
+		else if (ft_isprint(key) || key == TAB)
 			insert(cursor, key, &pos);
 	}
 }
@@ -77,7 +77,7 @@ static int		prompt_loop(char *ps, t_dlist **line, t_shell *shell)
 	while (ret != LF)
 	{
 		*line = ft_dlstnew(NULL);
-		ft_putstr_fd(ps, 1);
+		ft_putstr_fd(ps, 2);
 		term_mode("im", -1, -1);
 		ret = prompt_input(line, ps, shell);
 		term_mode("ei", -1, -1);
@@ -109,7 +109,7 @@ void			prompt(char *ps, t_dlist **line, t_shell *shell)
 	tcsetattr(STDIN_FILENO, TCSANOW, &tty_save);
 	if (ret == CTRLD)
 	{
-		ft_putendl_fd("exit", 1);
+		ft_putendl_fd("exit", 2);
 		ft_dlstclear(line, free);
 		minishell_end(shell);
 	}
