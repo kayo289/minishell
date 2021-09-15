@@ -141,7 +141,7 @@ static void escape(t_list **word, char **arg)
 	next_word(word);
 }
 
-char **expansion(t_list *words, t_shell *shell)
+char **expansion(t_list *words, t_shell *shell, bool quote)
 {
 	char	**args;
 	char	*arg;
@@ -158,11 +158,11 @@ char **expansion(t_list *words, t_shell *shell)
 		{
 			while (ch == ' ')
 				ch = next_word(&word);
-			if (ch == '\'')
+			if (quote && ch == '\'')
 				single_quote(&word, &arg);
-			else if (ch == '\"')
+			else if (quote && ch == '\"')
 				double_quote(&word, &arg, &args, shell);
-			else if (ch == '\\')
+			else if (quote && ch == '\\')
 				escape(&word, &arg);
 			else if (ch == '$')
 				dollar(&word, &arg, &args, shell);

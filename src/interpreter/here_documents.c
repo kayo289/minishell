@@ -1,28 +1,39 @@
 #include "../../includes/minishell.h"
 
-void here_documents(char *word, t_shell *shell)
+void here_documents(char *end_word, t_shell *shell)
 {
-	char	*line;
+	t_dlist *line;
+	t_dlist *tmp;
+	t_list *word;
+	char	**content;
 	int		pfd[2];
 
 	pipe(pfd);
 	while (1)
 	{
-		ft_putstr_fd("> ", 1);
-		get_next_line(0, &line);
-		if  (ft_strcmp(line, word) == EQUAL)
+		prompt("> ", &line, shell);
+		tmp = line;
+		word = NULL;
+		while(line != NULL)
 		{
-			free(line);
+			ft_lstadd_back(&word, ft_lstnew(line->content));
+			line = line->next;
+		}
+		content = expansion(ft_lstnew(word), shell, false);
+		if  (ft_strcmp(*content, end_word) == EQUAL)
+		{
 			dup2(pfd[0], 0);
+			free(content);
+			ft_dlstclear(&tmp, free);
 			close(pfd[0]);
 			close(pfd[1]);
 			return;
 		}
-		ft_putendl_fd(line, pfd[1]);
-		free(line);
+		ft_putendl_fd(*content, pfd[1]); 
+		free(content);
+		ft_dlstclear(&tmp, free);
 	}
 	return;
-	(void)shell;
 }
 
 /*
@@ -93,6 +104,7 @@ void here_documents(char *word, t_shell *shell)
 			return;
 		}
 		if (expand)
+			expansion(
 			expantion(pfd[1], line, shell);
 		else
 			ft_putendl_fd(line, pfd[1]);
