@@ -77,14 +77,12 @@ static void lists(t_ip *ip, t_list **tokens, t_list **gmrs)
 		gmr = malloc(sizeof(t_gmr));
 		gmr->datas = NULL;
 		pipeline(ip, tokens, &gmr);
-		if (ip->sy == OROR || ip->sy == ANDAND || ip->sy == SEMICOLON)
+		if (ip->sy == OROR || ip->sy == ANDAND)
 		{
 			if (ip->sy == OROR)
 				gmr->op = OROR_OP;
 			else if (ip->sy == ANDAND)
 				gmr->op = ANDAND_OP;
-			else if (ip->sy == SEMICOLON)
-				gmr->op = SEMICOLON_OP;
 			next_token(ip, tokens);
 		}
 		else
@@ -101,16 +99,7 @@ void parser(t_list *tokens, t_shell *shell)
 	
 	ip = *(t_ip *)tokens->content;
 	gmrs = NULL;
-	if (ip.sy == LEFT_BRACE)
-	{
-		next_token(&ip, &tokens);
-		lists(&ip, &tokens, &gmrs);
-		if (ip.sy == RIGHT_BRACE)
-			next_token(&ip, &tokens);
-	}
-	else
-		lists(&ip, &tokens, &gmrs);
-
+	lists(&ip, &tokens, &gmrs);
 	if (ip.sy == INPUT_END)
 		interpreter(gmrs, shell);
 	else

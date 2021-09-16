@@ -29,9 +29,9 @@ static void exec_pipeline_child(t_list *datas, int pfd[], int ppfd[], t_shell *s
 		args = expansion(data->words, shell, true);
 		redirect(&data->fds, shell);
 		if (lookup_bltin(args))
-			bltin_execute(args, shell);
+			execute_bltin(args, shell);
 		else
-			cmds_execute(args, shell);
+			execute_cmds(args, shell);
 	}
 	minishell_end(shell);
 }

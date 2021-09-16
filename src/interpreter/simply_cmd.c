@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-static void externalcmd_execute(char **args, t_shell *shell)
+static void execute_extern_cmd(char **args, t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
@@ -15,7 +15,7 @@ static void externalcmd_execute(char **args, t_shell *shell)
 	else if (pid == 0)
 	{
 		set_signal_dfl();
-		cmds_execute(args, shell);
+		execute_cmds(args, shell);
 	}
 	else if (pid > 0)
 	{
@@ -41,9 +41,9 @@ void exec_simplecmd(t_list *datas, t_shell *shell)
 	args = expansion(data->words, shell, true);
 	redirect(&data->fds, shell);
 	if (lookup_bltin(args))
-		bltin_execute(args, shell);
+		execute_bltin(args, shell);
 	else
-		externalcmd_execute(args, shell);
+		execute_extern_cmd(args, shell);
 	dp_free(args);
 }
 

@@ -70,7 +70,6 @@ enum u_token
 
 enum u_operator
 {
-	SEMICOLON_OP,
 	ANDAND_OP,
 	OROR_OP,
 	NEWLINE_OP
@@ -179,7 +178,7 @@ void	quoting(t_dlist **line, t_ip *ip);
 void	wildcard(t_ip *ip, t_list **tokens);
 
 //	metachcharacter
-void	metacharacter(t_dlist **line, t_ip *ip, t_list **tokens);
+void	metacharacter(t_dlist **line, t_ip *ip);
 
 // parser
 void	parser(t_list *tokens, t_shell *shell);
@@ -189,8 +188,8 @@ void	interpreter(t_list *gmrs, t_shell *shell);
 void	exec_pipeline(t_list *datas, int ppfd[], t_shell *shell);
 void	exec_simplecmd(t_list *datas, t_shell *shell);
 bool	lookup_bltin(char **args);
-void	bltin_execute(char **args, t_shell *shell);
-void	cmds_execute(char **args, t_shell *shell);
+void	execute_bltin(char **args, t_shell *shell);
+void	execute_cmds(char **args, t_shell *shell);
 void	assign_variable(t_queue *vars, t_shell *shell);
 char	**expansion(t_list *words, t_shell *shell, bool quote);
 void	redirect(t_queue *fds, t_shell *shell);
