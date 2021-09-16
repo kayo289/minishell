@@ -105,11 +105,13 @@ static void dollar(t_list **word, char **arg, char ***args, t_shell *shell)
 static bool is_closed(t_list **word, char **arg)
 {
 	char ch;
+	char end_ch;
 	t_list *lst;
 
 	lst = *word;
 	ch = next_word(&lst);
-	while (ch != '\'')
+	end_ch = now_word(word);
+	while (ch != end_ch)
 	{
 		if (ch == '\0')
 		{
