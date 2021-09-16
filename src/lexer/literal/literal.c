@@ -49,7 +49,7 @@ void literal(t_dlist **line, t_ip *ip, t_list **tokens)
 			numeric(line, ip);
 		else if (ip->ch == '$')
 			dollar(line, ip);
-		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
+		else if (ft_strchr("\"\'", ip->ch) != NULL)
 			quoting(line, ip);
 		else
 			string(line, ip);

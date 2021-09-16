@@ -102,23 +102,31 @@ static void dollar(t_list **word, char **arg, char ***args, t_shell *shell)
 	free(str);
 }
 
-static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell)
+static bool is_closed(t_list **word, char **arg)
 {
 	char ch;
 	t_list *lst;
 
 	lst = *word;
 	ch = next_word(&lst);
-	while (ch != '\"')
+	while (ch != '\'')
 	{
 		if (ch == '\0')
 		{
-			ft_charjoin(arg, '\"');
-			break;
+			ch = now_word(word);
+			ft_charjoin(arg, ch);
+			return false;
 		}
 		ch = next_word(&lst);
 	}
+	return true;
+}
 
+static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell)
+{
+	char ch;
+
+	is_closed(word, arg);
 	ch = next_word(word);
 	while (ch != '\"')
 	{
@@ -136,42 +144,20 @@ static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell
 static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
-	t_list *lst;
 	bool quote;
 
-	quote = false;
-	lst = *word;
-	ch = next_word(&lst);
-	while (ch != '\'')
-	{
-		if (ch == '\0')
-		{
-			quote = true;
-			ft_charjoin(arg, '\'');
-			break;
-		}
-		ch = next_word(&lst);
-	}
+	quote = is_closed(word, arg);
 	ch = next_word(word);
 	while (ch != '\'')
 	{
 		if (ch == '\0')
 			break;
-		if (quote && ch == '$')
+		if (ch == '$' && quote)
 			dollar(word, arg, args, shell);
 		else
 			ft_charjoin(arg, ch);
 		ch = next_word(word);
 	}
-	next_word(word);
-}
-
-static void escape(t_list **word, char **arg)
-{
-	char ch;
-
-	ch = next_word(word);
-	ft_charjoin(arg, ch);
 	next_word(word);
 }
 
@@ -196,8 +182,6 @@ char **expansion(t_list *words, t_shell *shell, bool quote)
 				single_quote(&word, &arg, &args, shell);
 			else if (quote && ch == '\"')
 				double_quote(&word, &arg, &args, shell);
-			else if (quote && ch == '\\')
-				escape(&word, &arg);
 			else if (ch == '$')
 				dollar(&word, &arg, &args, shell);
 			else
