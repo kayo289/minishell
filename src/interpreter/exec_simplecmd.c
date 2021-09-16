@@ -38,7 +38,7 @@ void exec_simplecmd(t_list *datas, t_shell *shell)
 		assign_variable(&data->vars, shell);
 		return;
 	}
-	args = expansion(data->words, shell);
+	args = expansion(data->words, shell, true);
 	redirect(&data->fds, shell);
 	if (lookup_bltin(args))
 		bltin_execute(args, shell);

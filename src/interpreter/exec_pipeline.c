@@ -26,7 +26,7 @@ static void exec_pipeline_child(t_list *datas, int pfd[], int ppfd[], t_shell *s
 		close(pfd[0]);
 		close(pfd[1]);
 
-		args = expansion(data->words, shell);
+		args = expansion(data->words, shell, true);
 		redirect(&data->fds, shell);
 		if (lookup_bltin(args))
 			bltin_execute(args, shell);
