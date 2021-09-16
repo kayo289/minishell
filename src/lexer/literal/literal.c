@@ -23,7 +23,7 @@ static void dollar(t_dlist **line, t_ip *ip)
 	}
 }
 
-static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
+static void numeric(t_dlist **line, t_ip *ip)
 {
 	while (ft_isdigit(ip->ch))
 	{
@@ -31,7 +31,7 @@ static void numeric(t_dlist **line, t_ip *ip, t_list **tokens)
 		next_ch(line, ip);
 	}
 	if (ip->ch == '>' || ip->ch == '<')
-		metacharacter(line, ip, tokens);
+		metacharacter(line, ip);
 }
 
 static void string(t_dlist **line, t_ip *ip)
@@ -43,13 +43,13 @@ static void string(t_dlist **line, t_ip *ip)
 void literal(t_dlist **line, t_ip *ip, t_list **tokens)
 {
 	ip->sy = IDENTIFY;
-	while (ft_strchr("|><;& \t\0", ip->ch) == NULL)
+	while (ft_strchr("|><& \t\0", ip->ch) == NULL)
 	{
 		if (ft_isdigit(ip->ch))
-			numeric(line, ip, tokens);
+			numeric(line, ip);
 		else if (ip->ch == '$')
 			dollar(line, ip);
-		else if (ft_strchr("\"\'\\", ip->ch) != NULL)
+		else if (ft_strchr("\"\'", ip->ch) != NULL)
 			quoting(line, ip);
 		else
 			string(line, ip);

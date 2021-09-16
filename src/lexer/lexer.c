@@ -45,32 +45,10 @@ void get_token(t_dlist **line, t_ip *ip, t_list **tokens)
 		ip->sy = INPUT_END;
 		return;
 	}
-	else if (ft_strchr("|&><;", ip->ch) == NULL)
+	else if (ft_strchr("|&><", ip->ch) == NULL)
 		literal(line, ip, tokens);
 	else
-		metacharacter(line, ip, tokens);
-}
-
-static void brace(t_dlist **line, t_ip *ip, t_list **tokens)
-{
-	if (ip->ch == '{')
-	{
-		ip_charjoin(ip, '{');
-		next_ch(line, ip);
-		if (ip->ch == ' ')
-		{
-			ip->sy = LEFT_BRACE; 
-			save_token(ip, tokens);
-			next_ch(line, ip);
-		}
-	}
-	else if (ip->ch == '}')
-	{
-		ip_charjoin(ip, '}');
-		ip->sy = RIGHT_BRACE; 
-		save_token(ip, tokens);
-		next_ch(line, ip);
-	}
+		metacharacter(line, ip);
 }
 
 void lexer(t_dlist *line, t_list **tokens)
@@ -82,7 +60,6 @@ void lexer(t_dlist *line, t_list **tokens)
 	ip.id_lst = NULL;
 	next_ch(&line, &ip);
 
-	brace(&line, &ip, tokens);
 	while (ip.ch != '\0')
 	{
 		get_token(&line, &ip, tokens);

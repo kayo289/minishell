@@ -17,7 +17,7 @@ bool lookup_bltin(char **args)
 	return (false);
 }
 
-void bltin_execute(char **args, t_shell *shell)
+void execute_bltin(char **args, t_shell *shell)
 {
 	int n;
 	
