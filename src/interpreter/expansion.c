@@ -152,7 +152,7 @@ static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell
 	{
 		if (ch == '\0')
 			break;
-		if (ch == '$' && quote)
+		if (ch == '$' && !quote)
 			dollar(word, arg, args, shell);
 		else
 			ft_charjoin(arg, ch);
