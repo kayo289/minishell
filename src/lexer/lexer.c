@@ -9,7 +9,6 @@ void ip_charjoin(t_ip *ip, char ch)
 	s[0] = ch; 
 	tmp = ip->id_string;
 	ip->id_string = ft_strjoin(ip->id_string, s);
-	ft_lstadd_back(&ip->id_lst, ft_lstnew(s));
 	free(tmp);
 }
 
@@ -28,6 +27,18 @@ char next_ch(t_dlist **line, t_ip *ip)
 void save_token(t_ip *ip, t_list **tokens)
 {
 	t_ip	*tmp;
+	char *s;
+	int i;
+
+
+	i = 0;
+	while (ip->id_string[i] != '\0')
+	{
+		s = ft_calloc(sizeof(char), 2);
+		s[0] = ip->id_string[i]; 
+		ft_lstadd_back(&ip->id_lst, ft_lstnew(s));
+		i++;
+	}
 
 	tmp = malloc(sizeof(t_ip));
 	*tmp = *ip;

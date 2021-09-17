@@ -6,6 +6,7 @@ static void	next_token(t_ip *ip, t_list **tokens)
 		return;
 	*tokens = (*tokens)->next;
 	*ip = *(t_ip*)(*tokens)->content;
+	//printf("%s\n", (char *)ip->id_string);
 }
 
 static void simple_command(t_ip *ip, t_list **tokens, t_data **data)
