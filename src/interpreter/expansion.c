@@ -14,10 +14,7 @@ static char next_word(t_list **word)
 	if (*word != NULL)
 	{
 		*word = (*word)->next;
-		if (*word != NULL)
-			ch = ((char *)(*word)->content)[0];
-		else
-			ch = '\0';
+		return now_word(word);
 	}
 	else
 		ch = '\0';
@@ -135,10 +132,15 @@ static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell
 		if (ch == '\0')
 			break;
 		if (ch == '$')
+		{
 			dollar(word, arg, args, shell);
+			ch = now_word(word);
+		}
 		else
+		{
 			ft_charjoin(arg, ch);
-		ch = next_word(word);
+			ch = next_word(word);
+		}
 	}
 	next_word(word);
 }
@@ -155,10 +157,15 @@ static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell
 		if (ch == '\0')
 			break;
 		if (ch == '$' && !quote)
+		{
 			dollar(word, arg, args, shell);
+			ch = now_word(word);
+		}
 		else
+		{
 			ft_charjoin(arg, ch);
-		ch = next_word(word);
+			ch = next_word(word);
+		}
 	}
 	next_word(word);
 }

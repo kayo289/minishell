@@ -20,8 +20,8 @@ NAME_SRC = \
 	lexer/literal/wildcard.c \
 	parser/parser.c \
 	interpreter/interpreter.c \
-	interpreter/pipeline_cmd.c \
-	interpreter/simply_cmd.c \
+	interpreter/pipeline.c \
+	interpreter/simple_command.c \
 	interpreter/execute_cmds.c \
 	interpreter/execute_bltin.c \
 	interpreter/assign_variable.c \
