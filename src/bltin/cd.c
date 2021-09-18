@@ -20,6 +20,11 @@ int minishell_cd(char **argv, t_shell *shell)
 	else
 		new_path = argv[1];
 	old_path = getcwd(NULL, 0);
+	if (argv[2] != NULL)
+	{
+		err_cstmmsg("cd", NULL, "too many arguments");
+		return (1);
+	}
 	if (chdir(new_path) == 0)
 		new_path = getcwd(NULL, 0);
 	else
