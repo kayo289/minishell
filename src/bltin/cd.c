@@ -1,10 +1,40 @@
 #include "../../includes/minishell.h"
 
+int count_first_samestr(char *str, char target)
+{
+	int c;
+	int i;
+
+	c = 0;
+	i = 0;
+	while(str[i]!='\0')
+	{
+		if (target != str[i])
+			return(c);
+		c++;
+		i++;
+	}
+	return (c);
+}
+
+// char *delete_duplicate(char *str, int c)
+// {
+// 	int i;
+
+// 	i = 1;
+// 	while(i <= c - 1)
+// 	{
+// 		i++;
+// 	}
+// 	return &str[i];
+// }
+
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *param;
 	char *new_path;
 	char *old_path;
+	int cnt;
 
 	if (argv[1] == NULL)
 	{
@@ -18,7 +48,9 @@ int minishell_cd(char **argv, t_shell *shell)
 		}
 	}
 	else
+	{
 		new_path = argv[1];
+	}
 	old_path = getcwd(NULL, 0);
 	if (argv[2] != NULL)
 	{
@@ -26,7 +58,13 @@ int minishell_cd(char **argv, t_shell *shell)
 		return (1);
 	}
 	if (chdir(new_path) == 0)
-		new_path = getcwd(NULL, 0);
+	{
+		cnt = count_first_samestr(argv[1], '/');
+		if(cnt == 2)
+			new_path = argv[1];
+		else
+			new_path = getcwd(NULL, 0);
+	}
 	else
 	{
 		err_errno("cd", new_path);
@@ -36,12 +74,10 @@ int minishell_cd(char **argv, t_shell *shell)
 	param = ft_strjoin("PWD=", new_path);
 	set_shell_var(shell, param);
 	free(param);
-	free(new_path);
 
 	param = ft_strjoin("OLD_PWD=", old_path);
 	set_shell_var(shell, param);
 	free(param);
 	free(old_path);
-
 	return (0);
 }
