@@ -79,10 +79,10 @@ static void dollar(t_list **word, char **arg, char ***args, t_shell *shell)
 	str = ft_strtrim(val, " \t\n");
 	if (ft_strchr(" \t\n", val[0]) != NULL)
 	{
-		if (**arg != '\0')
+		if (*arg != NULL)
 		{
 			*args = ft_realloc2(*args, *arg);
-			*arg = ft_calloc(sizeof(char), 1);
+			*arg = NULL;
 		}
 	}
 	tmp = *arg;
@@ -90,10 +90,10 @@ static void dollar(t_list **word, char **arg, char ***args, t_shell *shell)
 	free(tmp);
 	if (ft_strchr(" \t\n", val[ft_strlen(val) - 1]) != NULL)
 	{
-		if (**arg != '\0')
+		if (*arg != NULL)
 		{	
 			*args = ft_realloc2(*args, *arg);
-			*arg = ft_calloc(sizeof(char), 1);
+			*arg = NULL;
 		}
 	}
 	free(str);
@@ -125,6 +125,7 @@ static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell
 {
 	char ch;
 
+	*arg = ft_calloc(sizeof(char), 1);
 	is_closed(word, arg);
 	ch = next_word(word);
 	while (ch != '\"')
@@ -150,6 +151,7 @@ static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell
 	char ch;
 	bool quote;
 
+	*arg = ft_calloc(sizeof(char), 1);
 	quote = is_closed(word, arg);
 	ch = next_word(word);
 	while (ch != '\'')
@@ -180,7 +182,7 @@ char **expansion(t_list *words, t_shell *shell, bool quote)
 	args = ft_calloc2(sizeof(char), 1);
 	while (words != NULL)
 	{
-		arg = ft_calloc(sizeof(char), 1);
+		arg = NULL;
 		word = (t_list *)words->content;
 		ch = now_word(&word);
 		while (word != NULL)
@@ -200,7 +202,8 @@ char **expansion(t_list *words, t_shell *shell, bool quote)
 			}
 			ch = now_word(&word);
 		}
-		args = ft_realloc2(args, arg);
+		if (arg != NULL)
+			args = ft_realloc2(args, arg);
 		words = words->next;
 	}
 	return (args);

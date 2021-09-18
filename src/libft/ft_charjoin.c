@@ -6,6 +6,8 @@ void	ft_charjoin(char **old, char c)
 	int		len;
 	int		i;
 
+	if (*old == NULL)
+		*old = ft_calloc(sizeof(char), 1);
 	len = ft_strlen(*old);
 	new = (char *)malloc(sizeof(char) * (len + 2));
 	i = -1;

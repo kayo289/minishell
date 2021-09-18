@@ -6,12 +6,15 @@ static void dollar(t_dlist **line, t_ip *ip)
 	next_ch(line, ip);
 	if (ip->ch == '{')
 	{
+		ip_charjoin(ip, ip->ch);
 		while (next_ch(line, ip) != '}')
 		{
 			if (ip->ch == '\0')
 				break;
 			ip_charjoin(ip, ip->ch);
 		}
+		ip_charjoin(ip, ip->ch);
+		next_ch(line, ip);
 	}
 	else
 	{
