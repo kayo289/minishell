@@ -17,18 +17,6 @@ int count_first_samestr(char *str, char target)
 	return (c);
 }
 
-// char *delete_duplicate(char *str, int c)
-// {
-// 	int i;
-
-// 	i = 1;
-// 	while(i <= c - 1)
-// 	{
-// 		i++;
-// 	}
-// 	return &str[i];
-// }
-
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *param;
@@ -59,7 +47,10 @@ int minishell_cd(char **argv, t_shell *shell)
 	}
 	if (chdir(new_path) == 0)
 	{
-		cnt = count_first_samestr(argv[1], '/');
+		if (argv[1] == NULL)
+			cnt = count_first_samestr(new_path, '/');
+		else
+			cnt = count_first_samestr(argv[1], '/');
 		if(cnt == 2)
 			new_path = argv[1];
 		else
@@ -72,12 +63,13 @@ int minishell_cd(char **argv, t_shell *shell)
 		return (1);
 	}
 	param = ft_strjoin("PWD=", new_path);
+	printf("param:%s\n",param);
 	set_shell_var(shell, param);
 	free(param);
 
-	param = ft_strjoin("OLD_PWD=", old_path);
+	param = ft_strjoin("OLDPWD=", old_path);
 	set_shell_var(shell, param);
 	free(param);
-	free(old_path);
+	// free(old_path);
 	return (0);
 }
