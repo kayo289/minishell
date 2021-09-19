@@ -7,8 +7,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (s1 == NULL)
 		return (ft_strdup((char*)s2));
-	if (!s1 || !s2)
-		return (NULL);
+	else if (s2 == NULL)
+		return (ft_strdup((char*)s1));
 	len = ft_strlen(s1) + ft_strlen(s2);
 	str = ft_calloc(len + 1, sizeof(char));
 	if (!str)

@@ -125,7 +125,7 @@ static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell
 {
 	char ch;
 
-	*arg = ft_calloc(sizeof(char), 1);
+	*arg = ft_strjoin(*arg, "");
 	is_closed(word, arg);
 	ch = next_word(word);
 	while (ch != '\"')
@@ -151,7 +151,7 @@ static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell
 	char ch;
 	bool quote;
 
-	*arg = ft_calloc(sizeof(char), 1);
+	*arg = ft_strjoin(*arg, "");
 	quote = is_closed(word, arg);
 	ch = next_word(word);
 	while (ch != '\'')

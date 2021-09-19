@@ -72,6 +72,8 @@ int main(int argc, char **argv)
 				*ep = ft_strjoin("SHLVL=", tmp);
 				free(tmp);
 			}
+			if (!ft_strncmp(*ep, "OLDPWD", 6))
+				*ep = ft_strdup("OLDPWD");
 			ep++;
 		}
 	}
