@@ -42,8 +42,9 @@ void err_cstmmsg(char *s, char *c, char *msg)
 	ft_putstr_fd(": ", 2);
 	if (c != NULL)
 	{
+		ft_putstr_fd("`", 2);
 		ft_putstr_fd(c, 2);
-		ft_putstr_fd(": ", 2);
+		ft_putstr_fd("\': ", 2);
 	}
 	ft_putendl_fd(msg, 2);
 }
