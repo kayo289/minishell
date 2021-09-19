@@ -21,7 +21,6 @@ int minishell_cd(char **argv, t_shell *shell)
 {
 	char *param;
 	char *new_path;
-	char *old_path;
 	int cnt;
 
 	if (argv[1] == NULL)
@@ -39,7 +38,6 @@ int minishell_cd(char **argv, t_shell *shell)
 	{
 		new_path = argv[1];
 	}
-	old_path = getcwd(NULL, 0);
 	if (argv[2] != NULL)
 	{
 		err_cstmmsg("cd", NULL, "too many arguments");
@@ -59,15 +57,13 @@ int minishell_cd(char **argv, t_shell *shell)
 	else
 	{
 		err_errno("cd", new_path);
-		free(old_path);
 		return (1);
 	}
-	param = ft_strjoin("PWD=", new_path);
-	printf("param:%s\n",param);
+	param = ft_strjoin("OLDPWD=", getenv("PWD"));
 	set_shell_var(shell, param);
 	free(param);
 
-	param = ft_strjoin("OLDPWD=", old_path);
+	param = ft_strjoin("PWD=", new_path);
 	set_shell_var(shell, param);
 	free(param);
 	// free(old_path);
