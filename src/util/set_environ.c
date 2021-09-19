@@ -33,16 +33,19 @@ void set_environ(t_shell *shell, char *name)
 
 	param = get_shell_var(shell, name);
 	if (param == NULL)
-		return;
-	ep = environ;
-	while (*ep != NULL)
+		add_to_environ(ft_strdup(name));
+	else
 	{
-		if (!ft_strncmp(*ep, name, ft_strlen(name)))
+		ep = environ;
+		while (*ep != NULL)
 		{
-			*ep = param;
-			return ;
+			if (!ft_strncmp(*ep, name, ft_strlen(name)))
+			{
+				*ep = param;
+				return ;
+			}
+			ep++;
 		}
-		ep++;
+		add_to_environ(param);
 	}
-	add_to_environ(param);
 }

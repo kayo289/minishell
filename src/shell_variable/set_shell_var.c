@@ -6,6 +6,7 @@ void set_shell_var(t_shell *this, char *param)
 	char	*tmp;
 	char	*var;
 	char	*name;
+	char	*new_param;
 	int		h;
 
 	name = get_param_name(param);
@@ -16,8 +17,16 @@ void set_shell_var(t_shell *this, char *param)
 		var = get_param_name(lst->content);
 		if (ft_strcmp(var, name) == EQUAL)
 		{
+			if (ft_strnstr(param, "+=", ft_strlen(param)) != NULL)
+			{
+				new_param = ft_strjoin(get_param_value(lst->content), get_param_value(param));
+				new_param = ft_strjoin("=", new_param);
+				new_param = ft_strjoin(name, new_param);
+			}
+			else
+				new_param = ft_strdup(param);
 			tmp = lst->content;
-			lst->content = ft_strdup(param);
+			lst->content = new_param;
 			set_environ(this, name);
 			free(tmp);
 			free(name);

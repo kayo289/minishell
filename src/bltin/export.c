@@ -58,29 +58,34 @@ static void show_env(void)
 	while (tab[i] != NULL)
 	{
 		ft_putstr_fd("declare -x ", 1);
-		str = ft_split(tab[i], '=');
-		ft_putstr_fd(str[0], 1);
-		if (str[1] != NULL)
+		if (ft_strchr(tab[i], '=') == NULL)
+			ft_putendl_fd(tab[i], 1);
+		else
 		{
-			j = 1;
+			str = ft_split(tab[i], '=');
+			ft_putstr_fd(str[0], 1);
 			ft_putstr_fd("=\"", 1);
-			print_env(str[j++]);
-			while (str[j] != NULL)
+			if (str[1] != NULL)
 			{
-				ft_putstr_fd("=", 1);
-				ft_putstr_fd(str[j++], 1);
+				j = 1;
+				print_env(str[j++]);
+				while (str[j] != NULL)
+				{
+					ft_putstr_fd("=", 1);
+					ft_putstr_fd(str[j++], 1);
+				}
 			}
-			ft_putstr_fd("\"", 1);
+			ft_putendl_fd("\"", 1);
+			dp_free(str);
 		}
-		ft_putendl_fd("", 1);
-		dp_free(str);
 		i++;
 	}
 	free(tab);
 }
-
+/*
 static void identifier_err(char *s, char *c, char *msg, t_shell *shell)
 {
+
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd(": `", 2);
@@ -89,22 +94,15 @@ static void identifier_err(char *s, char *c, char *msg, t_shell *shell)
 	ft_putendl_fd(msg, 2);
 	shell->exit_status = 1;
 }
-
-static int has_err(char *argv)
-{
-	int i;
-
-	i = 0;
-	if (argv[i] != '_' && !ft_isalpha(argv[i]))
-		return (1);
-	return (0);
-}
+*/
 
 int minishell_export(char **argv, t_shell *shell)
 {
 	char *name;
+	char status;
 	int i;
 
+	status = 0;
  	if (argv[1] == NULL)
 		show_env();
 	else
@@ -112,10 +110,11 @@ int minishell_export(char **argv, t_shell *shell)
 		i = 1;
 		while (argv[i] != NULL)
 		{
-			if (has_err(argv[i]) == 1)
+			if (!ft_isalpha(argv[i][0]) && !(argv[i][0] == '_' && ft_isalpha(argv[i][1])))
 			{
-				identifier_err("export", argv[i], "not a valid identifier", shell);
-				return (1);
+				//identifier_err("export", argv[i], "not a valid identifier", shell);
+				err_cstmmsg("export", argv[i], "not a valid identifier");
+				status = 1;
 			}
 			else
 			{
@@ -128,5 +127,5 @@ int minishell_export(char **argv, t_shell *shell)
 			i++;
 		}
 	}
-	return (0);
+	return (status);
 }
