@@ -17,6 +17,28 @@ int count_first_samestr(char *str, char target)
 	return (c);
 }
 
+int change_dir(char *param)
+{
+	char *new_path;
+
+	if (param != NULL && getenv("CDPATH") != NULL)
+	{
+		// printf("cdpath使う");
+		new_path = ft_strjoin(getenv("CDPATH"), param);
+		// printf("new_path:%s\n",new_path);
+		if (param[0] != '/' && chdir(new_path) == 0)
+		{
+			// printf("通った");
+			ft_putendl_fd(new_path, 1);
+			return (0);
+		}
+	}
+	new_path = param;
+	if (chdir(new_path) == 0)
+		return (0);
+	return (1);
+}
+
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *param;
@@ -35,15 +57,8 @@ int minishell_cd(char **argv, t_shell *shell)
 		}
 	}
 	else
-	{
 		new_path = argv[1];
-	}
-	if (argv[1] != NULL && argv[2] != NULL)
-	{
-		err_cstmmsg("cd", NULL, "too many arguments");
-		return (1);
-	}
-	if (chdir(new_path) == 0)
+	if (change_dir(new_path) == 0)
 	{
 		if (argv[1] == NULL)
 			cnt = count_first_samestr(new_path, '/');
