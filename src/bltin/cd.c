@@ -17,7 +17,7 @@ int count_first_samestr(char *str, char target)
 	return (c);
 }
 
-int change_dir(char *param)
+int change_dir(char *param, int *is_use_cdpath)
 {
 	char *new_path;
 
@@ -25,11 +25,11 @@ int change_dir(char *param)
 	{
 		// printf("cdpath使う");
 		new_path = ft_strjoin(getenv("CDPATH"), param);
-		// printf("new_path:%s\n",new_path);
+		//printf("new_path:%s\n",new_path);
 		if (param[0] != '/' && chdir(new_path) == 0)
 		{
 			// printf("通った");
-			ft_putendl_fd(new_path, 1);
+			*is_use_cdpath = 1;
 			return (0);
 		}
 	}
@@ -44,7 +44,9 @@ int minishell_cd(char **argv, t_shell *shell)
 	char *param;
 	char *new_path;
 	int cnt;
+	int is_use_cdpath;
 
+	is_use_cdpath = 0;
 	if (argv[1] == NULL)
 	{
 		new_path = getenv("HOME");
@@ -58,16 +60,31 @@ int minishell_cd(char **argv, t_shell *shell)
 	}
 	else
 		new_path = argv[1];
-	if (change_dir(new_path) == 0)
+	if (change_dir(new_path, &is_use_cdpath) == 0)
 	{
-		if (argv[1] == NULL)
-			cnt = count_first_samestr(new_path, '/');
-		else
-			cnt = count_first_samestr(argv[1], '/');
-		if(cnt == 2)
-			new_path = argv[1];
-		else
-			new_path = getcwd(NULL, 0);
+		if (is_use_cdpath == 0)
+		{
+			if (argv[1] == NULL)
+				cnt = count_first_samestr(new_path, '/');
+			else
+				cnt = count_first_samestr(argv[1], '/');
+			if(cnt == 2)
+				new_path = argv[1];
+			else
+				new_path = getcwd(NULL, 0);
+		}else{
+			cnt = count_first_samestr(getenv("CDPATH"), '/');
+			if (cnt <= 1)
+				new_path = getcwd(NULL, 0);
+			else if(cnt == 2)
+				new_path = ft_strjoin("/", getcwd(NULL, 0));
+			else
+			{ 
+				new_path = ft_strjoin(getenv("CDPATH"), new_path);
+				new_path = &new_path[cnt - 1];
+			}
+			ft_putendl_fd(new_path, 1);
+		}
 	}
 	else
 	{
