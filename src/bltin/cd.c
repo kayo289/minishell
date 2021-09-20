@@ -38,7 +38,7 @@ int minishell_cd(char **argv, t_shell *shell)
 	{
 		new_path = argv[1];
 	}
-	if (argv[2] != NULL)
+	if (argv[1] != NULL && argv[2] != NULL)
 	{
 		err_cstmmsg("cd", NULL, "too many arguments");
 		return (1);
