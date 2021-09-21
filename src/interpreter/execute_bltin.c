@@ -3,7 +3,7 @@
 bool lookup_bltin(char **args)
 {
 	const char *bltin_name[] = {
-		"cd", "echo", "pwd", "unset", "exit", "export", NULL\
+		"cd", "echo", "pwd", "unset", "exit", "export", "env", NULL\
 	};
 	int i;
 
@@ -34,5 +34,7 @@ void execute_bltin(char **args, t_shell *shell)
 		n = minishell_exit(args, shell);
 	else if (ft_strcmp(args[0], "export") == EQUAL)
 		n = minishell_export(args, shell);
+	else if (ft_strcmp(args[0], "env") == EQUAL)
+		n = minishell_env(args);
 	shell->exit_status = n;
 }
