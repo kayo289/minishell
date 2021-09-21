@@ -32,17 +32,19 @@ static void del_shell_var(t_shell *this, char *name)
 int minishell_unset(char **argv, t_shell *shell)
 {
 	int i;
+	int status;
 
+	status = 0;
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		if (ft_unsetenv(argv[i]) < 0)
+		if (ft_isdigit(*argv[i]) || ft_unsetenv(argv[i]) < 0)
 		{
-			ft_putendl_fd(strerror(errno), 2);
-			return (1);
+			err_cstmmsg("unset", argv[i], "not a valid identifier");
+			status = 1;
 		}
 		del_shell_var(shell, argv[i]);
 		i++;
 	}
-	return (0);
+	return (status);
 }
