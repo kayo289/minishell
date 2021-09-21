@@ -46,6 +46,7 @@ NAME_SRC = \
 	src/bltin/unset.c \
 	src/bltin/export.c \
 	src/bltin/exit.c \
+	src/bltin/env.c \
 	src/error/error.c \
 	src/free/free.c \
 	src/util/set_environ.c \
@@ -53,29 +54,23 @@ NAME_SRC = \
 
 NAME_OBJ=$(NAME_SRC:.c=.o)
 
-all: $(NAME) $(CMDS)
+all: $(NAME)
 
 clean:
 	$(MAKE) clean -C ./src/libft
 	$(MAKE) clean -C ./src/queue
-	$(MAKE) clean -C ./src/cmds
 	rm -rf $(NAME_OBJ)
 
 fclean: clean
 	$(MAKE) fclean -C ./src/libft
 	$(MAKE) fclean -C ./src/queue
-	$(MAKE) fclean -C ./src/cmds
 	rm -rf $(NAME)
-	rm -rf $(CMDS)
 
 re:	fclean all
 
 
 $(NAME): $(NAME_OBJ) $(LIBFT) $(LIBQ)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(NAME_OBJ) $(LIBS)
-
-$(CMDS):
-	$(MAKE) -C ./src/cmds
 
 $(LIBFT):
 	$(MAKE) -C ./src/libft

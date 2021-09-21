@@ -205,6 +205,7 @@ int		minishell_echo(char **argv);
 int		minishell_unset(char **argv, t_shell *shell);
 int		minishell_exit(char **argv, t_shell *shell);
 int		minishell_export(char **argv, t_shell *shell);
+int		minishell_env(char **argv);
 
 // shell_var
 char	*get_param_name(char *param);
