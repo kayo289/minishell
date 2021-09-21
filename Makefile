@@ -6,12 +6,6 @@ LIBS	= -lq -lft -ltermcap
 LIBQ	= libqueue.a
 LIBFT 	= libft.a
 NAME 	= minishell
-CMDS	= \
-		src/cmds/cd \
-		src/cmds/echo \
-		src/cmds/pwd \
-		src/cmds/env \
-		src/cmds/exit
 NAME_SRC = \
 	src/lexer/lexer.c \
 	src/lexer/literal/literal.c \
@@ -45,6 +39,7 @@ NAME_SRC = \
 	src/bltin/pwd.c \
 	src/bltin/unset.c \
 	src/bltin/export.c \
+	src/bltin/env.c \
 	src/bltin/exit.c \
 	src/error/error.c \
 	src/free/free.c \
@@ -53,29 +48,23 @@ NAME_SRC = \
 
 NAME_OBJ=$(NAME_SRC:.c=.o)
 
-all: $(NAME) $(CMDS)
+all: $(NAME)
 
 clean:
 	$(MAKE) clean -C ./src/libft
 	$(MAKE) clean -C ./src/queue
-	$(MAKE) clean -C ./src/cmds
 	rm -rf $(NAME_OBJ)
 
 fclean: clean
 	$(MAKE) fclean -C ./src/libft
 	$(MAKE) fclean -C ./src/queue
-	$(MAKE) fclean -C ./src/cmds
 	rm -rf $(NAME)
-	rm -rf $(CMDS)
 
 re:	fclean all
 
 
 $(NAME): $(NAME_OBJ) $(LIBFT) $(LIBQ)
 	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(NAME_OBJ) $(LIBS)
-
-$(CMDS):
-	$(MAKE) -C ./src/cmds
 
 $(LIBFT):
 	$(MAKE) -C ./src/libft
