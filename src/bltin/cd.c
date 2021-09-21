@@ -20,17 +20,29 @@ int count_first_samestr(char *str, char target)
 int change_dir(char *param, int *is_use_cdpath)
 {
 	char *new_path;
+	char **str;
+	int i;
+	char *buf;
 
+	i = 0;
 	if (param != NULL && getenv("CDPATH") != NULL)
 	{
-		// printf("cdpath使う");
-		new_path = ft_strjoin(getenv("CDPATH"), param);
-		//printf("new_path:%s\n",new_path);
-		if (param[0] != '/' && chdir(new_path) == 0)
+		if (getenv("CDPATH")[0] == ':')
+			str = ft_split(ft_strjoin(".", getenv("CDPATH")), ':');
+		else
+			str = ft_split(getenv("CDPATH"), ':');
+		//printf("str[0]:%s]",str[0]);
+		while(str[i] && ft_strcmp(str[i], ".") != EQUAL)
 		{
-			// printf("通った");
-			*is_use_cdpath = 1;
-			return (0);
+			buf = ft_strjoin(str[i], "/");
+			new_path = ft_strjoin(buf, param);
+			//printf("[new_path:%s]",new_path);
+			if (param[0] != '/' && chdir(new_path) == 0)
+			{
+				*is_use_cdpath = 1;
+				return (0);
+			}
+			i++;
 		}
 	}
 	new_path = param;
