@@ -4,10 +4,12 @@ void err_syntax(t_ip *ip, t_shell *shell)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd("syntax error near unexpected token ", 2);
+	ft_putstr_fd("`", 2);
 	if (ip->id_string[0] == '\0')
-		ft_putendl_fd("`newline'", 2);
+		ft_putstr_fd("newline", 2);
 	else
-		ft_putendl_fd(ip->id_string, 2);
+		ft_putstr_fd(ip->id_string, 2);
+	ft_putendl_fd("\'", 2);
 	shell->exit_status = 258;
 }
 
