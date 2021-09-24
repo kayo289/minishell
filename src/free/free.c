@@ -15,7 +15,6 @@ void dp_free(char **str)
 
 void ip_free(void *content)
 {
-	ft_lstclear(&((t_ip *)content)->id_lst, free);
 	free(((t_ip *)content)->id_string);
 	free((t_ip *)content);
 }

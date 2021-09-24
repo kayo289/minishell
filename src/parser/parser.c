@@ -6,7 +6,6 @@ static void	next_token(t_ip *ip, t_list **tokens)
 		return;
 	*tokens = (*tokens)->next;
 	*ip = *(t_ip*)(*tokens)->content;
-	//printf("%s\n", (char *)ip->id_string);
 }
 
 static void simple_command(t_ip *ip, t_list **tokens, t_data **data)
@@ -28,7 +27,7 @@ static void simple_command(t_ip *ip, t_list **tokens, t_data **data)
 	while (ip->sy == IDENTIFY || ip->sy == REDIRECT)
 	{
 		if (ip->sy == IDENTIFY)
-			ft_lstadd_back(&(*data)->words, ft_lstnew(ip->id_lst));
+			ft_lstadd_back(&(*data)->words, ft_lstnew(ip->id_string));
 		else if (ip->sy == REDIRECT)
 		{
 			enq(&(*data)->fds, ip->id_string);

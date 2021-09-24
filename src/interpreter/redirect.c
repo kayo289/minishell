@@ -1,21 +1,23 @@
 #include "../../includes/minishell.h"
 
-static void gt(char *file, int n)
+static int gt(char *file, int n, t_shell *shell)
 {
 	int fd;
 
 	if (n == INIT)
 		n = STDOUT_FILENO;
-	fd = open(file, O_WRONLY | O_CREAT, S_IWRITE | S_IREAD);
+	fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IWRITE | S_IREAD);
 	if (fd == -1)
 	{
-		ft_putendl_fd(strerror(errno), 2);
-		exit(1);
+		perror("Error\n");
+		shell->exit_status = 1;
+		return FAIL;
 	}
 	dup2(fd, n);
+	return SUCCESS;
 }
 
-static void dgt(char *file, int n)
+static int dgt(char *file, int n, t_shell *shell)
 {
 	int fd;
 
@@ -24,13 +26,15 @@ static void dgt(char *file, int n)
 	fd = open(file, O_WRONLY | O_APPEND | O_CREAT, S_IWRITE | S_IREAD);
 	if (fd == -1)
 	{
-		ft_putendl_fd(strerror(errno), 2);
-		exit(1);
+		perror("Error\n");
+		shell->exit_status = 1;
+		return FAIL;
 	}
 	dup2(fd, n);
+	return SUCCESS;
 }
 
-static void lt(char *file, int n)
+static int lt(char *file, int n, t_shell *shell)
 {
 	int fd;
 
@@ -38,10 +42,15 @@ static void lt(char *file, int n)
 		n = STDIN_FILENO;
 	if ((fd = open(file, O_RDWR)) == -1)
 	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd(": ", 2);
 		ft_putendl_fd(strerror(errno), 2);
-		exit(1);
+		shell->exit_status = 1;
+		return FAIL;
 	}
 	dup2(fd, n);
+	return SUCCESS;
 }
 
 static int get_file_descriptor(char **rdt)
@@ -53,37 +62,59 @@ static int get_file_descriptor(char **rdt)
 	n = 0;
 	while (ft_isalnum(**rdt))
 	{
+		if (n > (INT_MAX - (**rdt - '0')) / 10)
+			return (OUTOFRANGE);
 		n = n * 10 + (**rdt - '0');
-		if (n > 256)
-			return (n);
 		(*rdt)++;
 	}
 	return (n);
 }
 
-void redirect(t_queue *fds, t_shell *shell)
+int redirect(t_queue *fds, t_shell *shell)
 {
 	int		n;
+	int		result;
 	char	*rdt;
-	char	*file;
+	char	*file_name;
+	char	**expand_file_name;
 
 	while (!q_empty(fds))
 	{
 		rdt = deq(fds);
-		file = deq(fds);
+		file_name = deq(fds);
 		n = get_file_descriptor(&rdt);
-		if (n > 256)
+		if (n > 256 || n == OUTOFRANGE)
 		{
-			err_badfd(n, shell);
-			return;
+			ft_putstr_fd("minishell: ", 2);
+			if (n > 256)
+				ft_putnbr_fd(n, 2);
+			else 
+				ft_putstr_fd("file descriptor out of range", 2);
+			ft_putstr_fd(": ", 2);
+			ft_putendl_fd("Bad file descriptor", 2);
+			shell->exit_status = 1;
+			return FAIL;
+		}
+		expand_file_name = expand_word(file_name, shell, true);
+		if (expand_file_name[0] == NULL || expand_file_name[1] != NULL)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(file_name, 2);
+			ft_putstr_fd(": ", 2);
+			ft_putendl_fd("ambiguous redirect", 2);
+			shell->exit_status = 1;
+			return FAIL;
 		}
 		if (ft_strcmp(rdt, ">>") == EQUAL)
-			dgt(file, n);
+			result = dgt(*expand_file_name, n, shell);
 		else if (ft_strcmp(rdt, ">") == EQUAL)
-			gt(file, n);
+			result = gt(*expand_file_name, n, shell);
 		else if (ft_strcmp(rdt, "<<") == EQUAL)
-			here_documents(file, shell);
+			here_documents(file_name, shell);
 		else if (ft_strcmp(rdt, "<") == EQUAL)
-			lt(file, n);
+			result = lt(*expand_file_name, n, shell);
+		if (result == FAIL)
+			return FAIL;
 	}
+	return SUCCESS;
 }
