@@ -38,8 +38,9 @@ void exec_simplecmd(t_list *datas, t_shell *shell)
 		assign_variable(&data->vars, shell);
 		return;
 	}
-	args = expansion(data->words, shell, true);
-	redirect(&data->fds, shell);
+	args = expand_words(data->words, shell, true);
+	if (redirect(&data->fds, shell) == FAIL)
+		return;
 	if (lookup_bltin(args))
 		execute_bltin(args, shell);
 	else

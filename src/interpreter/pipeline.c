@@ -1,11 +1,5 @@
 #include "../../includes/minishell.h"
 
-static void exec_pipeline_error(t_shell *shell)
-{
-	ft_putendl_fd(strerror(errno), 2);
-	shell->exit_status = 1;
-}
-
 static void exec_pipeline_child(t_list *datas, int pfd[], int ppfd[], t_shell *shell)
 {
 	t_data *data;
@@ -26,8 +20,9 @@ static void exec_pipeline_child(t_list *datas, int pfd[], int ppfd[], t_shell *s
 		close(pfd[0]);
 		close(pfd[1]);
 
-		args = expansion(data->words, shell, true);
-		redirect(&data->fds, shell);
+		args = expand_words(data->words, shell, true);
+		if (redirect(&data->fds, shell) == FAIL)
+			exit(shell->exit_status);
 		if (lookup_bltin(args))
 			execute_bltin(args, shell);
 		else
@@ -49,7 +44,8 @@ void exec_pipeline(t_list *datas, int ppfd[], t_shell *shell)
 	pid = fork();
 	if (pid < 0)	
 	{
-		exec_pipeline_error(shell);
+		ft_putendl_fd(strerror(errno), 2);
+		shell->exit_status = 1;
 		return;
 	}
 	else if (pid == 0)

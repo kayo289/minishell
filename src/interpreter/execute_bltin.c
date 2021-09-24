@@ -21,7 +21,7 @@ void execute_bltin(char **args, t_shell *shell)
 {
 	int n;
 	
-	n = 0;
+	n = shell->exit_status;
 	if (ft_strcmp(args[0], "cd") == EQUAL)
 		n = minishell_cd(args, shell);
 	else if (ft_strcmp(args[0], "echo") == EQUAL)
