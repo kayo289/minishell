@@ -63,7 +63,7 @@ static int			get_line(int fd, char *buf, char **line)
 	if (*p == '\n')
 	{
 		ft_strmove(buf, p + 1);
-		return (SUCESS);
+		return (SUCCESS);
 	}
 	if ((len = read(fd, buf, BUFFER_SIZE)) < 0)
 		return (ERROR);

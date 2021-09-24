@@ -4,7 +4,7 @@ void here_documents(char *end_word, t_shell *shell)
 {
 	t_dlist *line;
 	t_dlist *tmp;
-	t_list *word;
+	char	*word;
 	char	**content;
 	int		pfd[2];
 
@@ -13,13 +13,13 @@ void here_documents(char *end_word, t_shell *shell)
 	{
 		prompt("> ", &line, shell);
 		tmp = line;
-		word = NULL;
+		word = ft_calloc(sizeof(char), 1);
 		while(line != NULL)
 		{
-			ft_lstadd_back(&word, ft_lstnew(line->content));
+			ft_charjoin(&word, *(char*)line->content);
 			line = line->next;
 		}
-		content = expansion(ft_lstnew(word), shell, false);
+		content = expand_word(word, shell, false);
 		if  (ft_strcmp(*content, end_word) == EQUAL)
 		{
 			dup2(pfd[0], 0);

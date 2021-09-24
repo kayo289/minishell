@@ -17,3 +17,5 @@ unset OLDPWD && cd .. && export OLDPWD=new_value && export | grep OLDPWD
 unset PWD && cd .. && export PWD && export | grep PWD
 unset OLDPWD && cd .. && export OLDPWD && export | grep OLDPWD
 export =
+export A="    hello!" && echo$A
+export A=" ok ok ok ok ok" && echo$A
