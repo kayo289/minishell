@@ -96,8 +96,7 @@ int redirect(t_queue *fds, t_shell *shell)
 			return FAIL;
 		}
 		expand_file_name = expand_word(file_name, shell, true);
-		if (*expand_file_name == NULL ||\
-			ft_strchr(*expand_file_name, ' ') != NULL)
+		if (expand_file_name[0] == NULL || expand_file_name[1] != NULL)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(file_name, 2);
