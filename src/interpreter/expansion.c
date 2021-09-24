@@ -12,22 +12,6 @@ static char next_word(char **word)
 	return **word;
 }
 
-static void brace(char **word, char **key)
-{
-	char ch;
-
-	ch = next_word(word);
-	while (ch != '}')
-	{
-		if (ch == '\0')
-			break;
-		else
-			ft_charjoin(key, ch);
-		ch = next_word(word);
-	}
-	next_word(word);
-}
-
 char *parameter(char **word, t_shell *shell)
 {
 	char *key;
@@ -36,10 +20,6 @@ char *parameter(char **word, t_shell *shell)
 
 	key = ft_calloc(sizeof(char), 1);
 	ch = next_word(word);
-	if (ch == '{')
-		brace(word, &key);
-	else
-	{
 		if (ch == '?')
 		{
 			next_word(word);
@@ -52,7 +32,6 @@ char *parameter(char **word, t_shell *shell)
 			ft_charjoin(&key, ch);
 			ch = next_word(word);
 		}
-	}
 	val = getenv(key);
 	free(key);
 	return (val);
@@ -61,33 +40,23 @@ char *parameter(char **word, t_shell *shell)
 static void dollar(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char *val;
-	char *str;
-	char *tmp;
+	int i;
 
 	val = parameter(word, shell);
 	if (val == NULL)
 		return;
-	str = ft_strtrim(val, " \t\n");
-	if (ft_strchr(" \t\n", val[0]) != NULL)
+	i = 0;
+	while(val[i] != '\0')
 	{
-		if (*arg != NULL)
+		if (ft_strchr(" \t\n", val[i]) != NULL)
 		{
 			*args = ft_realloc2(*args, *arg);
 			*arg = NULL;
 		}
+		else
+			ft_charjoin(arg, val[i]);
+		i++;
 	}
-	tmp = *arg;
-	*arg = ft_strjoin(*arg, str);
-	free(tmp);
-	if (ft_strchr(" \t\n", val[ft_strlen(val) - 1]) != NULL)
-	{
-		if (*arg != NULL)
-		{	
-			*args = ft_realloc2(*args, *arg);
-			*arg = NULL;
-		}
-	}
-	free(str);
 }
 
 static bool is_closed(char *word, char **arg)
