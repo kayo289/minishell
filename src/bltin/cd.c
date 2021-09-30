@@ -49,6 +49,23 @@ int change_dir(char *param, int *is_use_cdpath)
 	return (1);
 }
 
+char *get_home_path(char **argv)
+{
+	char *path;
+
+	if (argv[1] == NULL)
+	{
+		path = getenv("HOME");
+		if (path == NULL)
+		{
+			err_cstmmsg("cd", NULL, "HOME not set");
+			return (NULL);	
+		}
+		return (path);
+	}
+	return (argv[1]);
+}
+
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *param;
@@ -56,20 +73,12 @@ int minishell_cd(char **argv, t_shell *shell)
 	int cnt;
 	int is_use_cdpath;
 
+	new_path = get_home_path(argv);
+	if (ft_strcmp(new_path, "") == EQUAL)
+		return (0);
+	if (new_path == NULL)
+		return (1);
 	is_use_cdpath = 0;
-	if (argv[1] == NULL)
-	{
-		new_path = getenv("HOME");
-		if (ft_strcmp(new_path, "") == EQUAL)
-			return (0);
-		if (new_path == NULL)
-		{
-			err_cstmmsg("cd", NULL, "HOME not set");
-			return (1);
-		}
-	}
-	else
-		new_path = argv[1];
 	if (change_dir(new_path, &is_use_cdpath) == 0)
 	{
 		if (is_use_cdpath == 0)
