@@ -42,6 +42,9 @@
 #define BUFFER_SIZE 1024
 #define HASH_SIZE	29999
 
+#define TRUE		1
+#define FALSE		0
+
 typedef enum u_token		t_token;
 typedef enum u_operator		t_operator;
 typedef enum u_exec_env		t_exec_env;

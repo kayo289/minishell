@@ -17,7 +17,7 @@ int count_first_samestr(char *str, char target)
 	return (c);
 }
 
-int change_dir(char *param, int *is_use_cdpath)
+int change_dir2(char *param, int *is_use_cdpath)
 {
 	char *new_path;
 	char **str;
@@ -66,6 +66,79 @@ char *get_home_path(char **argv)
 	return (argv[1]);
 }
 
+char *ft_3strjoin(char *s1, char *s2, char *s3)
+{
+	char *str;
+	char *str2;
+
+	str = ft_strjoin(s1, s2);
+	str2 = ft_strjoin(str, s3);
+	return (str2);
+}
+
+/*
+ * return absolute path
+ */
+char *get_absolute_path(char *path)
+{
+	char *new_path;
+
+	if(path[0] == "/")
+		new_path = path;
+	else
+		new_path = ft_strjoin(getenv("PWD"), path);
+	// custom absolute path
+	return (new_path);
+}
+
+int change_dir(char *path)
+{
+	char *new_path;
+
+	new_path = get_absolute_path(path);
+	//using chdir
+	if (chdir(new_path) == 0)
+	{
+		//success
+		//save pwd
+		//save oldpwd
+		return (0)
+	}
+	return (1);
+}
+
+int search_cdpath(char **argv, char *path)
+{
+	char *cdpath;
+	char **s;
+	int  i;
+
+	i = 0;
+	if (argv[1] == NULL 
+	|| ft_strcmp(path, ".") == 0
+	|| ft_strcmp(path, "..") == 0
+	|| ft_strcmp(path, "/") == 0
+	|| ft_strncmp(path, "./", 2) == 0
+	|| ft_strncmp(path, "../", 3) == 0)
+		return (FALSE);
+	str = ft_split(getenv("CDPATH"), ':');
+	while(str[i])
+	{
+		if (str[i][0] == "/")
+			cdpath = ft_strjoin(str[i], path);
+		else
+			cdpath = ft_3strjoin(getenv("PWD"), str[i], path);
+		if (change_dir(cdpath))
+		{
+			ft_putendl_fd(cdpath, 1);
+			return (TRUE)
+		}
+		//free(cdpath);
+		i++;
+	}
+	return (FLASE);
+}
+
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *param;
@@ -78,8 +151,10 @@ int minishell_cd(char **argv, t_shell *shell)
 		return (0);
 	if (new_path == NULL)
 		return (1);
+	if (search_cdpath(argv, new_path))
+		return (0);
 	is_use_cdpath = 0;
-	if (change_dir(new_path, &is_use_cdpath) == 0)
+	if (change_dir2(new_path, &is_use_cdpath) == 0)
 	{
 		if (is_use_cdpath == 0)
 		{
