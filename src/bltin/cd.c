@@ -22,13 +22,14 @@ char *path_join(char *path, char *new_path)
 	char *result_path;
 	char *tmp;
 
-	if (ft_strlen(path) == 0 || (path[ft_strlen(path) - 1] != '/' && new_path[0] != '/'))
+	if (ft_strlen(path) == 0 || path[ft_strlen(path) - 1] != '/')
 	{
 		tmp = ft_strjoin(path, "/");
 		result_path = ft_strjoin(tmp, new_path);
 	}else{
 		result_path = ft_strjoin(path, new_path);
 	}
+	//printf("[tmp:%s,result:%s]\n", tmp, result_path);
 	return (result_path);
 }
 
@@ -42,45 +43,29 @@ char *three_path_join(char *s1, char *s2, char *s3)
 	return (str2);
 }
 
-char *get_parent(char *path)
-{
-	char *result;
-
-	result = ft_substr(path, 0, ft_strrchr(path, '/') - path);
-	if (result && ft_strlen(result) == 0)
-	{
-		result = ft_strdup("/");
-	}
-	return (result);
-}
-
 char *normalize(char *path)
 {
 	char **str;
 	int i;
 	char *result;
-	struct stat buf;
 
 	i = 0;
 	str = ft_split(path, '/');
 	result = ft_strdup("/");
 	while (str[i])
 	{
-		if(ft_strncmp(str[i], "..", 3) == 0)
+		//printf("str:%s\n",str[i]);
+		if (ft_strncmp(str[i], "..", 2) == 0)
 		{
-			result = get_parent(result);
-		}else{
+			result = ft_substr(result, 0, ft_strrchr(result, '/') - result);
+		}else if (str[i][0] != '.'){
 			result = path_join(result, str[i]);
 		}
-		//printf("path:%s\n",result);
-		if (stat(result, &buf) != 0)
-			return (NULL);
-		//printf("i:%d,result:%s\n",i,result);
 		i++;
 	}
-	if (path[ft_strlen(path) - 1] == '/')
-		result = path_join(result, "/");
 	//printf("norm:result:%s\n",result);
+	if (ft_strlen(result) == 0)
+		result = ft_strdup("/");
 	if (path[0] == '/' && path[1] == '/' && path[2] != '/')
 		result = path_join("/", result);
 	return (result);
@@ -102,39 +87,21 @@ char *get_absolute_path(char *path)
 	return (norm_path);
 }
 
-void set_pwd(char *new_path, t_shell *shell)
-{
-	char *param;
-
-	param = ft_strjoin("OLDPWD=", getenv("PWD"));
-	set_shell_var(shell, param);
-
-	param = ft_strjoin("PWD=", new_path);
-	set_shell_var(shell, param);
-}
 int change_dir(char *path, t_shell *shell)
 {
 	char *new_path;
+	char *param;
 	
 	new_path = get_absolute_path(path);
 	if (chdir(new_path) == 0)
 	{
-		set_pwd(new_path, shell);
-		if (getcwd(NULL, 0) == NULL)
-		{
-			err_cstmmsg("cd", NULL, "error retrieving current directory: getcwd: cannot access parent directories: No such file or directory");
-			return (2);
-		}
-		return (0);
-	}
-	if (chdir(path) == 0)
-	{
-		set_pwd(path, shell);
-		if (!getcwd(NULL, 0))
-		{
-			err_cstmmsg("cd", NULL, "error retrieving current directory: getcwd: cannot access parent directories: No such file or directory");
-			return (2);
-		}
+		param = ft_strjoin("OLDPWD=", getenv("PWD"));
+		set_shell_var(shell, param);
+		free(param);
+
+		param = ft_strjoin("PWD=", new_path);
+		set_shell_var(shell, param);
+		free(param);
 		return (0);
 	}
 	return (1);
@@ -190,7 +157,6 @@ int search_cdpath(char **argv, char *path, t_shell *shell)
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *new_path;
-	int status;
 
 	new_path = get_home_path(argv);
 	if (ft_strcmp(new_path, "") == EQUAL)
@@ -198,15 +164,12 @@ int minishell_cd(char **argv, t_shell *shell)
 	if (new_path == NULL)
 		return (1);
 	//printf("==cdpath==\n");
-	status = search_cdpath(argv, new_path, shell);
-	if (status == 1)
+	if (search_cdpath(argv, new_path, shell))
 		return (0);
 	//printf("==normal==\n");
-	status = change_dir(new_path, shell);
-	if (status == 0)
+	if (change_dir(new_path, shell) == 0)
 		return (0);
-	if (status != 2)
-		err_errno("cd", new_path);
+	err_errno("cd", new_path);
 	// free(old_path);
 	return (1);
 }
