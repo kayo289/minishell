@@ -42,12 +42,24 @@ char *three_path_join(char *s1, char *s2, char *s3)
 	str2 = path_join(str, s3);
 	return (str2);
 }
+char *get_parent(char *path)
+{
+	char *result;
+
+	result = ft_substr(path, 0, ft_strrchr(path, '/') - path);
+	if (result && ft_strlen(result) == 0)
+	{
+		result = ft_strdup("/");
+	}
+	return (result);
+}
 
 char *normalize(char *path)
 {
 	char **str;
 	int i;
 	char *result;
+	struct stat buf;
 
 	i = 0;
 	str = ft_split(path, '/');
@@ -57,10 +69,13 @@ char *normalize(char *path)
 		//printf("str:%s\n",str[i]);
 		if (ft_strncmp(str[i], "..", 2) == 0)
 		{
-			result = ft_substr(result, 0, ft_strrchr(result, '/') - result);
+			result = get_parent(result);
 		}else if (str[i][0] != '.'){
 			result = path_join(result, str[i]);
 		}
+		if (stat(result, &buf) != 0)
+			return (NULL);
+		//printf("i:%d,result:%s\n",i, result);
 		i++;
 	}
 	//printf("norm:result:%s\n",result);
@@ -83,25 +98,41 @@ char *get_absolute_path(char *path)
 	else
 		new_path = path_join(getenv("PWD"), path);
 	norm_path = normalize(new_path);
+	if (norm_path == NULL)
+		norm_path = new_path;
 	//printf("new_path:%s,norm_path:%s\n",new_path,norm_path);
 	return (norm_path);
+}
+
+void set_pwd(char *new_path, t_shell *shell)
+{
+	char *param;
+
+	param = ft_strjoin("OLDPWD=", getenv("PWD"));
+	set_shell_var(shell, param);
+
+	param = ft_strjoin("PWD=", new_path);
+	set_shell_var(shell, param);
 }
 
 int change_dir(char *path, t_shell *shell)
 {
 	char *new_path;
-	char *param;
 	
 	new_path = get_absolute_path(path);
 	if (chdir(new_path) == 0)
 	{
-		param = ft_strjoin("OLDPWD=", getenv("PWD"));
-		set_shell_var(shell, param);
-		free(param);
+		if (!getcwd(NULL, 0))
+			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 1);
+		set_pwd(new_path, shell);
+		return (0);
+	}
 
-		param = ft_strjoin("PWD=", new_path);
-		set_shell_var(shell, param);
-		free(param);
+	if (chdir(path) == 0)
+	{
+		if (!getcwd(NULL, 0))
+			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 1);
+		set_pwd(new_path, shell);
 		return (0);
 	}
 	return (1);
@@ -157,6 +188,7 @@ int search_cdpath(char **argv, char *path, t_shell *shell)
 int minishell_cd(char **argv, t_shell *shell)
 {
 	char *new_path;
+	int status;
 
 	new_path = get_home_path(argv);
 	if (ft_strcmp(new_path, "") == EQUAL)
@@ -167,7 +199,8 @@ int minishell_cd(char **argv, t_shell *shell)
 	if (search_cdpath(argv, new_path, shell))
 		return (0);
 	//printf("==normal==\n");
-	if (change_dir(new_path, shell) == 0)
+	status = change_dir(new_path, shell);
+	if (status == 0)
 		return (0);
 	err_errno("cd", new_path);
 	// free(old_path);
