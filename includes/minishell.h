@@ -92,6 +92,7 @@ struct s_shell
 	char	*histfile_path;
 	char	*clipboard_path;
 	int		exit_status;
+	char	*pwd;
 };
 
 struct  s_pos

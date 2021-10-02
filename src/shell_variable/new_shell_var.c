@@ -13,6 +13,7 @@ static void init(t_shell *this)
 	this->histfile_path = NULL;
 	this->hist_lst = NULL;
 	this->clipboard_path = NULL;
+	this->pwd = NULL;
 	this->exit_status = 0;
 }
 
