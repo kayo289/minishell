@@ -205,6 +205,9 @@ void	set_signal_dfl(void);
 
 // bltin
 int		minishell_cd(char **argv, t_shell *shell);
+char	*get_absolute_path(char *path, bool *is_absolute_path, t_shell *shell);
+char	*path_join(char *path, char *new_path);
+char	*three_path_join(char *s1, char *s2, char *s3);
 int		minishell_pwd(char **argv);
 int		minishell_echo(char **argv);
 int		minishell_unset(char **argv, t_shell *shell);

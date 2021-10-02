@@ -10,35 +10,11 @@ char *get_home_path(char **argv)
 		if (path == NULL)
 		{
 			err_cstmmsg("cd", NULL, "HOME not set");
-			return (NULL);	
+			return (NULL);
 		}
 		return (path);
 	}
 	return (argv[1]);
-}
-
-char *path_join(char *path, char *new_path)
-{
-	char *result_path;
-	char *tmp;
-
-	if (ft_strlen(path) == 0 || path[ft_strlen(path) - 1] != '/')
-	{
-		tmp = ft_strjoin(path, "/");
-		result_path = ft_strjoin(tmp, new_path);
-	}else
-		result_path = ft_strjoin(path, new_path);
-	return (result_path);
-}
-
-char *three_path_join(char *s1, char *s2, char *s3)
-{
-	char *str;
-	char *str2;
-
-	str = path_join(s1, s2);
-	str2 = path_join(str, s3);
-	return (str2);
 }
 
 char *get_parent(char *path)
@@ -51,55 +27,10 @@ char *get_parent(char *path)
 	return (result);
 }
 
-char *normalize(char *path)
-{
-	char **str;
-	int i;
-	char *result;
-	struct stat buf;
-
-	i = 0;
-	str = ft_split(path, '/');
-	result = ft_strdup("/");
-	while (str[i])
-	{
-		if (ft_strncmp(str[i], "..", 2) == 0)
-			result = get_parent(result);
-		else if (str[i][0] != '.')
-			result = path_join(result, str[i]);
-		if (stat(result, &buf) != 0)
-			return (NULL);
-		i++;
-		
-	}
-	if (path[0] == '/' && path[1] == '/' && path[2] != '/')
-		result = path_join("/", result);
-	return (result);
-}
-
-char *get_absolute_path(char *path, bool *is_absolute_path, t_shell *shell)
-{
-	char *new_path;
-	char *norm_path;
-
-	if(path[0] == '/')
-		new_path = path;
-	else
-		new_path = path_join(shell->pwd, path);
-	norm_path = normalize(new_path);
-	if (norm_path != NULL)
-	{
-		*is_absolute_path = true;
-		return (norm_path);
-	}
-	*is_absolute_path = false;
-	return (new_path);
-}
-
 void set_pwd(char *new_path, t_shell *shell)
 {
 	char *param;
-	
+
 	if (getenv("PWD") == NULL)
 		param = ft_strjoin("OLDPWD=", "");
 	else
@@ -118,7 +49,7 @@ int change_dir(char *path, t_shell *shell)
 	char *absolute_path;
 	char *change_path;
 	bool is_absolute_path;
-	
+
 	absolute_path = get_absolute_path(path, &is_absolute_path, shell);
 	if (chdir(absolute_path) == 0)
 	{
@@ -152,7 +83,7 @@ int use_cdpath_chg(char **argv, char *path, t_shell *shell)
 	char *tmp;
 
 	i = 0;
-	if (argv[1] == NULL 
+	if (argv[1] == NULL
 	|| ft_strcmp(path, ".") == 0
 	|| ft_strcmp(path, "..") == 0
 	|| argv[1][0] == '/'
