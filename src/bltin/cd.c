@@ -26,9 +26,8 @@ char *path_join(char *path, char *new_path)
 	{
 		tmp = ft_strjoin(path, "/");
 		result_path = ft_strjoin(tmp, new_path);
-	}else{
+	}else
 		result_path = ft_strjoin(path, new_path);
-	}
 	return (result_path);
 }
 
@@ -48,9 +47,7 @@ char *get_parent(char *path)
 
 	result = ft_substr(path, 0, ft_strrchr(path, '/') - path);
 	if (result && ft_strlen(result) == 0)
-	{
 		result = ft_strdup("/");
-	}
 	return (result);
 }
 
@@ -67,23 +64,20 @@ char *normalize(char *path)
 	while (str[i])
 	{
 		if (ft_strncmp(str[i], "..", 2) == 0)
-		{
 			result = get_parent(result);
-		}else if (str[i][0] != '.'){
+		else if (str[i][0] != '.')
 			result = path_join(result, str[i]);
-		}
 		if (stat(result, &buf) != 0)
 			return (NULL);
 		i++;
+		
 	}
-	if (ft_strlen(result) == 0)
-		result = ft_strdup("/");
 	if (path[0] == '/' && path[1] == '/' && path[2] != '/')
 		result = path_join("/", result);
 	return (result);
 }
 
-char *get_absolute_path(char *path, bool *is_absolute_path)
+char *get_absolute_path(char *path, bool *is_absolute_path, t_shell *shell)
 {
 	char *new_path;
 	char *norm_path;
@@ -91,7 +85,7 @@ char *get_absolute_path(char *path, bool *is_absolute_path)
 	if(path[0] == '/')
 		new_path = path;
 	else
-		new_path = path_join(getenv("PWD"), path);
+		new_path = path_join(shell->pwd, path);
 	norm_path = normalize(new_path);
 	if (norm_path != NULL)
 	{
@@ -105,12 +99,18 @@ char *get_absolute_path(char *path, bool *is_absolute_path)
 void set_pwd(char *new_path, t_shell *shell)
 {
 	char *param;
-
-	param = ft_strjoin("OLDPWD=", getenv("PWD"));
+	
+	if (getenv("PWD") == NULL)
+		param = ft_strjoin("OLDPWD=", "");
+	else
+		param = ft_strjoin("OLDPWD=", shell->pwd);
 	set_shell_var(shell, param);
+	free(param);
 
 	param = ft_strjoin("PWD=", new_path);
 	set_shell_var(shell, param);
+	free(param);
+	shell->pwd = new_path;
 }
 
 int change_dir(char *path, t_shell *shell)
@@ -119,7 +119,7 @@ int change_dir(char *path, t_shell *shell)
 	char *change_path;
 	bool is_absolute_path;
 	
-	absolute_path = get_absolute_path(path, &is_absolute_path);
+	absolute_path = get_absolute_path(path, &is_absolute_path, shell);
 	if (chdir(absolute_path) == 0)
 	{
 		if (!getcwd(NULL, 0))
@@ -170,11 +170,11 @@ int use_cdpath_chg(char **argv, char *path, t_shell *shell)
 		if (str[i][0] == '/')
 			cdpath = path_join(str[i], path);
 		else
-			cdpath = three_path_join(getenv("PWD"), str[i], path);
+			cdpath = three_path_join(shell->pwd, str[i], path);
 		if (change_dir(cdpath, shell) == 0)
 		{
 			if (!(str[i][0] == '.' && str[i][1] == '\0'))
-				ft_putendl_fd(getenv("PWD"), 1);
+				ft_putendl_fd(shell->pwd, 1);
 			return (TRUE);
 		}
 		i++;
@@ -187,6 +187,8 @@ int minishell_cd(char **argv, t_shell *shell)
 	char *new_path;
 	int status;
 
+	if (!shell->pwd)
+		shell->pwd = getcwd(NULL, 0);
 	new_path = get_home_path(argv);
 	if (ft_strcmp(new_path, "") == EQUAL)
 		return (0);
