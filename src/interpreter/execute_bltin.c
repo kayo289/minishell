@@ -20,14 +20,14 @@ bool lookup_bltin(char **args)
 void execute_bltin(char **args, t_shell *shell)
 {
 	int n;
-	
+
 	n = shell->exit_status;
 	if (ft_strcmp(args[0], "cd") == EQUAL)
 		n = minishell_cd(args, shell);
 	else if (ft_strcmp(args[0], "echo") == EQUAL)
 		n = minishell_echo(args);
 	else if (ft_strcmp(args[0], "pwd") == EQUAL)
-		n = minishell_pwd(args);
+		n = minishell_pwd();
 	else if (ft_strcmp(args[0], "unset") == EQUAL)
 		n = minishell_unset(args, shell);
 	else if (ft_strcmp(args[0], "exit") == EQUAL)
