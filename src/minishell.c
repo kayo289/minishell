@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 		{
 			if (!ft_strncmp(*ep, "SHLVL", 5))
 			{
-				shlvl = ft_atoi(ft_getenv("SHLVL"));
+				shlvl = ft_atoi(getenv("SHLVL"));
 				if (shlvl >= 1000)
 				{
 					ft_putendl_fd("minishell: warning: shell level (1001) too high, resetting to 1", 2);
