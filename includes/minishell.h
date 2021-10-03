@@ -33,13 +33,17 @@
 #define DEL			126
 #define BKS			127
 
-#define SUCESS		1
+#define SUCCESS		1
 #define END			0
 #define ERROR		-1
 #define FAIL		-1
 #define INIT		-1
+#define OUTOFRANGE	-2
 #define BUFFER_SIZE 1024
 #define HASH_SIZE	29999
+
+#define TRUE		1
+#define FALSE		0
 
 typedef enum u_token		t_token;
 typedef enum u_operator		t_operator;
@@ -88,6 +92,7 @@ struct s_shell
 	char	*histfile_path;
 	char	*clipboard_path;
 	int		exit_status;
+	char	*pwd;
 };
 
 struct  s_pos
@@ -106,7 +111,6 @@ struct	s_ip
 	t_token		sy;
 	char		ch;
 	char		*id_string;
-	t_list		*id_lst;
 };
 
 struct s_data
@@ -191,8 +195,9 @@ bool	lookup_bltin(char **args);
 void	execute_bltin(char **args, t_shell *shell);
 void	execute_cmds(char **args, t_shell *shell);
 void	assign_variable(t_queue *vars, t_shell *shell);
-char	**expansion(t_list *words, t_shell *shell, bool quote);
-void	redirect(t_queue *fds, t_shell *shell);
+char	**expand_words(t_list *words, t_shell *shell, bool quote);
+char	**expand_word(char *word, t_shell *shell, bool quote);
+int		redirect(t_queue *fds, t_shell *shell);
 void	here_documents(char *end_word, t_shell *shell);
 void	set_signal(void);
 void	set_signal_ign(void);
@@ -205,6 +210,7 @@ int		minishell_echo(char **argv);
 int		minishell_unset(char **argv, t_shell *shell);
 int		minishell_exit(char **argv, t_shell *shell);
 int		minishell_export(char **argv, t_shell *shell);
+int		minishell_env(char **argv);
 
 // shell_var
 char	*get_param_name(char *param);
@@ -219,7 +225,6 @@ int		hash(char *name);
 // error
 void	err_syntax(t_ip *ip, t_shell *shell);
 void	err_notfound(char *cmd, t_shell *shell);
-void	err_badfd(int n, t_shell *shell);
 void	err_errno(char *s, char *arg);
 void	err_cstmmsg(char *s, char *c, char *msg);
 

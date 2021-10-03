@@ -1,43 +1,18 @@
 #include "../../includes/minishell.h"
 
-static char now_word(t_list **word)
+static char now_word(char **word)
 {
-	if (*word != NULL)
-		return (((char *)(*word)->content)[0]);
-	return ('\0');
+	return (**word);
 }
 
-static char next_word(t_list **word)
+static char next_word(char **word)
 {
-	char ch;
-
-	if (*word != NULL)
-	{
-		*word = (*word)->next;
-		return now_word(word);
-	}
-	else
-		ch = '\0';
-	return ch;
+	if (**word != '\0')
+		(*word)++;
+	return **word;
 }
 
-static void brace(t_list **word, char **key)
-{
-	char ch;
-
-	ch = next_word(word);
-	while (ch != '}')
-	{
-		if (ch == '\0')
-			break;
-		else
-			ft_charjoin(key, ch);
-		ch = next_word(word);
-	}
-	next_word(word);
-}
-
-char *parameter(t_list **word, t_shell *shell)
+char *parameter(char **word, t_shell *shell)
 {
 	char *key;
 	char *val;
@@ -45,10 +20,6 @@ char *parameter(t_list **word, t_shell *shell)
 
 	key = ft_calloc(sizeof(char), 1);
 	ch = next_word(word);
-	if (ch == '{')
-		brace(word, &key);
-	else
-	{
 		if (ch == '?')
 		{
 			next_word(word);
@@ -61,71 +32,59 @@ char *parameter(t_list **word, t_shell *shell)
 			ft_charjoin(&key, ch);
 			ch = next_word(word);
 		}
-	}
 	val = getenv(key);
 	free(key);
 	return (val);
 }
 
-static void dollar(t_list **word, char **arg, char ***args, t_shell *shell)
+static void dollar(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char *val;
-	char *str;
-	char *tmp;
+	int i;
 
 	val = parameter(word, shell);
 	if (val == NULL)
 		return;
-	str = ft_strtrim(val, " \t\n");
-	if (ft_strchr(" \t\n", val[0]) != NULL)
+	i = 0;
+	while(val[i] != '\0')
 	{
-		if (**arg != '\0')
+		if (ft_strchr(" \t\n", val[i]) != NULL)
 		{
 			*args = ft_realloc2(*args, *arg);
-			*arg = ft_calloc(sizeof(char), 1);
+			*arg = NULL;
 		}
+		else
+			ft_charjoin(arg, val[i]);
+		i++;
 	}
-	tmp = *arg;
-	*arg = ft_strjoin(*arg, str);
-	free(tmp);
-	if (ft_strchr(" \t\n", val[ft_strlen(val) - 1]) != NULL)
-	{
-		if (**arg != '\0')
-		{	
-			*args = ft_realloc2(*args, *arg);
-			*arg = ft_calloc(sizeof(char), 1);
-		}
-	}
-	free(str);
 }
 
-static bool is_closed(t_list **word, char **arg)
+static bool is_closed(char *word, char **arg)
 {
 	char ch;
 	char end_ch;
-	t_list *lst;
 
-	lst = *word;
-	ch = next_word(&lst);
-	end_ch = now_word(word);
+	ch = next_word(&word);
+	end_ch = now_word(&word);
 	while (ch != end_ch)
 	{
 		if (ch == '\0')
 		{
-			ch = now_word(word);
+			ch = now_word(&word);
 			ft_charjoin(arg, ch);
 			return false;
 		}
-		ch = next_word(&lst);
+		ch = next_word(&word);
 	}
 	return true;
 }
 
-static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell)
+static void double_quote(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
 
-	is_closed(word, arg);
+	*arg = ft_strjoin(*arg, "");
+	is_closed(*word, arg);
 	ch = next_word(word);
 	while (ch != '\"')
 	{
@@ -145,12 +104,13 @@ static void double_quote(t_list **word, char **arg, char ***args, t_shell *shell
 	next_word(word);
 }
 
-static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell)
+static void single_quote(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
 	bool quote;
 
-	quote = is_closed(word, arg);
+	*arg = ft_strjoin(*arg, "");
+	quote = is_closed(*word, arg);
 	ch = next_word(word);
 	while (ch != '\'')
 	{
@@ -170,37 +130,53 @@ static void single_quote(t_list **word, char **arg, char ***args, t_shell *shell
 	next_word(word);
 }
 
-char **expansion(t_list *words, t_shell *shell, bool quote)
+char **expand_word(char *word, t_shell *shell, bool quote)
+{
+	char **args;
+	char *arg;
+	char ch;
+
+	args = ft_calloc2(sizeof(char*), 1);
+	arg = NULL;
+	ch = now_word(&word);
+	while (*word != '\0')
+	{
+		while (ch == ' ')
+			ch = next_word(&word);
+		if (quote && ch == '\'')
+			single_quote(&word, &arg, &args, shell);
+		else if (quote && ch == '\"')
+			double_quote(&word, &arg, &args, shell);
+		else if (ch == '$')
+			dollar(&word, &arg, &args, shell);
+		else
+		{
+			ft_charjoin(&arg, ch);
+			ch = next_word(&word);
+		}
+		ch = now_word(&word);
+	}
+	if (arg != NULL)
+		args = ft_realloc2(args, arg);
+	return args;
+}
+
+char **expand_words(t_list *words, t_shell *shell, bool quote)
 {
 	char	**args;
-	char	*arg;
-	t_list	*word;
-	char	ch;
+	char	**ret;
+	int		i;
 
 	args = ft_calloc2(sizeof(char), 1);
 	while (words != NULL)
 	{
-		arg = ft_calloc(sizeof(char), 1);
-		word = (t_list *)words->content;
-		ch = now_word(&word);
-		while (word != NULL)
+		ret = expand_word(words->content, shell, quote);
+		i = 0;
+		while (ret[i] != NULL)
 		{
-			while (ch == ' ')
-				ch = next_word(&word);
-			if (quote && ch == '\'')
-				single_quote(&word, &arg, &args, shell);
-			else if (quote && ch == '\"')
-				double_quote(&word, &arg, &args, shell);
-			else if (ch == '$')
-				dollar(&word, &arg, &args, shell);
-			else
-			{
-				ft_charjoin(&arg, ch);
-				ch = next_word(&word);
-			}
-			ch = now_word(&word);
+			args = ft_realloc2(args, ret[i]);
+			i++;
 		}
-		args = ft_realloc2(args, arg);
 		words = words->next;
 	}
 	return (args);

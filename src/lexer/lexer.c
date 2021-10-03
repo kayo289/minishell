@@ -27,24 +27,12 @@ char next_ch(t_dlist **line, t_ip *ip)
 void save_token(t_ip *ip, t_list **tokens)
 {
 	t_ip	*tmp;
-	char *s;
-	int i;
 
-
-	i = 0;
-	while (ip->id_string[i] != '\0')
-	{
-		s = ft_calloc(sizeof(char), 2);
-		s[0] = ip->id_string[i]; 
-		ft_lstadd_back(&ip->id_lst, ft_lstnew(s));
-		i++;
-	}
 
 	tmp = malloc(sizeof(t_ip));
 	*tmp = *ip;
 	ft_lstadd_back(tokens, ft_lstnew(tmp));
 	ip->id_string = ft_calloc(sizeof(char), 1);
-	ip->id_lst = NULL;
 }
 
 void get_token(t_dlist **line, t_ip *ip, t_list **tokens)
@@ -68,7 +56,6 @@ void lexer(t_dlist *line, t_list **tokens)
 
 	*tokens = NULL;
 	ip.id_string = ft_calloc(sizeof(char), 1);
-	ip.id_lst = NULL;
 	next_ch(&line, &ip);
 
 	while (ip.ch != '\0')

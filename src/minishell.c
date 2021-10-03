@@ -67,11 +67,20 @@ int main(int argc, char **argv)
 		{
 			if (!ft_strncmp(*ep, "SHLVL", 5))
 			{
-				shlvl = ft_atoi(getenv("SHLVL"));
+				shlvl = ft_atoi(ft_getenv("SHLVL"));
+				if (shlvl >= 1000)
+				{
+					ft_putendl_fd("minishell: warning: shell level (1001) too high, resetting to 1", 2);
+					shlvl = 0;
+				}
 				tmp = ft_itoa(shlvl + 1);
+				if (shlvl + 1 == 1000)
+					tmp = ft_strdup("");
 				*ep = ft_strjoin("SHLVL=", tmp);
 				free(tmp);
 			}
+			if (!ft_strncmp(*ep, "OLDPWD", 6))
+				*ep = ft_strdup("OLDPWD");
 			ep++;
 		}
 	}
