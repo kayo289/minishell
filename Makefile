@@ -41,6 +41,7 @@ NAME_SRC = \
 	src/prompt/move.c \
 	src/prompt/history.c \
 	src/bltin/cd.c \
+	src/bltin/cd_path.c\
 	src/bltin/echo.c \
 	src/bltin/pwd.c \
 	src/bltin/unset.c \

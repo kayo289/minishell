@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-int minishell_pwd(char **argv)
+int minishell_pwd(void)
 {
 	char *path;
 
@@ -13,5 +13,4 @@ int minishell_pwd(char **argv)
 	}
 	ft_putendl_fd(path, 1);
 	return (0);
-	(void)argv;
 }

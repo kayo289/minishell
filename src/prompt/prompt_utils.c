@@ -5,7 +5,6 @@ void		init_pos(t_pos *pos, char *ps)
 	pos->cursor = ft_strlen(ps);
 	pos->max_lf = ft_strlen(ps);
 	pos->max_rg = ft_strlen(ps);
-
 	pos->is_select = false;
 	pos->select = ft_strlen(ps);
 	pos->selectp = NULL;
