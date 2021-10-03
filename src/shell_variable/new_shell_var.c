@@ -42,7 +42,10 @@ static void read_history_file(t_shell *shell)
 	path = getcwd(NULL, 0);
 	shell->histfile_path = ft_strjoin(path, "/.minishell_history");
 	while (get_next_line(fd, &line) > 0)
+	{
 		ft_dlstadd_front(&shell->hist_lst, ft_dlstnew(line));
+		free(line);
+	}
 	ft_dlstadd_front(&shell->hist_lst, ft_dlstnew(NULL));
 	free(line);
 	free(path);
