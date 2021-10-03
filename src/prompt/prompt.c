@@ -46,7 +46,6 @@ static int		prompt_input(t_dlist **cursor, char *ps, t_shell *shell)
 			cut(&pos, cursor, shell);
 		else if(key == CTRLY)
 			copy(&pos, cursor, shell);
-
 		else if (key == ESC)
 			esc(&pos, cursor, shell);
 		else if (key == BKS)
