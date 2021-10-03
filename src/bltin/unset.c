@@ -29,6 +29,20 @@ static void del_shell_var(t_shell *this, char *name)
 	}
 }
 
+int ft_isalphas(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isalpha(str[i]) && !ft_isdigit(str[i]) && str[i] != '_')
+			return (1);
+		i++;	
+	}
+	return (0);
+}
+
 int minishell_unset(char **argv, t_shell *shell)
 {
 	int i;
@@ -38,7 +52,7 @@ int minishell_unset(char **argv, t_shell *shell)
 	i = 1;
 	while (argv[i] != NULL)
 	{
-		if (ft_isdigit(*argv[i]) || ft_unsetenv(argv[i]) < 0)
+		if (ft_isdigit(*argv[i]) || ft_isalphas(argv[i]) || ft_unsetenv(argv[i]) < 0)
 		{
 			err_cstmmsg("unset", argv[i], "not a valid identifier");
 			status = 1;

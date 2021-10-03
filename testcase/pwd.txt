@@ -1,4 +1,4 @@
-mikdir dir && cd dir && rmdir ../dir && cd ./ && pwd
+mikdir dir && cd dir && rmdir ../dir && cd ./ || pwd
 echo $OLDPWD
 echo $OLDPWD, export OLDPWD=/
 echo $PWD
