@@ -22,14 +22,6 @@ void err_notfound(char *cmd, t_shell *shell)
 	minishell_end(shell);
 }
 
-void err_badfd(int n, t_shell *shell)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putnbr_fd(n, 2);
-	ft_putendl_fd(": Bad file descriptor", 2);
-	shell->exit_status = 1;
-}
-
 void err_errno(char *s, char *arg)
 {
 	ft_putstr_fd("minishell: ", 2);
