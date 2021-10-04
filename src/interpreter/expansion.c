@@ -167,7 +167,7 @@ char **expand_words(t_list *words, t_shell *shell, bool quote)
 	char	**ret;
 	int		i;
 
-	args = ft_calloc2(sizeof(char), 1);
+	args = ft_calloc2(sizeof(char*), 1);
 	while (words != NULL)
 	{
 		ret = expand_word(words->content, shell, quote);
