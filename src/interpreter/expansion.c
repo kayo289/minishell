@@ -179,5 +179,6 @@ char **expand_words(t_list *words, t_shell *shell, bool quote)
 		}
 		words = words->next;
 	}
+	free(ret);
 	return (args);
 }
