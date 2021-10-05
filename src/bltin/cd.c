@@ -49,26 +49,31 @@ int change_dir(char *path, t_shell *shell)
 	char *absolute_path;
 	char *change_path;
 	bool is_absolute_path;
+	char *cwd;
 
 	absolute_path = get_absolute_path(path, &is_absolute_path, shell);
 	if (chdir(absolute_path) == 0)
 	{
-		if (!getcwd(NULL, 0))
+		cwd = getcwd(NULL, 0);
+		if (!cwd)
 			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
 		if (is_absolute_path == false)
-			absolute_path = getcwd(NULL, 0);
+			absolute_path = cwd;
 		set_pwd(absolute_path, shell);
+		free(cwd);
 		return (0);
 	}
 
 	if (chdir(path) == 0)
 	{
-		if (!getcwd(NULL, 0))
-			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+
 		change_path = getcwd(NULL, 0);
+		if (!change_path)
+			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
 		if (change_path == NULL)
 			change_path = absolute_path;
 		set_pwd(change_path, shell);
+		free(change_path);
 		return (0);
 	}
 	return (1);
@@ -131,5 +136,6 @@ int minishell_cd(char **argv, t_shell *shell)
 	if (status == 0)
 		return (0);
 	err_errno("cd", new_path);
+	free(shell->pwd);
 	return (1);
 }
