@@ -5,8 +5,6 @@ void dp_free(char **str)
 	int i;
 
 	i = 0;
-	if (!str)
-		return ;
 	while (str[i] != NULL)
 	{
 		free(str[i]);

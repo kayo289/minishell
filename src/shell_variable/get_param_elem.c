@@ -23,5 +23,5 @@ char *get_param_value(char *param)
 	val = ft_strchr(param, '=');
 	if (val == NULL)
 		return NULL;
-	return (val + 1);
+	return (ft_strdup(val + 1));
 }
