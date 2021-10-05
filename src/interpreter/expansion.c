@@ -23,10 +23,14 @@ char *parameter(char **word, t_shell *shell)
 		if (ch == '?')
 		{
 			next_word(word);
+			free(key);
 			return (ft_itoa(shell->exit_status));
 		}
 		if (!ft_issnack_case(ch))
+		{
+			free(key);
 			return (ft_strdup("$"));
+		}
 		while (ft_issnack_case(ch))
 		{
 			ft_charjoin(&key, ch);
@@ -57,6 +61,7 @@ static void dollar(char **word, char **arg, char ***args, t_shell *shell)
 			ft_charjoin(arg, val[i]);
 		i++;
 	}
+	//free(val);
 }
 
 static bool is_closed(char *word, char **arg)

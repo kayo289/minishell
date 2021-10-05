@@ -31,12 +31,14 @@ void set_environ(t_shell *shell, char *name)
 	char		**ep;
 	char		*param;
 	char		*var;
+	char		*tmp;
 
 	param = get_shell_var(shell, name);
-	var = NULL;
+	tmp = NULL;
 	if (param != NULL)
-		var = ft_strjoin("=", param);
-	var = ft_strjoin(name, var);
+		tmp = ft_strjoin("=", param);
+	var = ft_strjoin(name, tmp);
+	free(tmp);
 	ep = environ;
 	while (*ep != NULL)
 	{
