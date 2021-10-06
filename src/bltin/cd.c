@@ -30,6 +30,7 @@ char *get_parent(char *path)
 void set_pwd(char *new_path, t_shell *shell)
 {
 	char *param;
+	char *set_path;
 
 	if (getenv("PWD") == NULL)
 		param = ft_strjoin("OLDPWD=", "");
@@ -38,10 +39,11 @@ void set_pwd(char *new_path, t_shell *shell)
 	set_shell_var(shell, param);
 	free(param);
 
+	set_path = ft_strdup(new_path);
 	param = ft_strjoin("PWD=", new_path);
 	set_shell_var(shell, param);
 	free(param);
-	shell->pwd = new_path;
+	shell->pwd = set_path;
 }
 
 int change_dir(char *path, t_shell *shell)
@@ -58,6 +60,7 @@ int change_dir(char *path, t_shell *shell)
 		if (is_absolute_path == false)
 			absolute_path = getcwd(NULL, 0);
 		set_pwd(absolute_path, shell);
+		free(absolute_path);
 		return (0);
 	}
 
@@ -69,6 +72,7 @@ int change_dir(char *path, t_shell *shell)
 		if (change_path == NULL)
 			change_path = absolute_path;
 		set_pwd(change_path, shell);
+		free(absolute_path);
 		return (0);
 	}
 	return (1);
