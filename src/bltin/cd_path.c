@@ -22,6 +22,7 @@ char *three_path_join(char *s1, char *s2, char *s3)
 
 	str = path_join(s1, s2);
 	str2 = path_join(str, s3);
+	free(str);
 	return (str2);
 }
 

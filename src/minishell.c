@@ -49,6 +49,7 @@ void minishell_end(t_shell *shell)
 	ft_dlstclear(&shell->hist_lst, free);
 	free(shell->histfile_path);
 	free(shell->clipboard_path);
+	free(shell->pwd);
 	exit(shell->exit_status);
 }
 
