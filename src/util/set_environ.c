@@ -29,16 +29,11 @@ void set_environ(t_shell *shell, char *name)
 {
 	extern char	**environ;
 	char		**ep;
-	char		*param;
 	char		*var;
-	char		*tmp;
 
-	param = get_shell_var(shell, name);
-	tmp = NULL;
-	if (param != NULL)
-		tmp = ft_strjoin("=", param);
-	var = ft_strjoin(name, tmp);
-	free(tmp);
+	if(name == NULL)
+		return ;
+	var = get_shell_var(shell, name);
 	ep = environ;
 	while (*ep != NULL)
 	{

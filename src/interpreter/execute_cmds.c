@@ -72,7 +72,7 @@ static char	*search_path(char *cmd_name, t_shell *shell)
 	char	*cmd_path;
 
 	cmd_path = NULL;
-	env_value = get_shell_var(shell, "PATH");
+	env_value = get_param_value(get_shell_var(shell, "PATH"));
 	if (env_value == NULL || *env_value == '\0') 
 	{
 		error_message(strerror(ENOENT), cmd_name);
