@@ -20,6 +20,8 @@ char *get_param_value(char *param)
 {
 	char *val;
 
+	if (param == NULL)
+		return NULL;
 	val = ft_strchr(param, '=');
 	if (val == NULL)
 		return NULL;
