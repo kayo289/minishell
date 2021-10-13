@@ -29,7 +29,7 @@ char *parameter(char **word, t_shell *shell)
 		if (!ft_issnack_case(ch))
 		{
 			free(key);
-			return ("$");
+			return (ft_strdup("$"));
 		}
 		while (ft_issnack_case(ch))
 		{
@@ -38,7 +38,9 @@ char *parameter(char **word, t_shell *shell)
 		}
 	val = getenv(key);
 	free(key);
-	return (val);
+	if (val == NULL)
+		return (NULL);
+	return (ft_strdup(val));
 }
 
 static void dollar(char **word, char **arg, char ***args, t_shell *shell)
@@ -61,6 +63,7 @@ static void dollar(char **word, char **arg, char ***args, t_shell *shell)
 			ft_charjoin(arg, val[i]);
 		i++;
 	}
+	free(val);
 }
 
 static bool is_closed(char *word, char **arg)
