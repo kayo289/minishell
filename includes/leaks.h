@@ -1,12 +1,9 @@
-#ifndef LEAKS
-#  define LEAKS 0
-# endif
+#ifndef LEAKS_H
+#define LEAKS_H
 
-# if LEAKS
 #include <stdlib.h>
 
 void	end(void) __attribute__((destructor));
 
+
 # endif
-
-

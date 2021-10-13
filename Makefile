@@ -46,17 +46,16 @@ SRCS = \
 	src/free/free.c \
 	src/util/set_environ.c \
 	src/minishell.c
-
 OBJS=$(SRCS:.c=.o)
 
 NAME_LEAKS	:= minishell_leaks
-SRCS_LEAKS	:= src/leaks.c
+SRCS_LEAKS	:= $(SRCS) src/leaks.c
 OBJS_LEAKS	:= $(SRCS_LEAKS:.c=.o)
 
 all: $(NAME)
 
-leaks: $(OBJS) $(OBJS_LEAKS) $(LIBFT) $(LIBQ)
-	$(CC) $(CFLAGS) -o $(NAME_LEAKS) $(LDFLAGS) $(OBJS) $(OBJSS_LEAKS) $(LIBS)
+leaks: $(OBJS_LEAKS) $(LIBFT) $(LIBQ)
+	$(CC) $(CFLAGS) -o $(NAME_LEAKS) $(LDFLAGS) $(OBJS_LEAKS) $(LIBS)
 
 clean:
 	$(MAKE) clean -C ./src/libft
