@@ -29,7 +29,7 @@ char *parameter(char **word, t_shell *shell)
 		if (!ft_issnack_case(ch))
 		{
 			free(key);
-			return (ft_strdup("$"));
+			return ("$");
 		}
 		while (ft_issnack_case(ch))
 		{
@@ -61,7 +61,6 @@ static void dollar(char **word, char **arg, char ***args, t_shell *shell)
 			ft_charjoin(arg, val[i]);
 		i++;
 	}
-	//free(val);
 }
 
 static bool is_closed(char *word, char **arg)
@@ -87,8 +86,11 @@ static bool is_closed(char *word, char **arg)
 static void double_quote(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
+	char *tmp;
 
+	tmp = *arg;
 	*arg = ft_strjoin(*arg, "");
+	free(tmp);
 	is_closed(*word, arg);
 	ch = next_word(word);
 	while (ch != '\"')
@@ -113,8 +115,11 @@ static void single_quote(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
 	bool quote;
+	char *tmp;
 
+	tmp = *arg;
 	*arg = ft_strjoin(*arg, "");
+	free(tmp);
 	quote = is_closed(*word, arg);
 	ch = next_word(word);
 	while (ch != '\'')
@@ -183,7 +188,7 @@ char **expand_words(t_list *words, t_shell *shell, bool quote)
 			i++;
 		}
 		words = words->next;
+		free(ret);
 	}
-	free(ret);
 	return (args);
 }
