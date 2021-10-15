@@ -34,8 +34,6 @@ void set_environ(t_shell *shell, char *name)
 	if(name == NULL)
 		return ;
 	var = get_shell_var(shell, name);
-	if (var == NULL)
-		var = ft_strdup(name);
 	ep = environ;
 	while (*ep != NULL)
 	{

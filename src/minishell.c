@@ -56,8 +56,8 @@ void minishell_end(t_shell *shell)
 void minishell_start(t_shell *shell)
 {
 	int old_shlvl;
+	char *shlvl_value;
 	char *new_shlvl;
-	char *tmp;
 
 	new_shell_var(shell);
 	set_shell_var(shell, "OLDPWD");
@@ -69,12 +69,12 @@ void minishell_start(t_shell *shell)
 		old_shlvl = 0;
 	}
 	if (old_shlvl + 1 == 1000)
-		tmp = ft_strdup("");
+		shlvl_value = ft_strdup("");
 	else
-		tmp = ft_itoa(old_shlvl + 1);
-	new_shlvl = ft_strjoin("SHLVL=", tmp);
+		shlvl_value = ft_itoa(old_shlvl + 1);
+	new_shlvl = ft_strjoin("SHLVL=", shlvl_value);
 	set_shell_var(shell, new_shlvl);
-	free(tmp);
+	free(shlvl_value);
 	free(new_shlvl);
 }
 
