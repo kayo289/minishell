@@ -27,7 +27,7 @@ void execute_bltin(char **args, t_shell *shell)
 	else if (ft_strcmp(args[0], "echo") == EQUAL)
 		n = minishell_echo(args);
 	else if (ft_strcmp(args[0], "pwd") == EQUAL)
-		n = minishell_pwd();
+		n = minishell_pwd(shell);
 	else if (ft_strcmp(args[0], "unset") == EQUAL)
 		n = minishell_unset(args, shell);
 	else if (ft_strcmp(args[0], "exit") == EQUAL)
