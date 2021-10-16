@@ -53,7 +53,7 @@ int minishell_exit(char **argv, t_shell *shell)
 		if (argv[i + 1])
 		{
 			err_cstmmsg("exit", NULL, "too many arguments");
-			return (1);
+			n = 1;
 		}
 		shell->exit_status = n;
 	}
