@@ -31,8 +31,10 @@ void set_pwd(char *new_path, t_shell *shell)
 {
 	char *param;
 	char *set_path;
+	char *pwd;
 
-	if (getenv("PWD") == NULL)
+	pwd = getenv("PWD");
+	if (pwd == NULL || ft_strcmp(pwd, "") == 0)
 		param = ft_strjoin("OLDPWD=", "");
 	else
 		param = ft_strjoin("OLDPWD=", shell->pwd);
