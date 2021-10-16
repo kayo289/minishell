@@ -49,42 +49,40 @@ void minishell_end(t_shell *shell)
 	ft_dlstclear(&shell->hist_lst, free);
 	free(shell->histfile_path);
 	free(shell->clipboard_path);
+	free(shell->pwd);
 	exit(shell->exit_status);
+}
+
+void minishell_start(t_shell *shell)
+{
+	int old_shlvl;
+	char *shlvl_value;
+	char *new_shlvl;
+
+	new_shell_var(shell);
+	set_shell_var(shell, "OLDPWD");
+	
+	old_shlvl = ft_atoi(getenv("SHLVL"));
+	if (old_shlvl >= 1000)
+	{
+		ft_putendl_fd("minishell: warning: shell level (1001) too high, resetting to 1", 2);
+		old_shlvl = 0;
+	}
+	if (old_shlvl + 1 == 1000)
+		shlvl_value = ft_strdup("");
+	else
+		shlvl_value = ft_itoa(old_shlvl + 1);
+	new_shlvl = ft_strjoin("SHLVL=", shlvl_value);
+	set_shell_var(shell, new_shlvl);
+	free(shlvl_value);
+	free(new_shlvl);
 }
 
 int main(int argc, char **argv)
 {
-	extern char **environ;
-	char **ep;
-	char *tmp;
-	int shlvl;
 	t_shell shell;
 
-	if (environ != NULL)
-	{
-		ep = environ;
-		while (*ep != NULL)
-		{
-			if (!ft_strncmp(*ep, "SHLVL", 5))
-			{
-				shlvl = ft_atoi(ft_getenv("SHLVL"));
-				if (shlvl >= 1000)
-				{
-					ft_putendl_fd("minishell: warning: shell level (1001) too high, resetting to 1", 2);
-					shlvl = 0;
-				}
-				tmp = ft_itoa(shlvl + 1);
-				if (shlvl + 1 == 1000)
-					tmp = ft_strdup("");
-				*ep = ft_strjoin("SHLVL=", tmp);
-				free(tmp);
-			}
-			if (!ft_strncmp(*ep, "OLDPWD", 6))
-				*ep = ft_strdup("OLDPWD");
-			ep++;
-		}
-	}
-	new_shell_var(&shell);
+	minishell_start(&shell);
 	if (argc > 2 && ft_strncmp("-c", argv[1], 3) == 0)
 		minishell_loop_c(&shell, argv[2]);
 	else

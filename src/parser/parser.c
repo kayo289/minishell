@@ -27,7 +27,7 @@ static void simple_command(t_ip *ip, t_list **tokens, t_data **data)
 	while (ip->sy == IDENTIFY || ip->sy == REDIRECT)
 	{
 		if (ip->sy == IDENTIFY)
-			ft_lstadd_back(&(*data)->words, ft_lstnew(ip->id_string));
+			ft_lstadd_back(&(*data)->words, ft_lstnew(ft_strdup(ip->id_string)));
 		else if (ip->sy == REDIRECT)
 		{
 			enq(&(*data)->fds, ip->id_string);

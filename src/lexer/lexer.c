@@ -9,6 +9,7 @@ void ip_charjoin(t_ip *ip, char ch)
 	s[0] = ch; 
 	tmp = ip->id_string;
 	ip->id_string = ft_strjoin(ip->id_string, s);
+	free(s);
 	free(tmp);
 }
 

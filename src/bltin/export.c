@@ -118,7 +118,7 @@ int minishell_export(char **argv, t_shell *shell)
 			}
 			else
 			{
-				if (ft_strchr(argv[i], '=') != NULL)
+				if (ft_strchr(argv[i], '=') != NULL || get_shell_var(shell, argv[i]) == NULL)
 					set_shell_var(shell, argv[i]);
 				name = get_param_name(argv[i]);
 				set_environ(shell, name);

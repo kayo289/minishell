@@ -23,10 +23,14 @@ char *parameter(char **word, t_shell *shell)
 		if (ch == '?')
 		{
 			next_word(word);
+			free(key);
 			return (ft_itoa(shell->exit_status));
 		}
 		if (!ft_issnack_case(ch))
+		{
+			free(key);
 			return (ft_strdup("$"));
+		}
 		while (ft_issnack_case(ch))
 		{
 			ft_charjoin(&key, ch);
@@ -34,7 +38,9 @@ char *parameter(char **word, t_shell *shell)
 		}
 	val = getenv(key);
 	free(key);
-	return (val);
+	if (val == NULL)
+		return (NULL);
+	return (ft_strdup(val));
 }
 
 static void dollar(char **word, char **arg, char ***args, t_shell *shell)
@@ -57,6 +63,7 @@ static void dollar(char **word, char **arg, char ***args, t_shell *shell)
 			ft_charjoin(arg, val[i]);
 		i++;
 	}
+	free(val);
 }
 
 static bool is_closed(char *word, char **arg)
@@ -82,8 +89,11 @@ static bool is_closed(char *word, char **arg)
 static void double_quote(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
+	char *tmp;
 
+	tmp = *arg;
 	*arg = ft_strjoin(*arg, "");
+	free(tmp);
 	is_closed(*word, arg);
 	ch = next_word(word);
 	while (ch != '\"')
@@ -108,8 +118,11 @@ static void single_quote(char **word, char **arg, char ***args, t_shell *shell)
 {
 	char ch;
 	bool quote;
+	char *tmp;
 
+	tmp = *arg;
 	*arg = ft_strjoin(*arg, "");
+	free(tmp);
 	quote = is_closed(*word, arg);
 	ch = next_word(word);
 	while (ch != '\'')
@@ -167,7 +180,7 @@ char **expand_words(t_list *words, t_shell *shell, bool quote)
 	char	**ret;
 	int		i;
 
-	args = ft_calloc2(sizeof(char), 1);
+	args = ft_calloc2(sizeof(char*), 1);
 	while (words != NULL)
 	{
 		ret = expand_word(words->content, shell, quote);
@@ -178,6 +191,7 @@ char **expand_words(t_list *words, t_shell *shell, bool quote)
 			i++;
 		}
 		words = words->next;
+		free(ret);
 	}
 	return (args);
 }

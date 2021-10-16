@@ -30,6 +30,7 @@ char *get_parent(char *path)
 void set_pwd(char *new_path, t_shell *shell)
 {
 	char *param;
+	char *set_path;
 
 	if (getenv("PWD") == NULL)
 		param = ft_strjoin("OLDPWD=", "");
@@ -38,10 +39,13 @@ void set_pwd(char *new_path, t_shell *shell)
 	set_shell_var(shell, param);
 	free(param);
 
+	set_path = ft_strdup(new_path);
 	param = ft_strjoin("PWD=", new_path);
 	set_shell_var(shell, param);
 	free(param);
-	shell->pwd = new_path;
+	free(shell->pwd);
+	shell->pwd = set_path;
+	//free(set_path);
 }
 
 int change_dir(char *path, t_shell *shell)
@@ -49,28 +53,36 @@ int change_dir(char *path, t_shell *shell)
 	char *absolute_path;
 	char *change_path;
 	bool is_absolute_path;
+	char *getcwd_path;
 
 	absolute_path = get_absolute_path(path, &is_absolute_path, shell);
 	if (chdir(absolute_path) == 0)
 	{
-		if (!getcwd(NULL, 0))
+		getcwd_path = getcwd(NULL, 0);
+		if (!getcwd_path)
 			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
 		if (is_absolute_path == false)
-			absolute_path = getcwd(NULL, 0);
+			absolute_path = getcwd_path;
 		set_pwd(absolute_path, shell);
+		free(absolute_path);
+		free(getcwd_path);
 		return (0);
 	}
 
 	if (chdir(path) == 0)
 	{
-		if (!getcwd(NULL, 0))
+		getcwd_path = getcwd(NULL, 0);
+		if (!getcwd_path)
 			ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
-		change_path = getcwd(NULL, 0);
+		change_path = getcwd_path;
 		if (change_path == NULL)
 			change_path = absolute_path;
 		set_pwd(change_path, shell);
+		free(absolute_path);
+		free(getcwd_path);
 		return (0);
 	}
+	free(absolute_path);
 	return (1);
 }
 

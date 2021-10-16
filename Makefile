@@ -6,13 +6,7 @@ LIBS	= -lq -lft -ltermcap
 LIBQ	= libqueue.a
 LIBFT 	= libft.a
 NAME 	= minishell
-CMDS	= \
-		src/cmds/cd \
-		src/cmds/echo \
-		src/cmds/pwd \
-		src/cmds/env \
-		src/cmds/exit
-NAME_SRC = \
+SRCS = \
 	src/lexer/lexer.c \
 	src/lexer/literal/literal.c \
 	src/lexer/literal/quoting.c \
@@ -52,26 +46,34 @@ NAME_SRC = \
 	src/free/free.c \
 	src/util/set_environ.c \
 	src/minishell.c
+OBJS=$(SRCS:.c=.o)
 
-NAME_OBJ=$(NAME_SRC:.c=.o)
+NAME_LEAKS	:= minishell_leaks
+SRCS_LEAKS	:= $(SRCS) src/leaks.c
+OBJS_LEAKS	:= $(SRCS_LEAKS:.c=.o)
 
 all: $(NAME)
+
+leaks: $(OBJS_LEAKS) $(LIBFT) $(LIBQ)
+	$(CC) $(CFLAGS) -o $(NAME_LEAKS) $(LDFLAGS) $(OBJS_LEAKS) $(LIBS)
 
 clean:
 	$(MAKE) clean -C ./src/libft
 	$(MAKE) clean -C ./src/queue
-	rm -rf $(NAME_OBJ)
+	rm -rf $(OBJS)
+	rm -rf $(OBJS_LEAKS)
 
 fclean: clean
 	$(MAKE) fclean -C ./src/libft
 	$(MAKE) fclean -C ./src/queue
 	rm -rf $(NAME)
+	rm -rf $(NAME_LEAKS)
 
 re:	fclean all
 
 
-$(NAME): $(NAME_OBJ) $(LIBFT) $(LIBQ)
-	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(NAME_OBJ) $(LIBS)
+$(NAME): $(OBJS) $(LIBFT) $(LIBQ)
+	$(CC) $(CFLAGS) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
 $(LIBFT):
 	$(MAKE) -C ./src/libft

@@ -30,7 +30,7 @@ echo "$PATH"
 echo '$PATH'
 echo '\$PATH'
 echo a "" b "" c
-echo a "$NO_SUCH_ENV" b $NO_SUCH_ENV c, unset NO_SUCH_ENV
+unset NO_SUCH_ENV && echo a "$NO_SUCH_ENV" b $NO_SUCH_ENV c
 echo		hello
 echo "$ $ $ $ $ $ "
 echo $
