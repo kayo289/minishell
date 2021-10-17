@@ -35,14 +35,17 @@ void	handle_execve_error(char *cmd_path, t_shell *shell)
 	minishell_end(shell);
 }
 
-static void		find_command(char *cmd, char **cmd_path, char **dir_names)
+static void		find_command(char **args, char *cmd, char **cmd_path, char **dir_names)
 {
 	DIR				*dir;
 	struct dirent	*dp;
 	struct stat		sb;
 	int				i;
+	char *tmp;
+	extern char	**environ;
 
 	i = -1;
+	tmp = NULL;
 	while (dir_names[++i] != NULL)
 	{
 		if ((dir = opendir(dir_names[i])) == NULL)
@@ -52,15 +55,15 @@ static void		find_command(char *cmd, char **cmd_path, char **dir_names)
 		{
 			if (ft_strcmp(cmd, dp->d_name) == EQUAL)
 			{
-				if (stat(dp->d_name, &sb) < 0)
+				if (stat(dp->d_name, &sb) <= 0)
 				{
-					*cmd_path = ft_strjoin(dir_names[i], "/");
-					*cmd_path = ft_strjoin(*cmd_path, dp->d_name);
+					tmp = path_join(dir_names[i], dp->d_name);
+					execve(tmp, args, environ);
+					if (errno == 0)
+						*cmd_path = tmp;
+					else
+						*cmd_path = tmp;
 				}
-				else
-					*cmd_path = ft_strjoin(dir_names[i],dp->d_name);
-				// execve
-				return;
 			}
 			dp = readdir(dir);
 		}
@@ -91,7 +94,7 @@ char **ft_split_path(char *str)
 	return (result);
 }
 
-static char	*search_path(char *cmd_name, t_shell *shell)
+static char	*search_path(char **args, char *cmd_name, t_shell *shell)
 {
 	char	*env_value;
 	char	**dir_names;
@@ -106,7 +109,7 @@ static char	*search_path(char *cmd_name, t_shell *shell)
 		minishell_end(shell);
 	}
 	dir_names = ft_split_path(env_value);
-	find_command(cmd_name, &cmd_path, dir_names);
+	find_command(args, cmd_name, &cmd_path, dir_names);
 	dp_free(dir_names);
 	return (cmd_path);
 }
@@ -122,10 +125,8 @@ void	execute_cmds(char **args, t_shell *shell)
 		cmd_path = ft_strdup(cmd);
 	else
 	{
-		cmd_path = search_path(cmd, shell);
-		if (errno && cmd_path)
-			err_cstmmsg(cmd_path, NULL, strerror(errno));
-		else
+		cmd_path = search_path(args, cmd, shell);
+		if (cmd_path == NULL)
 			err_notfound(cmd, shell);
 	}
 	execve(cmd_path, args, environ);
