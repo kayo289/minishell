@@ -58,7 +58,7 @@ static void		find_command(char *cmd, char **cmd_path, char **dir_names)
 					*cmd_path = ft_strdup(tmp);
 				else if (stat(tmp, &sb) == 0)
 				{
-					if ((S_IRUSR & sb.st_mode) && (S_IXUSR & sb.st_mode))
+					if (S_IXUSR & sb.st_mode)
 					{
 						free(*cmd_path);
 						*cmd_path = ft_strdup(tmp);
