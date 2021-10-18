@@ -1,4 +1,11 @@
 cp /bin/ls . && chmod 000 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 111 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 222 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 333 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 444 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 555 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 666 ls && export PATH=":"  && ls
+cp /bin/ls . && chmod 777 ls && export PATH=":"  && ls
 cp /bin/ls . && chmod 000 ls && export PATH=":/"  && ls
 cp /bin/ls . && chmod 000 ls && export PATH="::"  && ls
 cp /bin/ls . && chmod 000 ls && export PATH="/:"  && ls

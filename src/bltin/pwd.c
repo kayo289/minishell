@@ -1,16 +1,10 @@
 #include "../../includes/minishell.h"
 
-int minishell_pwd(void)
+int minishell_pwd(t_shell *shell)
 {
-	char *path;
-
-	path = getenv("PWD");
-	if (path == NULL)
-	{
-		ft_putendl_fd(strerror(errno), 2);
-		return (1);
-
-	}
-	ft_putendl_fd(path, 1);
+	if (!shell->pwd)
+		shell->pwd = getcwd(NULL, 0);
+	if (shell->pwd)
+		ft_putendl_fd(shell->pwd, 1);
 	return (0);
 }
