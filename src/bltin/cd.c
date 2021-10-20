@@ -120,10 +120,14 @@ int use_cdpath_chg(char **argv, char *path, t_shell *shell)
 		{
 			if (!(str[i][0] == '.' && str[i][1] == '\0'))
 				ft_putendl_fd(shell->pwd, 1);
+			dp_free(str);
+			free(cdpath);
 			return (TRUE);
 		}
+		free(cdpath);
 		i++;
 	}
+	dp_free(str);
 	return (FALSE);
 }
 
