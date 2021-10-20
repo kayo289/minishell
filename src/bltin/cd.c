@@ -108,8 +108,9 @@ int use_cdpath_chg(char **argv, char *path, t_shell *shell)
 	if (getenv("CDPATH")[0] == ':')
 		tmp = ft_strjoin(".",getenv("CDPATH"));
 	else
-		tmp = getenv("CDPATH");
+		tmp = ft_strdup(getenv("CDPATH"));
 	str = ft_split(tmp, ':');
+	free(tmp);
 	while(str[i])
 	{
 		if (str[i][0] == '/')
