@@ -108,8 +108,9 @@ int use_cdpath_chg(char **argv, char *path, t_shell *shell)
 	if (getenv("CDPATH")[0] == ':')
 		tmp = ft_strjoin(".",getenv("CDPATH"));
 	else
-		tmp = getenv("CDPATH");
+		tmp = ft_strdup(getenv("CDPATH"));
 	str = ft_split(tmp, ':');
+	free(tmp);
 	while(str[i])
 	{
 		if (str[i][0] == '/')
@@ -120,10 +121,14 @@ int use_cdpath_chg(char **argv, char *path, t_shell *shell)
 		{
 			if (!(str[i][0] == '.' && str[i][1] == '\0'))
 				ft_putendl_fd(shell->pwd, 1);
+			dp_free(str);
+			free(cdpath);
 			return (TRUE);
 		}
+		free(cdpath);
 		i++;
 	}
+	dp_free(str);
 	return (FALSE);
 }
 
