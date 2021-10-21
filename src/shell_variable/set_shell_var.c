@@ -7,6 +7,7 @@ void set_shell_var(t_shell *this, char *param)
 	char	*var;
 	char	*name;
 	char	*new_param;
+	char	*appended_value;
 	int		h;
 
 	name = get_param_name(param);
@@ -19,9 +20,12 @@ void set_shell_var(t_shell *this, char *param)
 		{
 			if (ft_strnstr(param, "+=", ft_strlen(param)) != NULL)
 			{
-				new_param = ft_strjoin(get_param_value(lst->content), get_param_value(param));
-				new_param = ft_strjoin("=", new_param);
+				appended_value = ft_strjoin(get_param_value(lst->content), get_param_value(param));
+				new_param = ft_strjoin("=", appended_value);
+				tmp = new_param;
 				new_param = ft_strjoin(name, new_param);
+				free(appended_value);
+				free(tmp);
 			}
 			else
 				new_param = ft_strdup(param);
