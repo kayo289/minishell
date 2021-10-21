@@ -113,6 +113,7 @@ int redirect(t_queue *fds, t_shell *shell)
 			here_documents(file_name, shell);
 		else if (ft_strcmp(rdt, "<") == EQUAL)
 			result = lt(*expand_file_name, n, shell);
+		dp_free(expand_file_name);
 		if (result == FAIL)
 			return FAIL;
 	}
