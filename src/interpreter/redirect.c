@@ -78,6 +78,7 @@ int redirect(t_queue *fds, t_shell *shell)
 	char	*file_name;
 	char	**expand_file_name;
 
+	result = SUCCESS;
 	while (!q_empty(fds))
 	{
 		rdt = deq(fds);
