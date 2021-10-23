@@ -1,14 +1,13 @@
 #ifndef QUEUE_H
-#define QUEUE_H
+# define QUEUE_H
 
-#include <stdio.h>
-#include <stdbool.h>
-#include "libft.h"
+# include <stdio.h>
+# include <stdbool.h>
+# include "libft.h"
 
-typedef t_list * t_queue;
+typedef t_list	*t_queue;
 
 void	enq(t_queue *this, void *value);
-//void	*deq(t_queue *this, void (*del)(void *));
 void	*deq(t_queue *this);
 void	*front(t_queue *this);
 int		q_size(t_queue *this);

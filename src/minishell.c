@@ -1,10 +1,10 @@
 #include "../includes/minishell.h"
 
-static void minishell_loop_c(t_shell *shell, char *input)
+static void	minishell_loop_c(t_shell *shell, char *input)
 {
-	t_dlist *line;
-	t_list	*tokens;
-	char	*s;
+	t_dlist		*line;
+	t_list		*tokens;
+	char		*s;
 
 	line = NULL;
 	while (*input != '\0')
@@ -20,9 +20,9 @@ static void minishell_loop_c(t_shell *shell, char *input)
 	ft_lstclear(&tokens, ip_free);
 }
 
-static void minishell_loop(t_shell *shell)
+static void	minishell_loop(t_shell *shell)
 {
-	t_dlist *line;
+	t_dlist	*line;
 	t_list	*tokens;
 
 	while (1)
@@ -33,11 +33,11 @@ static void minishell_loop(t_shell *shell)
 		ft_dlstclear(&line, free);
 		ft_lstclear(&tokens, ip_free);
 	}
-} 
+}
 
-void minishell_end(t_shell *shell)
+void	minishell_end(t_shell *shell)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < HASH_SIZE)
@@ -50,22 +50,24 @@ void minishell_end(t_shell *shell)
 	free(shell->histfile_path);
 	free(shell->clipboard_path);
 	free(shell->pwd);
+	while(1)
+		;
 	exit(shell->exit_status);
 }
 
-void minishell_start(t_shell *shell)
+void	minishell_start(t_shell *shell)
 {
-	int old_shlvl;
-	char *shlvl_value;
-	char *new_shlvl;
+	int		old_shlvl;
+	char	*shlvl_value;
+	char	*new_shlvl;
 
 	new_shell_var(shell);
 	set_shell_var(shell, "OLDPWD");
-	
 	old_shlvl = ft_atoi(getenv("SHLVL"));
 	if (old_shlvl >= 1000)
 	{
-		ft_putendl_fd("minishell: warning: shell level (1001) too high, resetting to 1", 2);
+		ft_putendl_fd("minishell: warning: shell level (1001) \
+too high, resetting to 1", 2);
 		old_shlvl = 0;
 	}
 	if (old_shlvl + 1 == 1000)
@@ -78,9 +80,9 @@ void minishell_start(t_shell *shell)
 	free(new_shlvl);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_shell shell;
+	t_shell	shell;
 
 	minishell_start(&shell);
 	if (argc > 2 && ft_strncmp("-c", argv[1], 3) == 0)

@@ -10,7 +10,6 @@ static void execute_extern_cmd(char **args, t_shell *shell)
 	{
 		ft_putendl_fd(strerror(errno), 2);
 		shell->exit_status = 1;
-		return;
 	}
 	else if (pid == 0)
 	{
