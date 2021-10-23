@@ -20,17 +20,18 @@ void here_documents(char *end_word, t_shell *shell)
 			line = line->next;
 		}
 		content = expand_word(word, shell, false);
+		free(word);
 		if  (ft_strcmp(*content, end_word) == EQUAL)
 		{
 			dup2(pfd[0], 0);
-			free(content);
+			dp_free(content);
 			ft_dlstclear(&tmp, free);
 			close(pfd[0]);
 			close(pfd[1]);
 			return;
 		}
 		ft_putendl_fd(*content, pfd[1]); 
-		free(content);
+		dp_free(content);
 		ft_dlstclear(&tmp, free);
 	}
 	return;

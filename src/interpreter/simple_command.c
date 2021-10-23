@@ -40,7 +40,10 @@ void exec_simplecmd(t_list *datas, t_shell *shell)
 	}
 	args = expand_words(data->words, shell, true);
 	if (redirect(&data->fds, shell) == FAIL)
+	{
+		dp_free(args);
 		return;
+	}
 	if (lookup_bltin(args))
 		execute_bltin(args, shell);
 	else

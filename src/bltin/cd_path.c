@@ -6,12 +6,11 @@ char *path_join(char *path, char *new_path)
 	char *tmp;
 
 	if (ft_strlen(path) == 0 || path[ft_strlen(path) - 1] != '/')
-	{
 		tmp = ft_strjoin(path, "/");
-		result_path = ft_strjoin(tmp, new_path);
-		free(tmp);
-	}else
-		result_path = ft_strjoin(path, new_path);
+	else
+		tmp = ft_strdup(path);
+	result_path = ft_strjoin(tmp, new_path);
+	free(tmp);
 	return (result_path);
 }
 
@@ -32,7 +31,10 @@ static char *get_parent(char *path)
 
 	result = ft_substr(path, 0, ft_strrchr(path, '/') - path);
 	if (result && ft_strlen(result) == 0)
+	{
+		free(result);
 		result = ft_strdup("/");
+	}
 	return (result);
 }
 
@@ -50,7 +52,11 @@ static char *normalize(char *path)
 	while (str[i])
 	{
 		if (ft_strncmp(str[i], "..", 2) == 0)
+		{
+			tmp = result;
 			result = get_parent(result);
+			free(tmp);
+		}
 		else if (str[i][0] != '.')
 		{
 			tmp = result;
