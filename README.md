@@ -31,3 +31,5 @@ $ cd minishell
 $ make
 $ ./minishell
 ```
+## 実行環境
+Ubuntu 18.04.4 LTS
