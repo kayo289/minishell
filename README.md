@@ -25,7 +25,9 @@
 - ワイルドカード
 
 ## 実行
+```
 $ git clone https://github.com/kayo289/minishell
 $ cd minishell
 $ make
 $ ./minishell
+```
