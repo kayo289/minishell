@@ -37,7 +37,7 @@ $ ./minishell
   - <img width="158" alt="image" src="https://user-images.githubusercontent.com/57135683/210719161-4fa400ae-7ea4-40c2-a253-e18a153dae00.png">
 
 - 環境変数$
-  - <img width="95" alt="image" src="https://user-images.githubusercontent.com/57135683/210719339-62d67461-7a00-47b0-b240-a4b1421ba585.png">
+  - <img width="186" alt="image" src="https://user-images.githubusercontent.com/57135683/210720782-f9587885-6171-4dcc-bd73-5e86786dfb49.png">
 
 - 特殊変数$?
   - <img width="133" alt="image" src="https://user-images.githubusercontent.com/57135683/210719443-9accaf6e-33d1-4079-bd2b-6aebd5afa0ff.png">
