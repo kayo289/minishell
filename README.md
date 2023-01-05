@@ -55,9 +55,10 @@ $ ./minishell
 
 - ワイルドカード
   - <img width="448" alt="image" src="https://user-images.githubusercontent.com/57135683/210720252-dbba9c81-8813-4669-8130-caa40d8b6cdd.png">
-  
-- シグナル（Ctrl-C, Ctrl-D, Ctrl-\）
-- 入力コマンドのヒストリー機能
+
+- その他
+  - シグナル（Ctrl-C, Ctrl-D, Ctrl-\）
+  - 入力コマンドのヒストリー機能
 
 ## 実行環境
 Ubuntu 18.04.4 LTS
