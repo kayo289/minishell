@@ -1,6 +1,8 @@
 # minishell
 ## 概要
-42Tokyoの課題の一つ。tiny版bash。
+42Tokyoの課題の一つ。tiny版bash[^1]。
+
+[^1]:https://linuxjm.osdn.jp/html/GNU_bash/man1/bash.1.html
 
 ## 実行
 ```
