@@ -30,7 +30,6 @@ $ ./minishell
 - カーソル機能（移動、編集、コピー＆ペースト、home、end）
   - 範囲選択:Ctrl+Shift+Space
   - ペースト:Ctrl+v
-  - カット:Ctrl+x
   - コピー:Ctrl+y
 - &&, ||
 - ワイルドカード
