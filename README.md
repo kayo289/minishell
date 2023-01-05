@@ -48,10 +48,10 @@ $ ./minishell
   - <img width="140" alt="image" src="https://user-images.githubusercontent.com/57135683/210719821-81188546-e22c-48f2-a05f-b4c88cb1c4e3.png">
 
 - カーソル機能（移動、編集、コピー＆ペースト、home、end）
-  - 範囲選択Ctrl+Space
-  - ペーストCtrl+v
-  - カットCtrl+x
-  - コピーCtrl+y
+  - 範囲選択:Ctrl+Shift+Space
+  - ペースト:Ctrl+v
+  - カット:Ctrl+x
+  - コピー:Ctrl+y
   - <img width="171" alt="image" src="https://user-images.githubusercontent.com/57135683/210719948-35d6a735-90ea-4c72-b937-60975e4c8c0c.png">
 
 - &&, ||
