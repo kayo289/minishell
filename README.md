@@ -38,8 +38,7 @@ $ ./minishell
   - 入力コマンドのヒストリー機能
 
 ## デモ
-https://user-images.githubusercontent.com/57135683/210779947-5efeb856-b260-45d4-8b12-84f660e1c1e3.mp4
-
+https://user-images.githubusercontent.com/57135683/210828009-2e360f77-690c-455e-8083-5b90acc57b52.mp4
 
 ## 実行環境
 Ubuntu 18.04.4 LTS
