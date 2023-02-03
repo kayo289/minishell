@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-int minishell_pwd(t_shell *shell)
+int	minishell_pwd(t_shell *shell)
 {
 	if (!shell->pwd)
 		shell->pwd = getcwd(NULL, 0);

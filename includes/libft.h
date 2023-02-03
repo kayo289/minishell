@@ -6,20 +6,20 @@
 # include <errno.h>
 # include <limits.h>
 
-#define __GNU_SOURCE
+# define __GNU_SOURCE
 # include <unistd.h>
 
-#define EQUAL	0
-#define FAIL	-1
+# define EQUAL	0
+# define FAIL	-1
 
-typedef struct		s_dlist
+typedef struct s_dlist
 {
 	struct s_dlist	*prev;
 	void			*content;
 	struct s_dlist	*next;
 }					t_dlist;
 
-typedef struct		s_list
+typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
@@ -51,10 +51,10 @@ int					ft_issnack_case(int n);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 void				*ft_calloc(size_t count, size_t size);
-char 				**ft_calloc2(size_t nmemb, size_t size);
-char 				***ft_calloc3(size_t nmemb, size_t size);
-char 				**ft_realloc2(char **old, char *add);
-char 				***ft_realloc3(char ***old, char **add);
+char				**ft_calloc2(size_t nmemb, size_t size);
+char				***ft_calloc3(size_t nmemb, size_t size);
+char				**ft_realloc2(char **old, char *add);
+char				***ft_realloc3(char ***old, char **add);
 char				*ft_strdup(const char *src);
 char				*ft_substr(char const *s, size_t start, size_t len);
 void				ft_charjoin(char **old, char c);
@@ -75,8 +75,8 @@ void				ft_lstadd_back(t_list **lst, t_list *new);
 void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
-t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
-				void (*del)(void *));
+t_list				*ft_lstmap(t_list *lst, void *(*f)(void *), \
+void (*del)(void *));
 int					ft_setenv(char *name, char *value);
 int					ft_unsetenv(char *name);
 char				*ft_getenv(char *name);
